@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split Money – 4 People</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .navbar { background:#6b2d5c; padding:15px 0; text-align:center; margin-bottom:30px; border-radius:8px; }
+        .navbar a { color:white; text-decoration:none; font-weight:600; font-size:1.1rem; padding:10px 25px; margin:0 10px; border-radius:6px; display:inline-block; transition:background .2s; }
+        .navbar a:hover { background:rgba(255,255,255,.2); }
+        .navbar a.active { background:white; color:#6b2d5c; font-weight:700; }
+        .container { max-width:900px; margin:0 auto; padding:20px; }
+        .people-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; margin:20px 0; }
+        .person-input { display:flex; align-items:center; gap:10px; }
+        .person-input input { flex:1; padding:10px; border:1.5px solid #cbd5e0; border-radius:8px; font-size:1rem; }
+        .form-group { margin:20px 0; padding:15px; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0; }
+        .form-group label { display:block; margin-bottom:8px; font-weight:600; color:#2d3748; }
+        select, input[type=number] { width:100%; padding:12px; border:1.5px solid #cbd5e0; border-radius:8px; font-size:1rem; }
+        button { background:#6b2d5c; color:white; padding:12px 24px; border:none; border-radius:8px; font-weight:600; cursor:pointer; margin-top:15px; width:100%; }
+        button:hover { background:#5a1e4d; }
+        .select-all-btn, .clear-all-btn { background:#4c1d95; width:auto; display:inline-block; margin-right:10px; }
+        .select-all-btn:hover, .clear-all-btn:hover { background:#3b1580; }
+        .clear-all-btn { background:#e53e3e; }
+        .clear-all-btn:hover { background:#c53030; }
+        #results-table, #summary-table, #history-table { width:100%; border-collapse:collapse; margin-bottom:15px; font-size:1rem; background:white; border-radius:10px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,.05); }
+        #results-table th, #summary-table th, #history-table th { background:#6b2d5c; color:white; padding:12px; text-align:left; font-weight:600; text-transform:uppercase; font-size:.9rem; }
+        #results-table td, #summary-table td, #history-table td { padding:12px; border-bottom:1px solid #e2e8f0; }
+        #results-table tr:hover td, #history-table tr:hover td { background:#f7fafc; }
+        .delete-btn { background:#e53e3e; color:white; border:none; padding:6px 10px; border-radius:6px; font-size:.8rem; cursor:pointer; }
+        .delete-btn:hover { background:#c53030; }
+        .summary-box { display:flex; justify-content:space-between; gap:15px; margin:15px 0; }
+        .total-paid, .total-split, .remaining { flex:1; padding:12px; background:#f8fafc; border-radius:8px; border:1px solid #e2e8f0; font-weight:600; font-size:1.1rem; }
+        .remaining { color:#d69e2e; }
+        .final-summary, .history-section { margin-top:30px; padding:20px; background:#f0f4f8; border-radius:12px; border:1px solid #cbd5e0; }
+        .final-summary h3, .history-section h3 { margin:0 0 15px; color:#2d3748; font-size:1.3rem; }
+        .owes-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:10px; }
+        .owes-grid label { display:flex; align-items:center; gap:8px; font-weight:500; cursor:pointer; }
+        .timestamp { font-size:0.8rem; color:#718096; }
+        .net-positive { color:#16a34a; font-weight:600; }
+        .net-negative { color:#dc2626; font-weight:600; }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <a href="index.html">Finance & Investments</a>
+    <a href="split.html" class="active">Split Money (4 People)</a>
+</div>
+<div class="container">
+    <h1>Split Money – BS15</h1>
+    <form id="split-form">
+        <div class="form-group">
+            <label>Enter Names (4 people):</label>
+            <div class="people-grid">
+                <div class="person-input"><span>1.</span><input type="text" class="person-name" value="Biên" required></div>
+                <div class="person-input"><span>2.</span><input type="text" class="person-name" value="Dân" required></div>
+                <div class="person-input"><span>3.</span><input type="text" class="person-name" value="Nguyên" required></div>
+                <div class="person-input"><span>4.</span><input type="text" class="person-name" value="Đạt" required></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="total-amount">Total Amount Paid:</label>
+            <input type="number" id="total-amount" placeholder="e.g. 4000000" step="1000" min="0" required>
+        </div>
+        <div class="form-group">
+            <label for="payer">Who Paid the Bill?</label>
+            <select id="payer" required></select>
+        </div>
+        <div class="form-group">
+            <label>Who Should Pay Back? (Check all that apply)</label>
+            <button type="button" class="select-all-btn" id="select-all">Select All</button>
+            <div class="owes-grid" id="owes-container"></div>
+        </div>
+        <button type="submit">Split Now</button>
+    </form>
+
+    <!-- === RESULTS === -->
+    <div id="results" class="result-container" style="display:none;">
+        <table id="results-table">
+            <thead>
+                <tr>
+                    <th>Payer</th>
+                    <th>Owed By</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+        </table>
+
+        <div class="summary-box">
+            <div class="total-paid">Total Paid: <span id="total-paid">0</span> VND</div>
+            <div class="total-split">Total Split: <span id="total-split">0</span> VND</div>
+            <div class="remaining">Remaining: <span id="remaining">0</span> VND</div>
+        </div>
+
+        <!-- === FINAL NET BALANCE === -->
+        <div class="final-summary" id="final-summary" style="display:none;">
+            <h3>Final Net Balance</h3>
+            <button type="button" class="clear-all-btn" id="clear-all">Clear All Data</button>
+            <table id="summary-table">
+                <thead>
+                    <tr>
+                        <th>Debtor</th>
+                        <th>Owes To</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="summary-body"></tbody>
+            </table>
+        </div>
+
+        <!-- === HISTORY === -->
+        <div class="history-section" id="history-section" style="display:none;">
+            <h3>Split History</h3>
+            <table id="history-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Payer</th>
+                        <th>Debtor(s)</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="history-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function formatVND(a){return a.toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");}
+    function formatDate(d){return d.toLocaleString('vi-VN');}
+
+    const form = document.getElementById('split-form');
+    const payerSelect = document.getElementById('payer');
+    const owesContainer = document.getElementById('owes-container');
+    const selectAllBtn = document.getElementById('select-all');
+    const clearAllBtn = document.getElementById('clear-all');
+    const resultsDiv = document.getElementById('results');
+    const tableBody = document.getElementById('table-body');
+    const summaryBody = document.getElementById('summary-body');
+    const historyBody = document.getElementById('history-body');
+    const totalPaidEl = document.getElementById('total-paid');
+    const totalSplitEl = document.getElementById('total-split');
+    const remainingEl = document.getElementById('remaining');
+    const finalSummary = document.getElementById('final-summary');
+    const historySection = document.getElementById('history-section');
+    const nameInputs = document.querySelectorAll('.person-name');
+
+    let people = [];
+    let allEntries = JSON.parse(localStorage.getItem('allSplitEntries')) || [];
+    let isFirstLoad = true;
+
+    function updatePeople(){
+        const prevPayer = payerSelect.value;
+        people = Array.from(nameInputs).map(inp=>({name:inp.value.trim(),input:inp})).filter(p=>p.name);
+
+        payerSelect.innerHTML = people.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+
+        if (prevPayer && people.some(p => p.name === prevPayer)) {
+            payerSelect.value = prevPayer;
+        } else if (isFirstLoad && people.length > 0) {
+            payerSelect.value = people[0].name;
+            isFirstLoad = false;
+        }
+
+        owesContainer.innerHTML = people.map((p,i)=>`
+            <label>
+                <input type="checkbox" class="owes" data-index="${i}" checked>
+                ${p.name}
+            </label>
+        `).join('');
+    }
+
+    function saveAll(){
+        localStorage.setItem('allSplitEntries', JSON.stringify(allEntries));
+    }
+
+    function renderAll(){
+        tableBody.innerHTML = '';
+        let total = 0;
+        allEntries.forEach((e, idx) => {
+            total += e.amount;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${e.payer}</td>
+                <td>${e.owedBy}</td>
+                <td>${formatVND(e.amount)} VND</td>
+                <td><button class="delete-btn" data-index="${idx}">Delete</button></td>
+            `;
+            tableBody.appendChild(tr);
+        });
+        totalPaidEl.textContent = formatVND(total);
+        totalSplitEl.textContent = formatVND(total);
+        remainingEl.textContent = formatVND(0);
+        resultsDiv.style.display = allEntries.length ? 'block' : 'none';
+        renderNetSummary();
+        renderHistory();
+    }
+
+    function renderNetSummary(){
+        const balance = {};
+        allEntries.forEach(e => {
+            const key = `${e.owedBy}→${e.payer}`;
+            balance[key] = (balance[key] || 0) + e.amount;
+        });
+        const net = {};
+        Object.keys(balance).forEach(key => {
+            const [from, to] = key.split('→');
+            if (from === to) return;
+            net[`${from}→${to}`] = (net[`${from}→${to}`] || 0) + balance[key];
+            net[`${to}→${from}`] = (net[`${to}→${from}`] || 0) - balance[key];
+        });
+        summaryBody.innerHTML = '';
+        let hasData = false;
+        Object.keys(net).forEach(key => {
+            const amount = net[key];
+            if (amount <= 0) return;
+            hasData = true;
+            const [from, to] = key.split('→');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${from}</strong></td>
+                <td>${to}</td>
+                <td class="net-positive">${formatVND(amount)} VND</td>
+            `;
+            summaryBody.appendChild(tr);
+        });
+        finalSummary.style.display = hasData ? 'block' : 'none';
+    }
+
+    // === UPDATED HISTORY: Group by time + payer + total ===
+    function renderHistory(){
+        historyBody.innerHTML = '';
+
+        // Group entries by time (same split)
+        const groups = {};
+        allEntries.forEach(e => {
+            const key = `${e.time}_${e.payer}`;
+            if (!groups[key]) {
+                groups[key] = { payer: e.payer, time: e.time, debtors: [], total: 0 };
+            }
+            groups[key].debtors.push(e.owedBy);
+            groups[key].total += e.amount;
+        });
+
+        Object.values(groups).forEach(g => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="timestamp">${formatDate(new Date(g.time))}</td>
+                <td><strong>${g.payer}</strong></td>
+                <td>${g.debtors.join(', ')}</td>
+                <td class="net-positive">${formatVND(g.total)} VND</td>
+            `;
+            historyBody.appendChild(tr);
+        });
+
+        historySection.style.display = Object.keys(groups).length ? 'block' : 'none';
+    }
+
+    // Init
+    updatePeople();
+    nameInputs.forEach(inp => inp.addEventListener('input', updatePeople));
+    renderAll();
+
+    selectAllBtn.addEventListener('click', () => {
+        document.querySelectorAll('.owes').forEach(cb => cb.checked = true);
+    });
+
+    clearAllBtn.addEventListener('click', () => {
+        if (confirm('Delete ALL splits and history?')) {
+            allEntries = [];
+            saveAll();
+            renderAll();
+        }
+    });
+
+    tableBody.addEventListener('click', e => {
+        if (e.target.classList.contains('delete-btn')) {
+            const idx = parseInt(e.target.dataset.index);
+            allEntries.splice(idx, 1);
+            saveAll();
+            renderAll();
+        }
+    });
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+
+        if (people.length !== 4) return alert('Please enter all 4 names.');
+
+        const total = parseFloat(document.getElementById('total-amount').value);
+        if (isNaN(total) || total <= 0 || total % 1000 !== 0) return alert('Enter valid amount (multiple of 1,000 VND)');
+
+        const payerName = payerSelect.value;
+        if (!payerName) return alert('Select who paid.');
+
+        const checkedBoxes = document.querySelectorAll('.owes:checked');
+        if (checkedBoxes.length === 0) return alert('Select at least one person.');
+
+        const owes = Array.from(checkedBoxes).map(cb => people[parseInt(cb.dataset.index)]);
+
+        const share = total / owes.length;
+        const now = new Date().toISOString();
+
+        owes.forEach(p => {
+            allEntries.push({
+                payer: payerName,
+                owedBy: p.name,
+                amount: Math.round(share),
+                time: now
+            });
+        });
+
+        saveAll();
+        renderAll();
+    });
+</script>
+</body>
+</html>

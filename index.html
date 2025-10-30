@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance & Investment Planner</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .navbar {
+            background: #6b2d5c;
+            padding: 15px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 10px 25px;
+            margin: 0 10px;
+            border-radius: 6px;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+        .navbar a:hover { background: rgba(255, 255, 255, 0.2); }
+        .navbar a.active { background: white; color: #6b2d5c; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="index.html" class="active">Finance & Investments</a>
+        <a href="split.html">Split Money (4 People)</a>
+    </div>
+
+    <div class="container">
+        <h1>Personal Finance & Investment Planner (₫)</h1>
+
+        <!-- ==== FINANCE TRACKER ==== -->
+        <div class="section">
+            <h2>Finance Tracker</h2>
+            <form id="finance-form">
+                <input type="text" id="finance-description" placeholder="Description" required>
+                <select id="finance-type" required>
+                    <option value="" disabled selected>Type</option>
+                    <option value="Income">Income</option>
+                    <option value="Expense">Expense</option>
+                </select>
+                <input type="number" id="finance-amount" placeholder="Amount (₫)" step="1000" min="0" required>
+                <select id="finance-category" required>
+                    <option value="" disabled selected>Category</option>
+                    <option value="Salary">Salary</option>
+                    <option value="Food">Food</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Other">Other</option>
+                </select>
+                <input type="date" id="finance-date" required>
+                <button type="submit">Add Entry</button>
+            </form>
+
+            <div class="filter">
+                <label for="filter-category">Filter by Category:</label>
+                <select id="filter-category">
+                    <option value="All">All</option>
+                    <option value="Salary">Salary</option>
+                    <option value="Food">Food</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Amount (₫)</th>
+                        <th>Category</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="finance-list"></tbody>
+            </table>
+
+            <!-- FIXED: Added missing total-expenses -->
+            <div class="summary">
+                <p>Total Income: <span id="total-income">0</span> ₫</p>
+                <p>Total Expenses: <span id="total-expenses">0</span> ₫</p>
+                <p>Balance: <span id="balance">0</span> ₫</p>
+            </div>
+        </div>
+
+        <!-- ==== INVESTMENT TRACKER ==== -->
+        <div class="section">
+            <h2>Investment Tracker</h2>
+            <form id="investment-form">
+                <input type="text" id="investment-symbol" placeholder="Stock Symbol (e.g., VCB)" required>
+                <input type="number" id="investment-amount" placeholder="Investment Amount (₫)" step="1000" min="0" required>
+                <button type="submit">Add Investment</button>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Amount (₫)</th>
+                        <th>Value (₫)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="investment-list"></tbody>
+            </table>
+
+            <div class="summary">
+                <p>Total Portfolio Value: <span id="total-portfolio">0</span> ₫</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
