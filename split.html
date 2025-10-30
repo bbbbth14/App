@@ -16,7 +16,7 @@
         .person-input input { flex:1; padding:10px; border:1.5px solid #cbd5e0; border-radius:8px; font-size:1rem; }
         .form-group { margin:20px 0; padding:15px; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0; }
         .form-group label { display:block; margin-bottom:8px; font-weight:600; color:#2d3748; }
-        select, input[type=number] { width:100%; padding:12px; border:1.5px solid #cbd5e0; border-radius:8px; font-size:1rem; }
+        select, input[type=number], input[type=date] { width:100%; padding:12px; border:1.5px solid #cbd5e0; border-radius:8px; font-size:1rem; }
         button { background:#6b2d5c; color:white; padding:12px 24px; border:none; border-radius:8px; font-weight:600; cursor:pointer; margin-top:15px; width:100%; }
         button:hover { background:#5a1e4d; }
         .select-all-btn, .clear-all-btn { background:#4c1d95; width:auto; display:inline-block; margin-right:10px; }
@@ -38,7 +38,6 @@
         .owes-grid label { display:flex; align-items:center; gap:8px; font-weight:500; cursor:pointer; }
         .timestamp { font-size:0.8rem; color:#718096; }
         .net-positive { color:#16a34a; font-weight:600; }
-        .net-negative { color:#dc2626; font-weight:600; }
     </style>
 </head>
 <body>
@@ -47,30 +46,39 @@
     <a href="split.html" class="active">Split Money (4 People)</a>
 </div>
 <div class="container">
-    <h1>Split Money – BS15</h1>
+    <h1>Split Money – Who Pays Whom (VND)</h1>
     <form id="split-form">
         <div class="form-group">
             <label>Enter Names (4 people):</label>
             <div class="people-grid">
                 <div class="person-input"><span>1.</span><input type="text" class="person-name" value="Biên" required></div>
-                <div class="person-input"><span>2.</span><input type="text" class="person-name" value="Dân" required></div>
-                <div class="person-input"><span>3.</span><input type="text" class="person-name" value="Nguyên" required></div>
+                <div class="person-input"><span>2.</span><input type="text" class="person-name" value="Nguyên" required></div>
+                <div class="person-input"><span>3.</span><input type="text" class="person-name" value="Dân" required></div>
                 <div class="person-input"><span>4.</span><input type="text" class="person-name" value="Đạt" required></div>
             </div>
         </div>
+
+        <div class="form-group">
+            <label for="bill-date">Bill Date:</label>
+            <input type="date" id="bill-date" required>
+        </div>
+
         <div class="form-group">
             <label for="total-amount">Total Amount Paid:</label>
             <input type="number" id="total-amount" placeholder="e.g. 4000000" step="1000" min="0" required>
         </div>
+
         <div class="form-group">
             <label for="payer">Who Paid the Bill?</label>
             <select id="payer" required></select>
         </div>
+
         <div class="form-group">
             <label>Who Should Pay Back? (Check all that apply)</label>
             <button type="button" class="select-all-btn" id="select-all">Select All</button>
             <div class="owes-grid" id="owes-container"></div>
         </div>
+
         <button type="submit">Split Now</button>
     </form>
 
@@ -79,6 +87,7 @@
         <table id="results-table">
             <thead>
                 <tr>
+                    <th>Date</th>
                     <th>Payer</th>
                     <th>Owed By</th>
                     <th>Amount</th>
@@ -96,7 +105,7 @@
 
         <!-- === FINAL NET BALANCE === -->
         <div class="final-summary" id="final-summary" style="display:none;">
-            <h3>Final Net Balance</h3>
+            <h3>Final Net Balance – Who Pays Whom</h3>
             <button type="button" class="clear-all-btn" id="clear-all">Clear All Data</button>
             <table id="summary-table">
                 <thead>
@@ -116,6 +125,7 @@
             <table id="history-table">
                 <thead>
                     <tr>
+                        <th>Date</th>
                         <th>Time</th>
                         <th>Payer</th>
                         <th>Debtor(s)</th>
@@ -130,7 +140,7 @@
 
 <script>
     function formatVND(a){return a.toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");}
-    function formatDate(d){return d.toLocaleString('vi-VN');}
+    function formatDate(d){return d.toLocaleString('vi-VN', {dateStyle: 'short', timeStyle: 'short'});}
 
     const form = document.getElementById('split-form');
     const payerSelect = document.getElementById('payer');
@@ -147,6 +157,7 @@
     const finalSummary = document.getElementById('final-summary');
     const historySection = document.getElementById('history-section');
     const nameInputs = document.querySelectorAll('.person-name');
+    const billDateInput = document.getElementById('bill-date');
 
     let people = [];
     let allEntries = JSON.parse(localStorage.getItem('allSplitEntries')) || [];
@@ -184,6 +195,7 @@
             total += e.amount;
             const tr = document.createElement('tr');
             tr.innerHTML = `
+                <td>${e.date}</td>
                 <td>${e.payer}</td>
                 <td>${e.owedBy}</td>
                 <td>${formatVND(e.amount)} VND</td>
@@ -230,16 +242,14 @@
         finalSummary.style.display = hasData ? 'block' : 'none';
     }
 
-    // === UPDATED HISTORY: Group by time + payer + total ===
     function renderHistory(){
         historyBody.innerHTML = '';
 
-        // Group entries by time (same split)
         const groups = {};
         allEntries.forEach(e => {
-            const key = `${e.time}_${e.payer}`;
+            const key = `${e.date}_${e.time}_${e.payer}`;
             if (!groups[key]) {
-                groups[key] = { payer: e.payer, time: e.time, debtors: [], total: 0 };
+                groups[key] = { date: e.date, time: e.time, payer: e.payer, debtors: [], total: 0 };
             }
             groups[key].debtors.push(e.owedBy);
             groups[key].total += e.amount;
@@ -248,7 +258,8 @@
         Object.values(groups).forEach(g => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td class="timestamp">${formatDate(new Date(g.time))}</td>
+                <td>${g.date}</td>
+                <td class="timestamp">${new Date(g.time).toLocaleTimeString('vi-VN')}</td>
                 <td><strong>${g.payer}</strong></td>
                 <td>${g.debtors.join(', ')}</td>
                 <td class="net-positive">${formatVND(g.total)} VND</td>
@@ -263,6 +274,9 @@
     updatePeople();
     nameInputs.forEach(inp => inp.addEventListener('input', updatePeople));
     renderAll();
+
+    // Default today
+    billDateInput.value = new Date().toISOString().split('T')[0];
 
     selectAllBtn.addEventListener('click', () => {
         document.querySelectorAll('.owes').forEach(cb => cb.checked = true);
@@ -288,7 +302,15 @@
     form.addEventListener('submit', e => {
         e.preventDefault();
 
+        // CONFIRMATION
+        if (!confirm('Are you sure you want to split this bill?')) {
+            return;
+        }
+
         if (people.length !== 4) return alert('Please enter all 4 names.');
+
+        const billDate = billDateInput.value;
+        if (!billDate) return alert('Please select the bill date.');
 
         const total = parseFloat(document.getElementById('total-amount').value);
         if (isNaN(total) || total <= 0 || total % 1000 !== 0) return alert('Enter valid amount (multiple of 1,000 VND)');
@@ -306,6 +328,7 @@
 
         owes.forEach(p => {
             allEntries.push({
+                date: billDate,
                 payer: payerName,
                 owedBy: p.name,
                 amount: Math.round(share),
@@ -315,6 +338,8 @@
 
         saveAll();
         renderAll();
+        document.getElementById('total-amount').value = '';
+        billDateInput.value = new Date().toISOString().split('T')[0]; // reset to today
     });
 </script>
 </body>
