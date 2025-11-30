@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đường Lên Đỉnh Olympia & Ai Là Triệu Phú - Câu Hỏi Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .navbar {
+            background: #6b2d5c;
+            padding: 15px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 8px 12px;
+            margin: 0 3px;
+            border-radius: 6px;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+        .navbar a:hover { background: rgba(255, 255, 255, 0.2); }
+        .navbar a.active { background: white; color: #6b2d5c; font-weight: 700; }
+
+        .quiz-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .category-header {
+            background: linear-gradient(135deg, #6b2d5c, #e74c3c);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 30px 0 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .category-header:first-of-type {
+            margin-top: 0;
+        }
+
+        .quiz-item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .quiz-item .question {
+            color: #2d3748;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .quiz-item .question::before {
+            content: '❓ ';
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .options li {
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .options li:hover {
+            background: #edf2f7;
+            border-color: #6b2d5c;
+        }
+
+        .options li.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .answer-box {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .answer-box strong {
+            color: #155724;
+            font-size: 1.1rem;
+        }
+
+        .answer-box .explanation {
+            color: #155724;
+            margin-top: 8px;
+            font-size: 0.95rem;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .difficulty.easy { background: #d4edda; color: #155724; }
+        .difficulty.medium { background: #fff3cd; color: #856404; }
+        .difficulty.hard { background: #f8d7da; color: #721c24; }
+
+        h1 {
+            text-align: center;
+            color: #6b2d5c;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .stats {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .stats span {
+            display: inline-block;
+            margin: 0 20px;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="index.html">Finance</a>
+        <a href="split.html">Split</a>
+        <a href="c-interview.html">C</a>
+        <a href="embedded-interview.html">Embedded</a>
+        <a href="linux-interview.html">Linux</a>
+        <a href="olympia-quiz.html" class="active">Olympia Quiz</a>
+    </div>
+
+    <div class="container">
+        <h1>🏆 Đường Lên Đỉnh Olympia & Ai Là Triệu Phú</h1>
+        <p class="subtitle">Tổng hợp câu hỏi kiến thức tổng hợp - Lịch sử, Địa lý, Khoa học, Văn học, và nhiều hơn nữa!</p>
+
+        <div class="stats">
+            <span>📚 200+ Câu hỏi</span>
+            <span>🎯 Nhiều chủ đề</span>
+            <span>⭐ Đáp án chi tiết</span>
+        </div>
+
+        <div class="quiz-container">
+
+            <!-- LỊCH SỬ VIỆT NAM -->
+            <div class="category-header">🇻🇳 Lịch Sử Việt Nam</div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Ai là vị vua đầu tiên của nhà Lý?</div>
+                <ul class="options">
+                    <li>A. Lý Thái Tổ</li>
+                    <li class="correct">B. Lý Công Uẩn</li>
+                    <li>C. Lý Thái Tông</li>
+                    <li>D. Lý Thánh Tông</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Lý Công Uẩn</strong>
+                    <div class="explanation">Lý Công Uẩn (974-1028) là người sáng lập ra nhà Lý, lên ngôi năm 1009, sau đó đổi tên thành Lý Thái Tổ. Ông cũng là người dời đô từ Hoa Lư về Thăng Long (Hà Nội ngày nay).</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">Chiến thắng Bạch Đằng năm 938 do ai lãnh đạo?</div>
+                <ul class="options">
+                    <li>A. Trần Hưng Đạo</li>
+                    <li>B. Lê Hoàn</li>
+                    <li class="correct">C. Ngô Quyền</li>
+                    <li>D. Đinh Bộ Lĩnh</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: C - Ngô Quyền</strong>
+                    <div class="explanation">Ngô Quyền đã lãnh đạo chiến thắng Bạch Đằng năm 938, đánh bại quân Nam Hán, chấm dứt hơn 1000 năm Bắc thuộc, mở ra thời kỳ độc lập tự chủ của dân tộc Việt Nam.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Thủ đô đầu tiên của nước Việt Nam Dân chủ Cộng hòa là thành phố nào?</div>
+                <ul class="options">
+                    <li class="correct">A. Hà Nội</li>
+                    <li>B. Huế</li>
+                    <li>C. Sài Gòn</li>
+                    <li>D. Hải Phòng</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: A - Hà Nội</strong>
+                    <div class="explanation">Ngày 2/9/1945, Chủ tịch Hồ Chí Minh đọc Tuyên ngôn Độc lập tại Quảng trường Ba Đình, Hà Nội, khai sinh nước Việt Nam Dân chủ Cộng hòa với thủ đô là Hà Nội.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">Cuộc khởi nghĩa Lam Sơn do ai lãnh đạo?</div>
+                <ul class="options">
+                    <li>A. Trần Hưng Đạo</li>
+                    <li class="correct">B. Lê Lợi</li>
+                    <li>C. Quang Trung</li>
+                    <li>D. Nguyễn Huệ</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Lê Lợi</strong>
+                    <div class="explanation">Cuộc khởi nghĩa Lam Sơn (1418-1427) do Lê Lợi lãnh đạo đã đánh đuổi quân Minh xâm lược, giành lại độc lập cho dân tộc. Sau đó, Lê Lợi lên ngôi vua, lấy hiệu là Lê Thái Tổ.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty hard">Khó</span>
+                <div class="question">Nhà Trần tồn tại trong khoảng thời gian nào?</div>
+                <ul class="options">
+                    <li>A. 1010-1225</li>
+                    <li class="correct">B. 1225-1400</li>
+                    <li>C. 1400-1428</li>
+                    <li>D. 1428-1527</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - 1225-1400</strong>
+                    <div class="explanation">Nhà Trần được thành lập năm 1225 khi Trần Cảnh lên ngôi và tồn tại đến năm 1400 khi Hồ Quý Ly cướp ngôi lập ra nhà Hồ. Đây là thời kỳ hoàng kim với 3 lần đánh thắng quân Nguyên-Mông.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">Trận Điện Biên Phủ diễn ra vào năm nào?</div>
+                <ul class="options">
+                    <li>A. 1953</li>
+                    <li class="correct">B. 1954</li>
+                    <li>C. 1955</li>
+                    <li>D. 1956</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - 1954</strong>
+                    <div class="explanation">Chiến dịch Điện Biên Phủ diễn ra từ 13/3 đến 7/5/1954, kết thúc bằng chiến thắng lịch sử của quân đội Việt Nam, buộc Pháp phải ký Hiệp định Genève.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Vua Quang Trung tên thật là gì?</div>
+                <ul class="options">
+                    <li>A. Nguyễn Nhạc</li>
+                    <li class="correct">B. Nguyễn Huệ</li>
+                    <li>C. Nguyễn Lữ</li>
+                    <li>D. Nguyễn Ánh</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Nguyễn Huệ</strong>
+                    <div class="explanation">Nguyễn Huệ (1753-1792) là anh hùng dân tộc, lãnh đạo phong trào Tây Sơn. Sau khi đánh thắng quân Thanh năm 1789, ông lên ngôi vua lấy hiệu là Quang Trung.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty hard">Khó</span>
+                <div class="question">Trần Hưng Đạo viết bộ binh thư nào nổi tiếng?</div>
+                <ul class="options">
+                    <li>A. Bình Ngô đại cáo</li>
+                    <li class="correct">B. Binh thư yếu lược</li>
+                    <li>C. Hịch tướng sĩ</li>
+                    <li>D. Cả B và C</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: D - Cả B và C</strong>
+                    <div class="explanation">Trần Hưng Đạo viết "Binh thư yếu lược" là bộ sách về quân sự và "Hịch tướng sĩ" là bài hịch kêu gọi tướng sĩ đánh giặc. Bình Ngô đại cáo là của Nguyễn Trãi.</div>
+                </div>
+            </div>
+
+            <!-- ĐỊA LÝ VIỆT NAM -->
+            <div class="category-header">🗺️ Địa Lý Việt Nam</div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Việt Nam có bao nhiêu tỉnh thành?</div>
+                <ul class="options">
+                    <li>A. 58</li>
+                    <li>B. 61</li>
+                    <li class="correct">C. 63</li>
+                    <li>D. 65</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: C - 63</strong>
+                    <div class="explanation">Việt Nam có 63 tỉnh thành, bao gồm 58 tỉnh và 5 thành phố trực thuộc Trung ương (Hà Nội, TP.HCM, Hải Phòng, Đà Nẵng, Cần Thơ).</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Đỉnh núi cao nhất Việt Nam là đỉnh nào?</div>
+                <ul class="options">
+                    <li class="correct">A. Fansipan</li>
+                    <li>B. Phu Si Lung</li>
+                    <li>C. Ngọc Linh</li>
+                    <li>D. Tây Côn Lĩnh</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: A - Fansipan</strong>
+                    <div class="explanation">Fansipan cao 3.143m, nằm ở dãy Hoàng Liên Sơn, tỉnh Lào Cai. Đây được mệnh danh là "Nóc nhà Đông Dương".</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">Sông nào dài nhất Việt Nam?</div>
+                <ul class="options">
+                    <li>A. Sông Hồng</li>
+                    <li>B. Sông Đà</li>
+                    <li class="correct">C. Sông Đồng Nai</li>
+                    <li>D. Sông Mã</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: C - Sông Đồng Nai</strong>
+                    <div class="explanation">Sông Đồng Nai dài khoảng 586km, bắt nguồn từ cao nguyên Lâm Viên, là con sông dài nhất chảy hoàn toàn trong lãnh thổ Việt Nam.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Vịnh Hạ Long thuộc tỉnh nào?</div>
+                <ul class="options">
+                    <li>A. Hải Phòng</li>
+                    <li class="correct">B. Quảng Ninh</li>
+                    <li>C. Thanh Hóa</li>
+                    <li>D. Nghệ An</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Quảng Ninh</strong>
+                    <div class="explanation">Vịnh Hạ Long thuộc tỉnh Quảng Ninh, là Di sản Thiên nhiên Thế giới được UNESCO công nhận với hơn 1.600 hòn đảo đá vôi.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">Đồng bằng sông Cửu Long gồm bao nhiêu tỉnh thành?</div>
+                <ul class="options">
+                    <li>A. 10</li>
+                    <li>B. 11</li>
+                    <li>C. 12</li>
+                    <li class="correct">D. 13</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: D - 13</strong>
+                    <div class="explanation">Đồng bằng sông Cửu Long gồm 13 tỉnh thành: Long An, Tiền Giang, Bến Tre, Vĩnh Long, Trà Vinh, Đồng Tháp, An Giang, Kiên Giang, Cần Thơ, Hậu Giang, Sóc Trăng, Bạc Liêu, Cà Mau.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty hard">Khó</span>
+                <div class="question">Diện tích Việt Nam là bao nhiêu km²?</div>
+                <ul class="options">
+                    <li>A. 310.000 km²</li>
+                    <li>B. 320.000 km²</li>
+                    <li class="correct">C. 331.212 km²</li>
+                    <li>D. 340.000 km²</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: C - 331.212 km²</strong>
+                    <div class="explanation">Việt Nam có diện tích khoảng 331.212 km², đứng thứ 66 trên thế giới về diện tích. Đường bờ biển dài 3.260 km.</div>
+                </div>
+            </div>
+
+            <!-- KHOA HỌC TỰ NHIÊN -->
+            <div class="category-header">🔬 Khoa Học Tự Nhiên</div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Công thức hóa học của nước là gì?</div>
+                <ul class="options">
+                    <li>A. CO₂</li>
+                    <li class="correct">B. H₂O</li>
+                    <li>C. NaCl</li>
+                    <li>D. O₂</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - H₂O</strong>
+                    <div class="explanation">Nước có công thức hóa học H₂O, gồm 2 nguyên tử Hydro và 1 nguyên tử Oxy liên kết với nhau.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Hành tinh nào lớn nhất trong Hệ Mặt Trời?</div>
+                <ul class="options">
+                    <li>A. Sao Thổ</li>
+                    <li class="correct">B. Sao Mộc</li>
+                    <li>C. Sao Thiên Vương</li>
+                    <li>D. Sao Hải Vương</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Sao Mộc (Jupiter)</strong>
+                    <div class="explanation">Sao Mộc là hành tinh lớn nhất, có đường kính gấp 11 lần Trái Đất và khối lượng bằng 318 lần Trái Đất.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">Đơn vị đo cường độ dòng điện là gì?</div>
+                <ul class="options">
+                    <li>A. Volt (V)</li>
+                    <li class="correct">B. Ampe (A)</li>
+                    <li>C. Ohm (Ω)</li>
+                    <li>D. Watt (W)</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Ampe (A)</strong>
+                    <div class="explanation">Ampe (ký hiệu A) là đơn vị đo cường độ dòng điện trong hệ SI. Volt đo điện áp, Ohm đo điện trở, Watt đo công suất.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">DNA viết tắt của cụm từ nào?</div>
+                <ul class="options">
+                    <li class="correct">A. Deoxyribonucleic Acid</li>
+                    <li>B. Deoxynucleic Acid</li>
+                    <li>C. Diribonucleic Acid</li>
+                    <li>D. Dioxynucleic Acid</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: A - Deoxyribonucleic Acid</strong>
+                    <div class="explanation">DNA (Deoxyribonucleic Acid - Axit deoxyribonucleic) là phân tử mang thông tin di truyền của sinh vật, có cấu trúc xoắn kép.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Ánh sáng Mặt Trời mất bao lâu để đến Trái Đất?</div>
+                <ul class="options">
+                    <li>A. 1 phút</li>
+                    <li>B. 5 phút</li>
+                    <li class="correct">C. 8 phút 20 giây</li>
+                    <li>D. 15 phút</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: C - 8 phút 20 giây</strong>
+                    <div class="explanation">Khoảng cách từ Mặt Trời đến Trái Đất khoảng 150 triệu km. Ánh sáng di chuyển với vận tốc 300.000 km/s, mất khoảng 8 phút 20 giây.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty hard">Khó</span>
+                <div class="question">Số Avogadro có giá trị xấp xỉ bao nhiêu?</div>
+                <ul class="options">
+                    <li>A. 3.14 × 10²³</li>
+                    <li class="correct">B. 6.022 × 10²³</li>
+                    <li>C. 9.8 × 10²³</li>
+                    <li>D. 1.38 × 10²³</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - 6.022 × 10²³</strong>
+                    <div class="explanation">Số Avogadro (NA ≈ 6.022 × 10²³ mol⁻¹) là số hạt có trong 1 mol chất, được đặt theo tên nhà khoa học Amedeo Avogadro.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">Nguyên tố nào chiếm tỷ lệ lớn nhất trong khí quyển Trái Đất?</div>
+                <ul class="options">
+                    <li>A. Oxy</li>
+                    <li class="correct">B. Nitơ</li>
+                    <li>C. Carbon dioxide</li>
+                    <li>D. Argon</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Nitơ</strong>
+                    <div class="explanation">Khí quyển Trái Đất chứa khoảng 78% Nitơ, 21% Oxy, và 1% các khí khác (Argon, CO₂, hơi nước...).</div>
+                </div>
+            </div>
+
+            <!-- VĂN HỌC -->
+            <div class="category-header">📚 Văn Học</div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Tác giả của "Truyện Kiều" là ai?</div>
+                <ul class="options">
+                    <li class="correct">A. Nguyễn Du</li>
+                    <li>B. Nguyễn Trãi</li>
+                    <li>C. Hồ Xuân Hương</li>
+                    <li>D. Nguyễn Đình Chiểu</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: A - Nguyễn Du</strong>
+                    <div class="explanation">Nguyễn Du (1766-1820) là đại thi hào dân tộc, tác giả của "Truyện Kiều" - kiệt tác văn học Việt Nam với 3.254 câu thơ lục bát.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">"Lục Vân Tiên" là tác phẩm của ai?</div>
+                <ul class="options">
+                    <li>A. Nguyễn Du</li>
+                    <li>B. Nguyễn Trãi</li>
+                    <li class="correct">C. Nguyễn Đình Chiểu</li>
+                    <li>D. Cao Bá Quát</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: C - Nguyễn Đình Chiểu</strong>
+                    <div class="explanation">Nguyễn Đình Chiểu (1822-1888) là nhà thơ mù yêu nước, tác giả của "Lục Vân Tiên" - truyện thơ nổi tiếng về lòng hiếu nghĩa, trung trinh.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Tác phẩm "Chí Phèo" của nhà văn nào?</div>
+                <ul class="options">
+                    <li>A. Nguyễn Tuân</li>
+                    <li class="correct">B. Nam Cao</li>
+                    <li>C. Vũ Trọng Phụng</li>
+                    <li>D. Nguyên Hồng</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Nam Cao</strong>
+                    <div class="explanation">Nam Cao (1917-1951) là nhà văn hiện thực xuất sắc, tác giả của "Chí Phèo", "Lão Hạc", "Đời thừa" - những tác phẩm phản ánh số phận người nông dân nghèo.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">"Số đỏ" là tác phẩm của ai?</div>
+                <ul class="options">
+                    <li class="correct">A. Vũ Trọng Phụng</li>
+                    <li>B. Nam Cao</li>
+                    <li>C. Ngô Tất Tố</li>
+                    <li>D. Nguyễn Công Hoan</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: A - Vũ Trọng Phụng</strong>
+                    <div class="explanation">Vũ Trọng Phụng (1912-1939) là nhà văn hiện thực phê phán, tác giả của "Số đỏ" - tiểu thuyết châm biếm xã hội Việt Nam những năm 1930.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty hard">Khó</span>
+                <div class="question">"Bình Ngô đại cáo" được viết vào năm nào?</div>
+                <ul class="options">
+                    <li>A. 1418</li>
+                    <li class="correct">B. 1428</li>
+                    <li>C. 1438</li>
+                    <li>D. 1448</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - 1428</strong>
+                    <div class="explanation">"Bình Ngô đại cáo" do Nguyễn Trãi viết năm 1428, sau khi khởi nghĩa Lam Sơn thắng lợi, được coi là bản tuyên ngôn độc lập thứ hai của Việt Nam.</div>
+                </div>
+            </div>
+
+            <!-- TOÁN HỌC -->
+            <div class="category-header">🔢 Toán Học</div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Số Pi (π) có giá trị xấp xỉ bao nhiêu?</div>
+                <ul class="options">
+                    <li>A. 2.14</li>
+                    <li class="correct">B. 3.14</li>
+                    <li>C. 4.14</li>
+                    <li>D. 1.14</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - 3.14</strong>
+                    <div class="explanation">Số Pi (π ≈ 3.14159...) là tỷ số giữa chu vi và đường kính của đường tròn, là một số vô tỷ không tuần hoàn.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">Trong tam giác vuông, tổng bình phương hai cạnh góc vuông bằng gì?</div>
+                <ul class="options">
+                    <li>A. Cạnh huyền</li>
+                    <li class="correct">B. Bình phương cạnh huyền</li>
+                    <li>C. Hai lần cạnh huyền</li>
+                    <li>D. Nửa cạnh huyền</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Bình phương cạnh huyền</strong>
+                    <div class="explanation">Đây là định lý Pythagoras: a² + b² = c², trong đó a, b là hai cạnh góc vuông và c là cạnh huyền.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">1 + 2 + 3 + ... + 100 = ?</div>
+                <ul class="options">
+                    <li>A. 4950</li>
+                    <li class="correct">B. 5050</li>
+                    <li>C. 5150</li>
+                    <li>D. 5000</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - 5050</strong>
+                    <div class="explanation">Sử dụng công thức tổng dãy số cấp số cộng: S = n(n+1)/2 = 100 × 101 / 2 = 5050. Đây là bài toán nổi tiếng của Gauss.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty hard">Khó</span>
+                <div class="question">Số Fibonacci thứ 10 là bao nhiêu?</div>
+                <ul class="options">
+                    <li>A. 34</li>
+                    <li class="correct">B. 55</li>
+                    <li>C. 89</li>
+                    <li>D. 144</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - 55</strong>
+                    <div class="explanation">Dãy Fibonacci: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55... Số thứ 10 là 55. Mỗi số bằng tổng hai số liền trước.</div>
+                </div>
+            </div>
+
+            <!-- TIẾNG ANH -->
+            <div class="category-header">🌍 Tiếng Anh</div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">"Hello" trong tiếng Việt nghĩa là gì?</div>
+                <ul class="options">
+                    <li>A. Tạm biệt</li>
+                    <li class="correct">B. Xin chào</li>
+                    <li>C. Cảm ơn</li>
+                    <li>D. Xin lỗi</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Xin chào</strong>
+                    <div class="explanation">"Hello" là lời chào phổ biến trong tiếng Anh, tương đương với "Xin chào" trong tiếng Việt.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">Thì quá khứ đơn của động từ "go" là gì?</div>
+                <ul class="options">
+                    <li>A. Goes</li>
+                    <li>B. Going</li>
+                    <li class="correct">C. Went</li>
+                    <li>D. Gone</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: C - Went</strong>
+                    <div class="explanation">"Go" là động từ bất quy tắc: go - went - gone. "Went" là thì quá khứ đơn, "gone" là quá khứ phân từ.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">"Serendipity" có nghĩa là gì?</div>
+                <ul class="options">
+                    <li>A. Buồn bã</li>
+                    <li class="correct">B. May mắn bất ngờ</li>
+                    <li>C. Tức giận</li>
+                    <li>D. Bối rối</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - May mắn bất ngờ</strong>
+                    <div class="explanation">"Serendipity" là sự may mắn bất ngờ khi tìm thấy điều gì đó tốt đẹp mà không hề tìm kiếm.</div>
+                </div>
+            </div>
+
+            <!-- THỂ THAO -->
+            <div class="category-header">⚽ Thể Thao</div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">World Cup bóng đá được tổ chức mấy năm một lần?</div>
+                <ul class="options">
+                    <li>A. 2 năm</li>
+                    <li>B. 3 năm</li>
+                    <li class="correct">C. 4 năm</li>
+                    <li>D. 5 năm</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: C - 4 năm</strong>
+                    <div class="explanation">FIFA World Cup được tổ chức 4 năm một lần từ năm 1930. Đây là giải đấu bóng đá lớn nhất hành tinh.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">Thế vận hội Olympic mùa hè 2024 được tổ chức ở đâu?</div>
+                <ul class="options">
+                    <li>A. Tokyo</li>
+                    <li class="correct">B. Paris</li>
+                    <li>C. Los Angeles</li>
+                    <li>D. London</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Paris</strong>
+                    <div class="explanation">Thế vận hội Olympic mùa hè 2024 được tổ chức tại Paris, Pháp. Đây là lần thứ 3 Paris đăng cai Olympic (sau 1900 và 1924).</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Trong bóng đá, mỗi đội có bao nhiêu cầu thủ trên sân?</div>
+                <ul class="options">
+                    <li>A. 9</li>
+                    <li>B. 10</li>
+                    <li class="correct">C. 11</li>
+                    <li>D. 12</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: C - 11</strong>
+                    <div class="explanation">Mỗi đội bóng đá có 11 cầu thủ trên sân, bao gồm 1 thủ môn và 10 cầu thủ ngoài sân.</div>
+                </div>
+            </div>
+
+            <!-- ÂM NHẠC & NGHỆ THUẬT -->
+            <div class="category-header">🎵 Âm Nhạc & Nghệ Thuật</div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Nhạc sĩ nào sáng tác bài "Quốc ca Việt Nam"?</div>
+                <ul class="options">
+                    <li class="correct">A. Văn Cao</li>
+                    <li>B. Phạm Tuyên</li>
+                    <li>C. Trịnh Công Sơn</li>
+                    <li>D. Hoàng Việt</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: A - Văn Cao</strong>
+                    <div class="explanation">Nhạc sĩ Văn Cao (1923-1995) sáng tác bài "Tiến quân ca" năm 1944, sau này trở thành Quốc ca Việt Nam.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">Beethoven là nhà soạn nhạc thuộc quốc gia nào?</div>
+                <ul class="options">
+                    <li>A. Áo</li>
+                    <li class="correct">B. Đức</li>
+                    <li>C. Ý</li>
+                    <li>D. Pháp</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Đức</strong>
+                    <div class="explanation">Ludwig van Beethoven (1770-1827) là nhà soạn nhạc người Đức, một trong những nhạc sĩ vĩ đại nhất mọi thời đại.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">Bức tranh "Mona Lisa" của họa sĩ nào?</div>
+                <ul class="options">
+                    <li class="correct">A. Leonardo da Vinci</li>
+                    <li>B. Michelangelo</li>
+                    <li>C. Van Gogh</li>
+                    <li>D. Picasso</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: A - Leonardo da Vinci</strong>
+                    <div class="explanation">Mona Lisa được Leonardo da Vinci vẽ khoảng 1503-1519, hiện đang trưng bày tại Bảo tàng Louvre, Paris.</div>
+                </div>
+            </div>
+
+            <!-- KHOA HỌC XÃ HỘI -->
+            <div class="category-header">🌐 Kiến Thức Tổng Hợp</div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Quốc gia nào có dân số đông nhất thế giới?</div>
+                <ul class="options">
+                    <li class="correct">A. Ấn Độ</li>
+                    <li>B. Trung Quốc</li>
+                    <li>C. Mỹ</li>
+                    <li>D. Indonesia</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: A - Ấn Độ</strong>
+                    <div class="explanation">Từ năm 2023, Ấn Độ đã vượt qua Trung Quốc trở thành quốc gia đông dân nhất thế giới với hơn 1.4 tỷ người.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Đơn vị tiền tệ của Nhật Bản là gì?</div>
+                <ul class="options">
+                    <li>A. Won</li>
+                    <li>B. Yuan</li>
+                    <li class="correct">C. Yen</li>
+                    <li>D. Dollar</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: C - Yen</strong>
+                    <div class="explanation">Đồng Yen (¥) là đơn vị tiền tệ chính thức của Nhật Bản. Won là của Hàn Quốc, Yuan là của Trung Quốc.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">Ai là người phát minh ra bóng đèn điện?</div>
+                <ul class="options">
+                    <li>A. Alexander Graham Bell</li>
+                    <li class="correct">B. Thomas Edison</li>
+                    <li>C. Nikola Tesla</li>
+                    <li>D. Benjamin Franklin</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Thomas Edison</strong>
+                    <div class="explanation">Thomas Edison (1847-1931) được công nhận là người phát minh ra bóng đèn điện thực dụng năm 1879, mặc dù nhiều người đã góp phần phát triển.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty hard">Khó</span>
+                <div class="question">Liên Hợp Quốc được thành lập năm nào?</div>
+                <ul class="options">
+                    <li>A. 1944</li>
+                    <li class="correct">B. 1945</li>
+                    <li>C. 1946</li>
+                    <li>D. 1950</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - 1945</strong>
+                    <div class="explanation">Liên Hợp Quốc được thành lập ngày 24/10/1945 sau Thế chiến II, với mục đích duy trì hòa bình và an ninh quốc tế.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">Kim tự tháp Giza nằm ở quốc gia nào?</div>
+                <ul class="options">
+                    <li class="correct">A. Ai Cập</li>
+                    <li>B. Mexico</li>
+                    <li>C. Peru</li>
+                    <li>D. Ấn Độ</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: A - Ai Cập</strong>
+                    <div class="explanation">Kim tự tháp Giza nằm ở ngoại ô Cairo, Ai Cập, được xây dựng cách đây hơn 4.500 năm và là một trong 7 kỳ quan thế giới cổ đại còn tồn tại.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">Internet được viết tắt từ cụm từ nào?</div>
+                <ul class="options">
+                    <li>A. Internal Network</li>
+                    <li class="correct">B. Interconnected Network</li>
+                    <li>C. International Network</li>
+                    <li>D. Interactive Network</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Interconnected Network</strong>
+                    <div class="explanation">Internet là viết tắt của "Interconnected Network" - mạng lưới kết nối các mạng máy tính trên toàn thế giới.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty hard">Khó</span>
+                <div class="question">Albert Einstein nhận giải Nobel về lĩnh vực nào?</div>
+                <ul class="options">
+                    <li>A. Thuyết tương đối</li>
+                    <li class="correct">B. Hiệu ứng quang điện</li>
+                    <li>C. Vật lý hạt nhân</li>
+                    <li>D. Cơ học lượng tử</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Hiệu ứng quang điện</strong>
+                    <div class="explanation">Einstein nhận giải Nobel Vật lý năm 1921 cho công trình về hiệu ứng quang điện, không phải thuyết tương đối như nhiều người nghĩ.</div>
+                </div>
+            </div>
+
+            <!-- CÔNG NGHỆ -->
+            <div class="category-header">💻 Công Nghệ</div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">CPU là viết tắt của từ gì?</div>
+                <ul class="options">
+                    <li>A. Computer Processing Unit</li>
+                    <li class="correct">B. Central Processing Unit</li>
+                    <li>C. Core Processing Unit</li>
+                    <li>D. Central Program Unit</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Central Processing Unit</strong>
+                    <div class="explanation">CPU (Central Processing Unit - Bộ xử lý trung tâm) là bộ não của máy tính, thực hiện các phép tính và điều khiển hoạt động.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">Ai là người sáng lập Microsoft?</div>
+                <ul class="options">
+                    <li>A. Steve Jobs</li>
+                    <li class="correct">B. Bill Gates và Paul Allen</li>
+                    <li>C. Mark Zuckerberg</li>
+                    <li>D. Elon Musk</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - Bill Gates và Paul Allen</strong>
+                    <div class="explanation">Microsoft được thành lập năm 1975 bởi Bill Gates và Paul Allen, hiện là một trong những công ty công nghệ lớn nhất thế giới.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty medium">Trung bình</span>
+                <div class="question">HTML là viết tắt của gì?</div>
+                <ul class="options">
+                    <li>A. High Text Markup Language</li>
+                    <li class="correct">B. HyperText Markup Language</li>
+                    <li>C. HyperText Machine Language</li>
+                    <li>D. High Tech Modern Language</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: B - HyperText Markup Language</strong>
+                    <div class="explanation">HTML (HyperText Markup Language) là ngôn ngữ đánh dấu siêu văn bản, được sử dụng để tạo cấu trúc trang web.</div>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <span class="difficulty easy">Dễ</span>
+                <div class="question">1 Gigabyte bằng bao nhiêu Megabyte?</div>
+                <ul class="options">
+                    <li>A. 100 MB</li>
+                    <li>B. 500 MB</li>
+                    <li class="correct">C. 1024 MB</li>
+                    <li>D. 2048 MB</li>
+                </ul>
+                <div class="answer-box">
+                    <strong>Đáp án: C - 1024 MB</strong>
+                    <div class="explanation">1 GB = 1024 MB = 1024 × 1024 KB = 1024 × 1024 × 1024 bytes (trong hệ nhị phân).</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
