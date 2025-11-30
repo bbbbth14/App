@@ -8,30 +8,7 @@
 </head>
 <body>
 
-    <div class="page-wrapper">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-title">📚 Learning Hub</div>
-                <div class="sidebar-subtitle">Navigation Menu</div>
-            </div>
-            <ul class="sidebar-menu">
-                <li><a href="home.html"><span class="sidebar-icon">🏠</span> Home</a></li>
-                <li><a href="index.html"><span class="sidebar-icon">💰</span> Finance</a></li>
-                <li><a href="split.html"><span class="sidebar-icon">🧾</span> Split Money</a></li>
-                <li><a href="c-interview.html"><span class="sidebar-icon">💻</span> C Q&A</a></li>
-                <li><a href="embedded-interview.html"><span class="sidebar-icon">🔧</span> Embedded</a></li>
-                <li><a href="linux-interview.html" class="active"><span class="sidebar-icon">🐧</span> Linux/Driver</a></li>
-            </ul>
-        </aside>
-
-        <!-- Main Content -->
-        <div class="main-content">
-
-            <div class="content-area">
-
     <div class="navbar">
-        <a href="home.html">🏠 Home</a>
         <a href="index.html">Finance</a>
         <a href="split.html">Split Money</a>
         <a href="c-interview.html">C Q&A</a>
@@ -45,7 +22,7 @@
         <div class="qa-container">
 
             <!-- Linux Basics -->
-            <div class="category-header" id="linux-basics">🐧 Linux Basics</div>
+            <div class="category-header">🐧 Linux Basics</div>
 
             <div class="qa-item">
                 <h3>What is Linux?</h3>
@@ -163,7 +140,7 @@ syscall           // trigger syscall</pre>
             </div>
 
             <!-- Linux Commands -->
-            <div class="category-header" id="commands">💻 Essential Linux Commands</div>
+            <div class="category-header">💻 Essential Linux Commands</div>
 
             <div class="qa-item">
                 <h3>What are important Linux commands for embedded development?</h3>
@@ -226,7 +203,7 @@ cat /proc/version
             </div>
 
             <!-- Device Drivers -->
-            <div class="category-header" id="drivers">🔧 Linux Device Drivers</div>
+            <div class="category-header">🔧 Linux Device Drivers</div>
 
             <div class="qa-item">
                 <h3>What is a Linux Device Driver?</h3>
@@ -412,7 +389,7 @@ static ssize_t dev_read(struct file *filp,
             </div>
 
             <!-- Interrupts & Concurrency -->
-            <div class="category-header" id="interrupts">⚡ Interrupts & Concurrency</div>
+            <div class="category-header">⚡ Interrupts & Concurrency</div>
 
             <div class="qa-item">
                 <h3>How do you handle interrupts in Linux drivers?</h3>
@@ -537,7 +514,7 @@ write_unlock(&rwlock);</pre>
             </div>
 
             <!-- Memory Management -->
-            <div class="category-header" id="memory">💾 Kernel Memory Management</div>
+            <div class="category-header">💾 Kernel Memory Management</div>
 
             <div class="qa-item">
                 <h3>What are the different ways to allocate memory in the kernel?</h3>
@@ -616,7 +593,7 @@ Comparison:
             </div>
 
             <!-- Platform Drivers -->
-            <div class="category-header" id="platform">🔌 Platform & Device Tree</div>
+            <div class="category-header">🔌 Platform & Device Tree</div>
 
             <div class="qa-item">
                 <h3>What is a Platform Driver?</h3>
@@ -700,7 +677,7 @@ static int my_probe(struct platform_device *pdev)
             </div>
 
             <!-- Advanced Topics -->
-            <div class="category-header" id="advanced">🔥 Advanced Topics</div>
+            <div class="category-header">🔥 Advanced Topics</div>
 
             <div class="qa-item">
                 <h3>What is IOCTL and how is it implemented?</h3>
@@ -835,7 +812,7 @@ module_i2c_driver(my_driver);</pre>
             </div>
 
             <!-- MCQ Section -->
-            <div class="category-header" id="mcq">📝 Multiple Choice Questions</div>
+            <div class="category-header">📝 Multiple Choice Questions</div>
 
             <div class="mcq-item">
                 <h3>Which function is used to copy data from user space to kernel space?</h3>
@@ -1008,138 +985,6 @@ module_i2c_driver(my_driver);</pre>
                 button.textContent = 'View Answer';
             }
         }
-    </script>
-
-    <div class="page-navigation">
-        <a href="embedded-interview.html" class="page-nav-btn">Previous</a>
-        <div class="page-nav-center">
-            <strong>Linux & Device Driver Q&A</strong>
-            Page 5 of 5
-        </div>
-        <a href="#" class="page-nav-btn next disabled">Next</a>
-    </div>
-
-            </div><!-- End content-area -->
-
-            <!-- Right Sidebar - Table of Contents & Bookmarks -->
-            <aside class="right-sidebar">
-                <div class="right-sidebar-header">
-                    📑 Table of Contents
-                </div>
-                <ul class="toc-list">
-                    <li><a href="#linux-basics">🐧 Linux Basics</a></li>
-                    <li><a href="#commands">💻 Essential Linux Commands</a></li>
-                    <li><a href="#drivers">🔧 Linux Device Drivers</a></li>
-                    <li><a href="#interrupts">⚡ Interrupts & Concurrency</a></li>
-                    <li><a href="#memory">💾 Kernel Memory Management</a></li>
-                    <li><a href="#platform">🔌 Platform & Device Tree</a></li>
-                    <li><a href="#advanced">🔥 Advanced Topics</a></li>
-                    <li><a href="#mcq">📝 MCQ</a></li>
-                </ul>
-
-                <div class="bookmark-section">
-                    <div class="right-sidebar-header">
-                        ⭐ Bookmarks
-                    </div>
-                    <button class="bookmark-btn" onclick="addBookmark()">
-                        <span class="bookmark-icon">🔖</span>
-                        Bookmark Current Position
-                    </button>
-                    <ul class="bookmarks-list" id="bookmarks-list">
-                        <li class="bookmarks-empty">No bookmarks yet</li>
-                    </ul>
-                </div>
-            </aside>
-
-        </div><!-- End main-content -->
-    </div><!-- End page-wrapper -->
-
-    <script>
-        // Bookmark functionality
-        let bookmarks = JSON.parse(localStorage.getItem('linux-bookmarks') || '[]');
-
-        function addBookmark() {
-            const scrollPos = window.scrollY;
-            const timestamp = new Date().toLocaleString();
-            bookmarks.push({ pos: scrollPos, time: timestamp });
-            localStorage.setItem('linux-bookmarks', JSON.stringify(bookmarks));
-            renderBookmarks();
-        }
-
-        function renderBookmarks() {
-            const list = document.getElementById('bookmarks-list');
-            if (bookmarks.length === 0) {
-                list.innerHTML = '<li class="bookmarks-empty">No bookmarks yet</li>';
-            } else {
-                list.innerHTML = bookmarks.map((b, i) => 
-                    `<li onclick="window.scrollTo(0, ${b.pos})">${b.time}</li>`
-                ).join('');
-            }
-        }
-
-        renderBookmarks();
-
-        // Highlight active TOC item on scroll
-        window.addEventListener('scroll', () => {
-            const sections = document.querySelectorAll('.category-header');
-            const tocLinks = document.querySelectorAll('.toc-list a');
-            
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (window.scrollY >= sectionTop - 100) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            tocLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${current}`) {
-                    link.classList.add('active');
-                }
-            });
-        });
-
-        // MCQ functionality
-        document.querySelectorAll('.mcq-options').forEach(optionList => {
-            optionList.addEventListener('click', function(e) {
-                if (e.target.tagName === 'LI' && !optionList.classList.contains('answered')) {
-                    const clickedOption = e.target;
-                    const allOptions = optionList.querySelectorAll('li');
-                    const answerDiv = optionList.nextElementSibling;
-                    
-                    // Mark as answered
-                    optionList.classList.add('answered');
-                    
-                    // Disable all options
-                    allOptions.forEach(opt => opt.classList.add('disabled'));
-                    
-                    if (clickedOption.classList.contains('correct')) {
-                        // Correct answer clicked - turn green and show explanation
-                        clickedOption.classList.add('selected-correct');
-                        if (answerDiv && answerDiv.classList.contains('mcq-answer')) {
-                            answerDiv.classList.add('show');
-                        }
-                    } else {
-                        // Wrong answer clicked - turn red
-                        clickedOption.classList.add('selected-wrong');
-                        // Show the correct answer in green
-                        const correctOption = optionList.querySelector('li.correct');
-                        if (correctOption) {
-                            setTimeout(() => {
-                                correctOption.classList.add('show-correct');
-                            }, 300);
-                        }
-                        // Show answer explanation even for wrong answers
-                        if (answerDiv && answerDiv.classList.contains('mcq-answer')) {
-                            setTimeout(() => {
-                                answerDiv.classList.add('show');
-                            }, 600);
-                        }
-                    }
-                }
-            });
-        });
     </script>
 
 </body>

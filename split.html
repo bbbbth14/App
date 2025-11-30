@@ -6,10 +6,6 @@
     <title>Split Money – 4 People</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .navbar { background:#6b2d5c; padding:15px 0; text-align:center; margin-bottom:30px; border-radius:8px; }
-        .navbar a { color:white; text-decoration:none; font-weight:600; font-size:1.1rem; padding:10px 25px; margin:0 10px; border-radius:6px; display:inline-block; transition:background .2s; }
-        .navbar a:hover { background:rgba(255,255,255,.2); }
-        .navbar a.active { background:white; color:#6b2d5c; font-weight:700; }
         .container { max-width:900px; margin:0 auto; padding:20px; }
         .people-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; margin:20px 0; }
         .person-input { display:flex; align-items:center; gap:10px; }
@@ -17,14 +13,14 @@
         .form-group { margin:20px 0; padding:15px; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0; }
         .form-group label { display:block; margin-bottom:8px; font-weight:600; color:#2d3748; }
         select, input[type=number], input[type=date] { width:100%; padding:12px; border:1.5px solid #cbd5e0; border-radius:8px; font-size:1rem; }
-        button { background:#6b2d5c; color:white; padding:12px 24px; border:none; border-radius:8px; font-weight:600; cursor:pointer; margin-top:15px; width:100%; }
-        button:hover { background:#5a1e4d; }
+        button { background:#3b82f6; color:white; padding:12px 24px; border:none; border-radius:8px; font-weight:600; cursor:pointer; margin-top:15px; width:100%; }
+        button:hover { background:#2563eb; }
         .select-all-btn, .clear-all-btn { background:#4c1d95; width:auto; display:inline-block; margin-right:10px; }
         .select-all-btn:hover, .clear-all-btn:hover { background:#3b1580; }
         .clear-all-btn { background:#e53e3e; }
         .clear-all-btn:hover { background:#c53030; }
         #results-table, #summary-table, #history-table { width:100%; border-collapse:collapse; margin-bottom:15px; font-size:1rem; background:white; border-radius:10px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,.05); }
-        #results-table th, #summary-table th, #history-table th { background:#6b2d5c; color:white; padding:12px; text-align:left; font-weight:600; text-transform:uppercase; font-size:.9rem; }
+        #results-table th, #summary-table th, #history-table th { background:#3b82f6; color:white; padding:12px; text-align:left; font-weight:600; text-transform:uppercase; font-size:.9rem; }
         #results-table td, #summary-table td, #history-table td { padding:12px; border-bottom:1px solid #e2e8f0; }
         #results-table tr:hover td, #history-table tr:hover td { background:#f7fafc; }
         .delete-btn { background:#e53e3e; color:white; border:none; padding:6px 10px; border-radius:6px; font-size:.8rem; cursor:pointer; }
@@ -41,7 +37,31 @@
     </style>
 </head>
 <body>
+
+<div class="page-wrapper">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">📚 Learning Hub</div>
+            <div class="sidebar-subtitle">Navigation Menu</div>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="home.html"><span class="sidebar-icon">🏠</span> Home</a></li>
+            <li><a href="index.html"><span class="sidebar-icon">💰</span> Finance</a></li>
+            <li><a href="split.html" class="active"><span class="sidebar-icon">🧾</span> Split Money</a></li>
+            <li><a href="c-interview.html"><span class="sidebar-icon">💻</span> C Q&A</a></li>
+            <li><a href="embedded-interview.html"><span class="sidebar-icon">🔧</span> Embedded</a></li>
+            <li><a href="linux-interview.html"><span class="sidebar-icon">🐧</span> Linux/Driver</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <div class="content-area">
+
 <div class="navbar">
+    <a href="home.html">🏠 Home</a>
     <a href="index.html">Finance</a>
     <a href="split.html" class="active">Split Money</a>
     <a href="c-interview.html">C Q&A</a>
@@ -345,5 +365,20 @@
         billDateInput.value = new Date().toISOString().split('T')[0]; // reset to today
     });
 </script>
+
+<div class="page-navigation">
+    <a href="index.html" class="page-nav-btn">Previous</a>
+    <div class="page-nav-center">
+        <strong>Split Money Calculator</strong>
+        Page 2 of 5
+    </div>
+    <a href="c-interview.html" class="page-nav-btn next">Next</a>
+</div>
+
+        </div><!-- End content-area -->
+
+    </div><!-- End main-content -->
+</div><!-- End page-wrapper -->
+
 </body>
 </html>

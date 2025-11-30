@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Hub - Navigation</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 16px;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        .nav-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .nav-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+        }
+        .nav-card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .nav-card h2 {
+            color: #1e293b;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .nav-card p {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .nav-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .nav-card-badge {
+            background: #dbeafe;
+            color: #3b82f6;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .nav-card-arrow {
+            color: #3b82f6;
+            font-size: 1.5rem;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: #f8fafc;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 40px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+        .stat-label {
+            color: #64748b;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">📚 Learning Hub</div>
+                <div class="sidebar-subtitle">Navigation Menu</div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="home.html" class="active"><span class="sidebar-icon">🏠</span> Home</a></li>
+                <li><a href="index.html"><span class="sidebar-icon">💰</span> Finance</a></li>
+                <li><a href="split.html"><span class="sidebar-icon">🧾</span> Split Money</a></li>
+                <li><a href="c-interview.html"><span class="sidebar-icon">💻</span> C Q&A</a></li>
+                <li><a href="embedded-interview.html"><span class="sidebar-icon">🔧</span> Embedded</a></li>
+                <li><a href="linux-interview.html"><span class="sidebar-icon">🐧</span> Linux/Driver</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+
+    <div class="container">
+        <div class="hero">
+            <h1>🎓 Learning Hub</h1>
+            <p>Your comprehensive resource for finance, programming, and technical interview preparation</p>
+        </div>
+
+        <div class="nav-grid">
+            <a href="index.html" class="nav-card">
+                <div class="nav-card-icon">💰</div>
+                <h2>Finance & Investment</h2>
+                <p>Personal finance planner with investment tracking, portfolio management, and financial goal planning tools.</p>
+                <div class="nav-card-footer">
+                    <span class="nav-card-badge">Tools</span>
+                    <span class="nav-card-arrow">→</span>
+                </div>
+            </a>
+
+            <a href="split.html" class="nav-card">
+                <div class="nav-card-icon">🧾</div>
+                <h2>Split Money Calculator</h2>
+                <p>Easily split bills and expenses among friends. Track who owes whom and settle debts efficiently.</p>
+                <div class="nav-card-footer">
+                    <span class="nav-card-badge">Utilities</span>
+                    <span class="nav-card-arrow">→</span>
+                </div>
+            </a>
+
+            <a href="c-interview.html" class="nav-card">
+                <div class="nav-card-icon">💻</div>
+                <h2>C Programming Q&A</h2>
+                <p>Comprehensive C programming interview questions covering pointers, memory management, data structures, and more.</p>
+                <div class="nav-card-footer">
+                    <span class="nav-card-badge">Interview Prep</span>
+                    <span class="nav-card-arrow">→</span>
+                </div>
+            </a>
+
+            <a href="embedded-interview.html" class="nav-card">
+                <div class="nav-card-icon">🔧</div>
+                <h2>Embedded Systems Q&A</h2>
+                <p>Essential embedded systems topics including microcontrollers, RTOS, interrupts, and hardware interfaces.</p>
+                <div class="nav-card-footer">
+                    <span class="nav-card-badge">Interview Prep</span>
+                    <span class="nav-card-arrow">→</span>
+                </div>
+            </a>
+
+            <a href="linux-interview.html" class="nav-card">
+                <div class="nav-card-icon">🐧</div>
+                <h2>Linux & Device Drivers</h2>
+                <p>Linux kernel concepts, device driver development, system calls, and kernel module programming.</p>
+                <div class="nav-card-footer">
+                    <span class="nav-card-badge">Interview Prep</span>
+                    <span class="nav-card-arrow">→</span>
+                </div>
+            </a>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Learning Modules</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">100+</div>
+                <div class="stat-label">Interview Questions</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">2</div>
+                <div class="stat-label">Practical Tools</div>
+            </div>
+        </div>
+    </div>
+
+        </div><!-- End main-content -->
+    </div><!-- End page-wrapper -->
+
+</body>
+</html>

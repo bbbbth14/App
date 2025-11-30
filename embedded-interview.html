@@ -5,168 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Embedded Systems Interview Questions & Answers</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .navbar {
-            background: #6b2d5c;
-            padding: 15px 0;
-            text-align: center;
-            margin-bottom: 30px;
-            border-radius: 8px;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            padding: 10px 25px;
-            margin: 0 10px;
-            border-radius: 6px;
-            display: inline-block;
-            transition: background 0.2s;
-        }
-        .navbar a:hover { background: rgba(255, 255, 255, 0.2); }
-        .navbar a.active { background: white; color: #6b2d5c; font-weight: 700; }
-
-        .qa-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .qa-item {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .qa-item h3 {
-            color: #6b2d5c;
-            font-size: 1.2rem;
-            margin-bottom: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .qa-item h3::before {
-            content: 'Q:';
-            background: #6b2d5c;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-
-        .qa-item .answer {
-            color: #2d3748;
-            line-height: 1.8;
-            padding-left: 45px;
-        }
-
-        .qa-item .answer::before {
-            content: 'A:';
-            background: #16a34a;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            margin-right: 10px;
-        }
-
-        .qa-item pre {
-            background: #1a202c;
-            color: #e2e8f0;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 15px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-        }
-
-        .qa-item code {
-            background: #f4f7fc;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            color: #6b2d5c;
-        }
-
-        .category-header {
-            background: #6b2d5c;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin: 30px 0 20px;
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
-
-        .category-header:first-of-type {
-            margin-top: 0;
-        }
-
-        .mcq-item {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-        .mcq-item h3 {
-            color: #6b2d5c;
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-        }
-        .mcq-item h3::before {
-            content: 'MCQ:';
-            background: #3b82f6;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            margin-right: 10px;
-        }
-        .mcq-options {
-            list-style: none;
-            padding: 0;
-            margin: 15px 0;
-        }
-        .mcq-options li {
-            padding: 10px 15px;
-            margin: 8px 0;
-            background: #f8fafc;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .mcq-options li:hover {
-            background: #e2e8f0;
-        }
-        .mcq-options li.correct {
-            background: #dcfce7;
-            border-color: #16a34a;
-        }
-        .mcq-answer {
-            background: #f0fdf4;
-            border-left: 4px solid #16a34a;
-            padding: 12px 15px;
-            margin-top: 15px;
-            border-radius: 0 8px 8px 0;
-        }
-        .mcq-answer strong {
-            color: #16a34a;
-        }
-    </style>
 </head>
 <body>
 
+    <div class="page-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">📚 Learning Hub</div>
+                <div class="sidebar-subtitle">Navigation Menu</div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="home.html"><span class="sidebar-icon">🏠</span> Home</a></li>
+                <li><a href="index.html"><span class="sidebar-icon">💰</span> Finance</a></li>
+                <li><a href="split.html"><span class="sidebar-icon">🧾</span> Split Money</a></li>
+                <li><a href="c-interview.html"><span class="sidebar-icon">💻</span> C Q&A</a></li>
+                <li><a href="embedded-interview.html" class="active"><span class="sidebar-icon">🔧</span> Embedded</a></li>
+                <li><a href="linux-interview.html"><span class="sidebar-icon">🐧</span> Linux/Driver</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+
+            <div class="content-area">
+
     <div class="navbar">
+        <a href="home.html">🏠 Home</a>
         <a href="index.html">Finance</a>
         <a href="split.html">Split Money</a>
         <a href="c-interview.html">C Q&A</a>
@@ -180,18 +45,20 @@
         <div class="qa-container">
 
             <!-- Basic Concepts -->
-            <div class="category-header">🔧 Embedded Systems Basics</div>
+            <div class="category-header" id="basics">🔧 Embedded Systems Basics</div>
 
             <div class="qa-item">
                 <h3>What is an Embedded System?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer1')">View Answer</button>
+                <div class="answer" id="answer1">
                     An embedded system is a specialized computer system designed to perform dedicated functions within a larger mechanical or electrical system. Unlike general-purpose computers, embedded systems are optimized for specific tasks with constraints on size, power, and real-time performance. Examples include microwave ovens, automotive ECUs, medical devices, and smart watches.
                 </div>
             </div>
 
             <div class="qa-item">
                 <h3>What are the key characteristics of embedded systems?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer2')">View Answer</button>
+                <div class="answer" id="answer2">
                     Key characteristics include:
                     <ul>
                         <li><strong>Task-specific:</strong> Designed for a particular application</li>
@@ -206,7 +73,8 @@
 
             <div class="qa-item">
                 <h3>What is the difference between a Microprocessor and a Microcontroller?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer3')">View Answer</button>
+                <div class="answer" id="answer3">
                     <ul>
                         <li><strong>Microprocessor:</strong> Contains only the CPU. Requires external memory (RAM, ROM), I/O peripherals, and other components. Used in general-purpose computers.</li>
                         <li><strong>Microcontroller:</strong> Contains CPU, memory (RAM, ROM/Flash), and peripherals (GPIO, ADC, timers, UART) all on a single chip. Ideal for embedded applications.</li>
@@ -222,7 +90,8 @@ Examples:
 
             <div class="qa-item">
                 <h3>What is RTOS (Real-Time Operating System)?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer4')">View Answer</button>
+                <div class="answer" id="answer4">
                     An RTOS is an operating system designed to serve real-time applications that process data as it comes in, with strict timing constraints. It provides deterministic timing guarantees for task execution.
                     <pre>Key features of RTOS:
 - Task scheduling (preemptive/cooperative)
@@ -236,11 +105,12 @@ Popular RTOS: FreeRTOS, VxWorks, QNX, Zephyr, RTLinux</pre>
             </div>
 
             <!-- Interrupts -->
-            <div class="category-header">⚡ Interrupts</div>
+            <div class="category-header" id="interrupts">⚡ Interrupts</div>
 
             <div class="qa-item">
                 <h3>What is an Interrupt?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer5')">View Answer</button>
+                <div class="answer" id="answer5">
                     An interrupt is a signal to the processor indicating an event that requires immediate attention. When an interrupt occurs, the processor suspends the current task, saves its state, executes an Interrupt Service Routine (ISR), then resumes the original task.
                     <pre>Interrupt Flow:
 1. Event triggers interrupt
@@ -255,7 +125,8 @@ Popular RTOS: FreeRTOS, VxWorks, QNX, Zephyr, RTLinux</pre>
 
             <div class="qa-item">
                 <h3>What is the difference between Hardware and Software Interrupts?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer6')">View Answer</button>
+                <div class="answer" id="answer6">
                     <ul>
                         <li><strong>Hardware Interrupt:</strong> Generated by external hardware devices (keyboard, timer, sensors). Asynchronous to program execution.</li>
                         <li><strong>Software Interrupt:</strong> Triggered by software instructions (system calls, exceptions). Synchronous to program execution.</li>
@@ -275,7 +146,8 @@ Software Interrupts:
 
             <div class="qa-item">
                 <h3>What is Interrupt Latency?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer7')">View Answer</button>
+                <div class="answer" id="answer7">
                     Interrupt latency is the time between when an interrupt is triggered and when the ISR begins execution. Minimizing interrupt latency is critical in real-time systems.
                     <pre>Interrupt Latency = Recognition Time + Context Save Time + ISR Entry Time
 
@@ -290,7 +162,8 @@ Factors affecting latency:
 
             <div class="qa-item">
                 <h3>What is Interrupt Priority and Nested Interrupts?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer8')">View Answer</button>
+                <div class="answer" id="answer8">
                     Interrupt priority determines which interrupt is serviced first when multiple interrupts occur simultaneously. Nested interrupts allow a higher-priority interrupt to preempt a lower-priority ISR.
                     <pre>Priority Levels (example):
 - Level 0: Highest priority (e.g., NMI)
@@ -306,11 +179,12 @@ ISR_Low executing → High priority IRQ occurs
             </div>
 
             <!-- Memory -->
-            <div class="category-header">💾 Memory & Storage</div>
+            <div class="category-header" id="memory">💾 Memory & Storage</div>
 
             <div class="qa-item">
                 <h3>What are the different types of memory in embedded systems?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer9')">View Answer</button>
+                <div class="answer" id="answer9">
                     <ul>
                         <li><strong>RAM (Volatile):</strong> SRAM (fast, expensive), DRAM (slower, cheaper)</li>
                         <li><strong>ROM (Non-volatile):</strong> Mask ROM, PROM, EPROM, EEPROM</li>
@@ -325,7 +199,8 @@ Registers → Cache → SRAM → DRAM → Flash → External Storage</pre>
 
             <div class="qa-item">
                 <h3>What is Memory-Mapped I/O vs Port-Mapped I/O?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer10')">View Answer</button>
+                <div class="answer" id="answer10">
                     <ul>
                         <li><strong>Memory-Mapped I/O:</strong> I/O devices share the same address space as memory. Access using normal load/store instructions.</li>
                         <li><strong>Port-Mapped I/O:</strong> I/O devices have a separate address space. Access using special I/O instructions (IN, OUT).</li>
@@ -342,7 +217,8 @@ data = inb(0x60);   // Read from port 0x60</pre>
 
             <div class="qa-item">
                 <h3>What is the purpose of the <code>volatile</code> keyword in embedded C?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer11')">View Answer</button>
+                <div class="answer" id="answer11">
                     The <code>volatile</code> keyword tells the compiler that a variable's value may change unexpectedly (by hardware, ISR, or another thread), preventing optimization that could skip reading the actual value.
                     <pre>// Without volatile - compiler may optimize away the loop
 int *status_reg = (int *)0x40000000;
@@ -360,11 +236,12 @@ Use cases:
             </div>
 
             <!-- Communication Protocols -->
-            <div class="category-header">📡 Communication Protocols</div>
+            <div class="category-header" id="communication">📡 Communication Protocols</div>
 
             <div class="qa-item">
                 <h3>Explain I2C (Inter-Integrated Circuit) protocol.</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer12')">View Answer</button>
+                <div class="answer" id="answer12">
                     I2C is a synchronous, multi-master, multi-slave serial communication protocol using two wires: SDA (data) and SCL (clock).
                     <pre>I2C Features:
 - 2 wires: SDA (data), SCL (clock)
@@ -384,7 +261,8 @@ Communication Flow:
 
             <div class="qa-item">
                 <h3>Explain SPI (Serial Peripheral Interface) protocol.</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer13')">View Answer</button>
+                <div class="answer" id="answer13">
                     SPI is a synchronous, full-duplex serial communication protocol using four wires. It's faster than I2C but requires more pins.
                     <pre>SPI Signals:
 - MOSI: Master Out, Slave In
@@ -403,7 +281,8 @@ SPI Features:
 
             <div class="qa-item">
                 <h3>Explain UART (Universal Asynchronous Receiver/Transmitter).</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer14')">View Answer</button>
+                <div class="answer" id="answer14">
                     UART is an asynchronous serial communication protocol. Both devices must agree on baud rate, data bits, parity, and stop bits.
                     <pre>UART Features:
 - 2 wires: TX (transmit), RX (receive)
@@ -425,7 +304,8 @@ Configuration: 115200 8N1
 
             <div class="qa-item">
                 <h3>Compare I2C, SPI, and UART protocols.</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer15')">View Answer</button>
+                <div class="answer" id="answer15">
                     <pre>
 | Feature      | I2C           | SPI            | UART          |
 |--------------|---------------|----------------|---------------|
@@ -441,11 +321,12 @@ Configuration: 115200 8N1
             </div>
 
             <!-- GPIO & Peripherals -->
-            <div class="category-header">🔌 GPIO & Peripherals</div>
+            <div class="category-header" id="gpio">🔌 GPIO & Peripherals</div>
 
             <div class="qa-item">
                 <h3>What is GPIO (General Purpose Input/Output)?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer16')">View Answer</button>
+                <div class="answer" id="answer16">
                     GPIO pins are digital pins on a microcontroller that can be configured as either input or output. They're used to interface with external devices like LEDs, buttons, sensors, and displays.
                     <pre>GPIO Configuration:
 - Input modes: Floating, Pull-up, Pull-down
@@ -461,7 +342,8 @@ GPIO_PORT->DATA ^= LED_PIN;    // Toggle LED</pre>
 
             <div class="qa-item">
                 <h3>What is PWM (Pulse Width Modulation)?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer17')">View Answer</button>
+                <div class="answer" id="answer17">
                     PWM is a technique to simulate analog output using digital signals by varying the duty cycle (ratio of ON time to total period).
                     <pre>PWM Parameters:
 - Frequency: How fast the signal toggles
@@ -483,7 +365,8 @@ Example: 1kHz PWM, 75% duty cycle
 
             <div class="qa-item">
                 <h3>What is ADC (Analog-to-Digital Converter)?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer18')">View Answer</button>
+                <div class="answer" id="answer18">
                     ADC converts continuous analog signals (voltage) to discrete digital values. Key parameters include resolution (bits), sampling rate, and reference voltage.
                     <pre>ADC Parameters:
 - Resolution: Number of bits (8, 10, 12, 16-bit)
@@ -500,11 +383,12 @@ Types: SAR, Sigma-Delta, Flash, Pipeline</pre>
             </div>
 
             <!-- Firmware -->
-            <div class="category-header">💻 Firmware & Programming</div>
+            <div class="category-header" id="firmware">💻 Firmware & Programming</div>
 
             <div class="qa-item">
                 <h3>What is the Boot Process in embedded systems?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer19')">View Answer</button>
+                <div class="answer" id="answer19">
                     The boot process initializes the hardware and loads the application firmware when power is applied.
                     <pre>Boot Sequence:
 1. Power-on Reset (POR)
@@ -524,7 +408,8 @@ Bootloader functions:
 
             <div class="qa-item">
                 <h3>What is a Watchdog Timer?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer20')">View Answer</button>
+                <div class="answer" id="answer20">
                     A watchdog timer (WDT) is a hardware timer that resets the system if not periodically "fed" (reset). It's used to recover from software hangs or crashes.
                     <pre>Watchdog Operation:
 1. WDT starts counting down
@@ -549,7 +434,8 @@ Use cases:
 
             <div class="qa-item">
                 <h3>What is DMA (Direct Memory Access)?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer21')">View Answer</button>
+                <div class="answer" id="answer21">
                     DMA allows peripherals to transfer data directly to/from memory without CPU intervention, improving performance and reducing CPU load.
                     <pre>DMA Benefits:
 - CPU free during data transfer
@@ -568,11 +454,12 @@ With DMA: CPU configures DMA once, gets interrupt when complete</pre>
             </div>
 
             <!-- Advanced Topics -->
-            <div class="category-header">🔥 Advanced Topics</div>
+            <div class="category-header" id="advanced">🔥 Advanced Topics</div>
 
             <div class="qa-item">
                 <h3>What is Big Endian vs Little Endian?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer22')">View Answer</button>
+                <div class="answer" id="answer22">
                     Endianness refers to the order in which bytes are stored in memory.
                     <pre>Value: 0x12345678
 
@@ -592,7 +479,8 @@ Network protocols: Big Endian (network byte order)</pre>
 
             <div class="qa-item">
                 <h3>What is the difference between polling and interrupt-driven I/O?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer23')">View Answer</button>
+                <div class="answer" id="answer23">
                     <ul>
                         <li><strong>Polling:</strong> CPU continuously checks device status in a loop. Simple but wastes CPU cycles.</li>
                         <li><strong>Interrupt-driven:</strong> CPU is notified by hardware when data is ready. More efficient, allows CPU to do other work.</li>
@@ -611,7 +499,8 @@ void UART_IRQHandler() {
 
             <div class="qa-item">
                 <h3>Explain the concept of bit manipulation in embedded systems.</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer24')">View Answer</button>
+                <div class="answer" id="answer24">
                     Bit manipulation is essential for controlling hardware registers efficiently.
                     <pre>Common Bit Operations:
 
@@ -642,7 +531,8 @@ GPIO->DATA |= PIN5;   // Set high</pre>
 
             <div class="qa-item">
                 <h3>What is a Semaphore and Mutex in RTOS?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer25')">View Answer</button>
+                <div class="answer" id="answer25">
                     Both are synchronization primitives used in RTOS to manage shared resources.
                     <pre>Mutex (Mutual Exclusion):
 - Binary lock (0 or 1)
@@ -670,7 +560,8 @@ sem_post(&slots_available);  // Signal producer</pre>
 
             <div class="qa-item">
                 <h3>What is Power Management in Embedded Systems?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer26')">View Answer</button>
+                <div class="answer" id="answer26">
                     Power management techniques are critical for battery-powered embedded devices.
                     <pre>Power Saving Modes:
 - Active: Full operation
@@ -693,7 +584,7 @@ Example: IoT Sensor Node
             </div>
 
             <!-- MCQ Section -->
-            <div class="category-header">📝 Multiple Choice Questions</div>
+            <div class="category-header" id="mcq">📝 Multiple Choice Questions</div>
 
             <div class="mcq-item">
                 <h3>Which memory type is non-volatile?</h3>
@@ -853,6 +744,152 @@ Example: IoT Sensor Node
 
         </div>
     </div>
+
+    <script>
+        function showAnswer(answerId) {
+            const answerDiv = document.getElementById(answerId);
+            const button = answerDiv.previousElementSibling;
+            answerDiv.classList.toggle('show');
+            button.classList.toggle('expanded');
+            if (answerDiv.classList.contains('show')) {
+                button.textContent = 'Hide Answer';
+            } else {
+                button.textContent = 'View Answer';
+            }
+        }
+    </script>
+
+    <div class="page-navigation">
+        <a href="c-interview.html" class="page-nav-btn">Previous</a>
+        <div class="page-nav-center">
+            <strong>Embedded Systems Q&A</strong>
+            Page 4 of 5
+        </div>
+        <a href="linux-interview.html" class="page-nav-btn next">Next</a>
+    </div>
+
+            </div><!-- End content-area -->
+
+            <!-- Right Sidebar - Table of Contents & Bookmarks -->
+            <aside class="right-sidebar">
+                <div class="right-sidebar-header">
+                    📑 Table of Contents
+                </div>
+                <ul class="toc-list">
+                    <li><a href="#basics">🔧 Embedded Systems Basics</a></li>
+                    <li><a href="#interrupts">⚡ Interrupts</a></li>
+                    <li><a href="#memory">💾 Memory & Storage</a></li>
+                    <li><a href="#communication">📡 Communication Protocols</a></li>
+                    <li><a href="#gpio">🔌 GPIO & Peripherals</a></li>
+                    <li><a href="#firmware">💻 Firmware & Programming</a></li>
+                    <li><a href="#advanced">🔥 Advanced Topics</a></li>
+                    <li><a href="#mcq">📝 MCQ</a></li>
+                </ul>
+
+                <div class="bookmark-section">
+                    <div class="right-sidebar-header">
+                        ⭐ Bookmarks
+                    </div>
+                    <button class="bookmark-btn" onclick="addBookmark()">
+                        <span class="bookmark-icon">🔖</span>
+                        Bookmark Current Position
+                    </button>
+                    <ul class="bookmarks-list" id="bookmarks-list">
+                        <li class="bookmarks-empty">No bookmarks yet</li>
+                    </ul>
+                </div>
+            </aside>
+
+        </div><!-- End main-content -->
+    </div><!-- End page-wrapper -->
+
+    <script>
+        // Bookmark functionality
+        let bookmarks = JSON.parse(localStorage.getItem('embedded-bookmarks') || '[]');
+
+        function addBookmark() {
+            const scrollPos = window.scrollY;
+            const timestamp = new Date().toLocaleString();
+            bookmarks.push({ pos: scrollPos, time: timestamp });
+            localStorage.setItem('embedded-bookmarks', JSON.stringify(bookmarks));
+            renderBookmarks();
+        }
+
+        function renderBookmarks() {
+            const list = document.getElementById('bookmarks-list');
+            if (bookmarks.length === 0) {
+                list.innerHTML = '<li class="bookmarks-empty">No bookmarks yet</li>';
+            } else {
+                list.innerHTML = bookmarks.map((b, i) => 
+                    `<li onclick="window.scrollTo(0, ${b.pos})">${b.time}</li>`
+                ).join('');
+            }
+        }
+
+        renderBookmarks();
+
+        // Highlight active TOC item on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.category-header');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // MCQ functionality
+        document.querySelectorAll('.mcq-options').forEach(optionList => {
+            optionList.addEventListener('click', function(e) {
+                if (e.target.tagName === 'LI' && !optionList.classList.contains('answered')) {
+                    const clickedOption = e.target;
+                    const allOptions = optionList.querySelectorAll('li');
+                    const answerDiv = optionList.nextElementSibling;
+                    
+                    // Mark as answered
+                    optionList.classList.add('answered');
+                    
+                    // Disable all options
+                    allOptions.forEach(opt => opt.classList.add('disabled'));
+                    
+                    if (clickedOption.classList.contains('correct')) {
+                        // Correct answer clicked - turn green and show explanation
+                        clickedOption.classList.add('selected-correct');
+                        if (answerDiv && answerDiv.classList.contains('mcq-answer')) {
+                            answerDiv.classList.add('show');
+                        }
+                    } else {
+                        // Wrong answer clicked - turn red
+                        clickedOption.classList.add('selected-wrong');
+                        // Show the correct answer in green
+                        const correctOption = optionList.querySelector('li.correct');
+                        if (correctOption) {
+                            setTimeout(() => {
+                                correctOption.classList.add('show-correct');
+                            }, 300);
+                        }
+                        // Show answer explanation even for wrong answers
+                        if (answerDiv && answerDiv.classList.contains('mcq-answer')) {
+                            setTimeout(() => {
+                                answerDiv.classList.add('show');
+                            }, 600);
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>

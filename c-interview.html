@@ -3,116 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>C Interview Questions & Answers</title>
+    <title>C Programming Interview Questions & Answers</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .navbar {
-            background: #6b2d5c;
-            padding: 15px 0;
-            text-align: center;
-            margin-bottom: 30px;
-            border-radius: 8px;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            padding: 10px 25px;
-            margin: 0 10px;
-            border-radius: 6px;
-            display: inline-block;
-            transition: background 0.2s;
-        }
-        .navbar a:hover { background: rgba(255, 255, 255, 0.2); }
-        .navbar a.active { background: white; color: #6b2d5c; font-weight: 700; }
-
-        .qa-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .qa-item {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .qa-item h3 {
-            color: #6b2d5c;
-            font-size: 1.2rem;
-            margin-bottom: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .qa-item h3::before {
-            content: 'Q:';
-            background: #6b2d5c;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-
-        .qa-item .answer {
-            color: #2d3748;
-            line-height: 1.8;
-            padding-left: 45px;
-        }
-
-        .qa-item .answer::before {
-            content: 'A:';
-            background: #16a34a;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            margin-right: 10px;
-        }
-
-        .qa-item pre {
-            background: #1a202c;
-            color: #e2e8f0;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 15px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-        }
-
-        .qa-item code {
-            background: #f4f7fc;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            color: #6b2d5c;
-        }
-
-        .category-header {
-            background: #6b2d5c;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin: 30px 0 20px;
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
-
-        .category-header:first-of-type {
-            margin-top: 0;
-        }
-    </style>
 </head>
 <body>
 
+    <div class="page-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">📚 Learning Hub</div>
+                <div class="sidebar-subtitle">Navigation Menu</div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="home.html"><span class="sidebar-icon">🏠</span> Home</a></li>
+                <li><a href="index.html"><span class="sidebar-icon">💰</span> Finance</a></li>
+                <li><a href="split.html"><span class="sidebar-icon">🧾</span> Split Money</a></li>
+                <li><a href="c-interview.html" class="active"><span class="sidebar-icon">💻</span> C Q&A</a></li>
+                <li><a href="embedded-interview.html"><span class="sidebar-icon">🔧</span> Embedded</a></li>
+                <li><a href="linux-interview.html"><span class="sidebar-icon">🐧</span> Linux/Driver</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+
+            <div class="content-area">
+
     <div class="navbar">
+        <a href="home.html">🏠 Home</a>
         <a href="index.html">Finance</a>
         <a href="split.html">Split Money</a>
         <a href="c-interview.html" class="active">C Q&A</a>
@@ -126,18 +45,20 @@
         <div class="qa-container">
 
             <!-- Basic Concepts -->
-            <div class="category-header">📚 Basic Concepts</div>
+            <div class="category-header" id="basic-concepts">📚 Basic Concepts</div>
 
             <div class="qa-item">
                 <h3>What is C programming language?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer1')">View Answer</button>
+                <div id="answer1" class="answer">
                     C is a general-purpose, procedural programming language developed by Dennis Ritchie at Bell Labs in 1972. It is one of the most widely used programming languages and has influenced many other languages like C++, Java, and Python. C is known for its efficiency, low-level memory access, and portability across different platforms.
                 </div>
             </div>
 
             <div class="qa-item">
                 <h3>What are the key features of C?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer2')">View Answer</button>
+                <div id="answer2" class="answer">
                     Key features of C include:
                     <ul>
                         <li><strong>Simplicity:</strong> Easy to learn with a small set of keywords</li>
@@ -152,7 +73,8 @@
 
             <div class="qa-item">
                 <h3>What is the difference between <code>#include &lt;stdio.h&gt;</code> and <code>#include "stdio.h"</code>?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer3')">View Answer</button>
+                <div id="answer3" class="answer">
                     <ul>
                         <li><code>#include &lt;stdio.h&gt;</code> - Searches for the header file in the standard system directories first</li>
                         <li><code>#include "stdio.h"</code> - Searches for the header file in the current directory first, then in the standard system directories</li>
@@ -162,11 +84,12 @@
             </div>
 
             <!-- Data Types -->
-            <div class="category-header">🔢 Data Types & Variables</div>
+            <div class="category-header" id="data-types">🔢 Data Types & Variables</div>
 
             <div class="qa-item">
                 <h3>What are the basic data types in C?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer4')">View Answer</button>
+                <div id="answer4" class="answer">
                     The basic data types in C are:
                     <ul>
                         <li><code>int</code> - Integer numbers (typically 4 bytes)</li>
@@ -181,7 +104,8 @@
 
             <div class="qa-item">
                 <h3>What is the difference between <code>const</code> and <code>#define</code>?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer5')">View Answer</button>
+                <div id="answer5" class="answer">
                     <ul>
                         <li><code>#define</code> is a preprocessor directive that creates a macro. It has no type and simply replaces text before compilation.</li>
                         <li><code>const</code> creates a typed constant variable that exists in memory and has scope rules.</li>
@@ -193,11 +117,12 @@ const double PI = 3.14159;  // Typed constant</pre>
             </div>
 
             <!-- Pointers -->
-            <div class="category-header">🎯 Pointers</div>
+            <div class="category-header" id="pointers">🎯 Pointers</div>
 
             <div class="qa-item">
                 <h3>What is a pointer in C?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer6')">View Answer</button>
+                <div id="answer6" class="answer">
                     A pointer is a variable that stores the memory address of another variable. Pointers are declared using the <code>*</code> operator and the address of a variable is obtained using the <code>&amp;</code> operator.
                     <pre>int num = 10;
 int *ptr = &amp;num;  // ptr stores the address of num
@@ -207,7 +132,8 @@ printf("%d", *ptr);  // Dereference: prints 10</pre>
 
             <div class="qa-item">
                 <h3>What is a NULL pointer?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer7')">View Answer</button>
+                <div id="answer7" class="answer">
                     A NULL pointer is a pointer that points to nothing (address 0). It is used to indicate that the pointer is not pointing to any valid memory location. Always initialize pointers to NULL if they don't have a valid address yet.
                     <pre>int *ptr = NULL;  // Good practice
 if (ptr != NULL) {
@@ -218,7 +144,8 @@ if (ptr != NULL) {
 
             <div class="qa-item">
                 <h3>What is the difference between <code>*ptr++</code> and <code>++*ptr</code>?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer8')">View Answer</button>
+                <div id="answer8" class="answer">
                     <ul>
                         <li><code>*ptr++</code> - Returns the value at ptr, then increments the pointer address</li>
                         <li><code>++*ptr</code> - Increments the value pointed to by ptr, then returns it</li>
@@ -231,11 +158,12 @@ printf("%d\n", ++*ptr);  // Increments arr[1] to 21, prints 21</pre>
             </div>
 
             <!-- Memory Management -->
-            <div class="category-header">💾 Memory Management</div>
+            <div class="category-header" id="memory-management">💾 Memory Management</div>
 
             <div class="qa-item">
                 <h3>What is the difference between <code>malloc()</code> and <code>calloc()</code>?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer9')">View Answer</button>
+                <div id="answer9" class="answer">
                     Both functions allocate memory dynamically, but with differences:
                     <ul>
                         <li><code>malloc(size)</code> - Allocates specified bytes, memory contains garbage values</li>
@@ -249,7 +177,8 @@ int *arr2 = (int *)calloc(5, sizeof(int));   // Initialized to 0</pre>
 
             <div class="qa-item">
                 <h3>What is a memory leak?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer10')">View Answer</button>
+                <div id="answer10" class="answer">
                     A memory leak occurs when dynamically allocated memory is not freed after use. This causes the program to consume more memory over time, potentially leading to system slowdown or crashes.
                     <pre>void leak_example() {
     int *ptr = (int *)malloc(sizeof(int));
@@ -261,7 +190,8 @@ int *arr2 = (int *)calloc(5, sizeof(int));   // Initialized to 0</pre>
 
             <div class="qa-item">
                 <h3>What is the difference between stack and heap memory?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer11')">View Answer</button>
+                <div id="answer11" class="answer">
                     <ul>
                         <li><strong>Stack:</strong> Used for static memory allocation (local variables, function calls). Memory is automatically managed (allocated/deallocated). Fast access but limited size.</li>
                         <li><strong>Heap:</strong> Used for dynamic memory allocation (malloc, calloc). Programmer must manage memory manually. Slower access but larger size.</li>
@@ -276,11 +206,12 @@ int *arr2 = (int *)calloc(5, sizeof(int));   // Initialized to 0</pre>
             </div>
 
             <!-- Arrays & Strings -->
-            <div class="category-header">📊 Arrays & Strings</div>
+            <div class="category-header" id="arrays-strings">📊 Arrays & Strings</div>
 
             <div class="qa-item">
                 <h3>What is the difference between an array and a pointer?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer12')">View Answer</button>
+                <div id="answer12" class="answer">
                     While arrays and pointers are closely related in C, they have key differences:
                     <ul>
                         <li>An array name is a constant pointer to the first element</li>
@@ -296,7 +227,8 @@ printf("%zu\n", sizeof(ptr));  // 8 (pointer size on 64-bit)</pre>
 
             <div class="qa-item">
                 <h3>How do strings work in C?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer13')">View Answer</button>
+                <div id="answer13" class="answer">
                     In C, strings are arrays of characters terminated by a null character (<code>'\0'</code>). There is no built-in string type.
                     <pre>char str1[] = "Hello";  // Compiler adds '\0' automatically
 char str2[6] = {'H', 'e', 'l', 'l', 'o', '\0'};
@@ -310,11 +242,12 @@ strcat(s1, s2);    // Concatenate strings</pre>
             </div>
 
             <!-- Functions -->
-            <div class="category-header">⚙️ Functions</div>
+            <div class="category-header" id="functions">⚙️ Functions</div>
 
             <div class="qa-item">
                 <h3>What is the difference between call by value and call by reference?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer14')">View Answer</button>
+                <div id="answer14" class="answer">
                     <ul>
                         <li><strong>Call by value:</strong> A copy of the argument is passed. Changes inside the function don't affect the original variable.</li>
                         <li><strong>Call by reference:</strong> The address of the argument is passed. Changes inside the function affect the original variable.</li>
@@ -330,7 +263,8 @@ byReference(&amp;num);  // num is now 100</pre>
 
             <div class="qa-item">
                 <h3>What is a recursive function?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer15')">View Answer</button>
+                <div id="answer15" class="answer">
                     A recursive function is a function that calls itself to solve a problem by breaking it into smaller subproblems. Every recursive function needs a base case to stop the recursion.
                     <pre>int factorial(int n) {
     if (n <= 1) return 1;  // Base case
@@ -341,11 +275,12 @@ byReference(&amp;num);  // num is now 100</pre>
             </div>
 
             <!-- Structures -->
-            <div class="category-header">🏗️ Structures & Unions</div>
+            <div class="category-header" id="structures-unions">🏗️ Structures & Unions</div>
 
             <div class="qa-item">
                 <h3>What is a structure in C?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer16')">View Answer</button>
+                <div id="answer16" class="answer">
                     A structure is a user-defined data type that groups related variables of different types under a single name.
                     <pre>struct Student {
     char name[50];
@@ -360,7 +295,8 @@ printf("Name: %s, Age: %d", s1.name, s1.age);</pre>
 
             <div class="qa-item">
                 <h3>What is the difference between structure and union?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer17')">View Answer</button>
+                <div id="answer17" class="answer">
                     <ul>
                         <li><strong>Structure:</strong> All members have their own memory locations. Size = sum of all member sizes (plus padding).</li>
                         <li><strong>Union:</strong> All members share the same memory location. Size = size of largest member.</li>
@@ -372,11 +308,12 @@ union U { int i; char c; };   // Size: 4 bytes (size of int)</pre>
             </div>
 
             <!-- File Handling -->
-            <div class="category-header">📁 File Handling</div>
+            <div class="category-header" id="file-handling">📁 File Handling</div>
 
             <div class="qa-item">
                 <h3>How do you read and write files in C?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer18')">View Answer</button>
+                <div id="answer18" class="answer">
                     C uses file pointers and functions from <code>stdio.h</code> for file operations:
                     <pre>// Writing to a file
 FILE *fp = fopen("data.txt", "w");
@@ -399,11 +336,12 @@ if (fp != NULL) {
             </div>
 
             <!-- Advanced Topics -->
-            <div class="category-header">🚀 Advanced Topics</div>
+            <div class="category-header" id="advanced-topics">🚀 Advanced Topics</div>
 
             <div class="qa-item">
                 <h3>What is a static variable?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer19')">View Answer</button>
+                <div id="answer19" class="answer">
                     A static variable retains its value between function calls. It is initialized only once and exists for the lifetime of the program.
                     <pre>void counter() {
     static int count = 0;  // Initialized once
@@ -418,7 +356,8 @@ counter();  // Count: 3</pre>
 
             <div class="qa-item">
                 <h3>What is the volatile keyword?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer20')">View Answer</button>
+                <div id="answer20" class="answer">
                     The <code>volatile</code> keyword tells the compiler that a variable's value may change unexpectedly (e.g., by hardware or another thread). This prevents the compiler from optimizing reads/writes to that variable.
                     <pre>volatile int sensor_value;  // May change by hardware
 // Compiler will always read from memory, not cache</pre>
@@ -428,7 +367,8 @@ counter();  // Count: 3</pre>
 
             <div class="qa-item">
                 <h3>What is a function pointer?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer21')">View Answer</button>
+                <div id="answer21" class="answer">
                     A function pointer is a pointer that stores the address of a function. It can be used to call functions indirectly.
                     <pre>int add(int a, int b) { return a + b; }
 int subtract(int a, int b) { return a - b; }
@@ -444,7 +384,8 @@ printf("%d\n", operation(5, 3));  // Prints 2</pre>
 
             <div class="qa-item">
                 <h3>What is the difference between <code>++i</code> and <code>i++</code>?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer22')">View Answer</button>
+                <div id="answer22" class="answer">
                     <ul>
                         <li><code>++i</code> (pre-increment): Increments i first, then returns the new value</li>
                         <li><code>i++</code> (post-increment): Returns the current value of i, then increments it</li>
@@ -457,11 +398,12 @@ printf("%d\n", i);    // Prints 7</pre>
             </div>
 
             <!-- More Advanced Topics -->
-            <div class="category-header">🔥 Expert Level Questions</div>
+            <div class="category-header" id="expert-level">🔥 Expert Level Questions</div>
 
             <div class="qa-item">
                 <h3>What is a dangling pointer?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert1')">View Answer</button>
+                <div id="answer-expert1" class="answer">
                     A dangling pointer is a pointer that references memory that has been freed or deallocated. Accessing a dangling pointer leads to undefined behavior.
                     <pre>int *ptr = (int *)malloc(sizeof(int));
 *ptr = 10;
@@ -477,7 +419,8 @@ ptr = NULL;</pre>
 
             <div class="qa-item">
                 <h3>What is pointer arithmetic?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert2')">View Answer</button>
+                <div id="answer-expert2" class="answer">
                     Pointer arithmetic allows you to perform mathematical operations on pointers. When you add or subtract from a pointer, it moves by the size of the data type it points to.
                     <pre>int arr[] = {10, 20, 30, 40, 50};
 int *ptr = arr;
@@ -493,7 +436,8 @@ printf("%d\n", *ptr);       // 20</pre>
 
             <div class="qa-item">
                 <h3>What is the difference between <code>realloc()</code> and <code>malloc()</code>?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert3')">View Answer</button>
+                <div id="answer-expert3" class="answer">
                     <ul>
                         <li><code>malloc()</code> allocates a new block of memory</li>
                         <li><code>realloc()</code> resizes an existing memory block, preserving the data</li>
@@ -510,7 +454,8 @@ arr = (int *)realloc(arr, 10 * sizeof(int));
 
             <div class="qa-item">
                 <h3>What is a void pointer?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert4')">View Answer</button>
+                <div id="answer-expert4" class="answer">
                     A void pointer (<code>void *</code>) is a generic pointer that can hold the address of any data type. It must be cast to the appropriate type before dereferencing.
                     <pre>void *ptr;
 int num = 10;
@@ -527,7 +472,8 @@ printf("%.2f\n", *(float *)ptr); // Cast to float*</pre>
 
             <div class="qa-item">
                 <h3>What is a double pointer (pointer to pointer)?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert5')">View Answer</button>
+                <div id="answer-expert5" class="answer">
                     A double pointer stores the address of another pointer. It's commonly used for dynamic 2D arrays and modifying pointer values in functions.
                     <pre>int num = 10;
 int *ptr = &amp;num;
@@ -548,7 +494,8 @@ allocate(&amp;myPtr);  // myPtr now points to allocated memory</pre>
 
             <div class="qa-item">
                 <h3>What is the <code>extern</code> keyword?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert6')">View Answer</button>
+                <div id="answer-expert6" class="answer">
                     The <code>extern</code> keyword declares a variable or function that is defined in another file. It tells the compiler that the definition exists elsewhere.
                     <pre>// file1.c
 int globalVar = 100;
@@ -562,7 +509,8 @@ printf("%d\n", globalVar);  // Uses variable from file1.c</pre>
 
             <div class="qa-item">
                 <h3>What is the <code>register</code> keyword?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert7')">View Answer</button>
+                <div id="answer-expert7" class="answer">
                     The <code>register</code> keyword suggests to the compiler that a variable should be stored in a CPU register for faster access. However, modern compilers often ignore this hint and optimize automatically.
                     <pre>register int counter;
 for (counter = 0; counter < 1000000; counter++) {
@@ -574,7 +522,8 @@ for (counter = 0; counter < 1000000; counter++) {
 
             <div class="qa-item">
                 <h3>What is a bit field in structures?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert8')">View Answer</button>
+                <div id="answer-expert8" class="answer">
                     Bit fields allow you to specify the number of bits a structure member should occupy. They're useful for memory optimization and hardware programming.
                     <pre>struct PackedData {
     unsigned int flag1 : 1;   // 1 bit
@@ -591,7 +540,8 @@ data.value = 42;</pre>
 
             <div class="qa-item">
                 <h3>What is the difference between <code>typedef</code> and <code>#define</code>?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert9')">View Answer</button>
+                <div id="answer-expert9" class="answer">
                     <ul>
                         <li><code>typedef</code> creates an alias for a type, processed by the compiler with type checking</li>
                         <li><code>#define</code> is a preprocessor macro that does text replacement</li>
@@ -608,7 +558,8 @@ INT_PTR c, d;     // c is int*, d is just int!
 
             <div class="qa-item">
                 <h3>What is an inline function?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert10')">View Answer</button>
+                <div id="answer-expert10" class="answer">
                     An inline function suggests to the compiler to insert the function's code directly at the call site, avoiding function call overhead.
                     <pre>inline int square(int x) {
     return x * x;
@@ -622,7 +573,8 @@ int result = square(5);
 
             <div class="qa-item">
                 <h3>What is recursion vs iteration? When to use which?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert11')">View Answer</button>
+                <div id="answer-expert11" class="answer">
                     <ul>
                         <li><strong>Recursion:</strong> Function calls itself. Elegant for tree/graph problems, but uses more memory (stack frames).</li>
                         <li><strong>Iteration:</strong> Uses loops. More memory efficient, better for simple repetitive tasks.</li>
@@ -644,7 +596,8 @@ int factorial_iter(int n) {
 
             <div class="qa-item">
                 <h3>What is a segmentation fault?</h3>
-                <div class="answer">
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert12')">View Answer</button>
+                <div id="answer-expert12" class="answer">
                     A segmentation fault (segfault) occurs when a program tries to access memory it doesn't have permission to access.
                     <pre>// Common causes:
 int *ptr = NULL;
@@ -659,8 +612,315 @@ str[0] = 'h';  // Modifying string literal</pre>
                 </div>
             </div>
 
+            <div class="qa-item">
+                <h3>What is the difference between <code>const char *ptr</code> and <code>char * const ptr</code>?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert13')">View Answer</button>
+                <div id="answer-expert13" class="answer">
+                    <ul>
+                        <li><code>const char *ptr</code> - Pointer to a constant character. The data is constant, but the pointer can change.</li>
+                        <li><code>char * const ptr</code> - Constant pointer to a character. The pointer is constant, but the data can change.</li>
+                        <li><code>const char * const ptr</code> - Constant pointer to a constant character. Both are constant.</li>
+                    </ul>
+                    <pre>const char *ptr1 = "Hello";
+ptr1 = "World";    // OK - pointer can change
+*ptr1 = 'h';       // ERROR - data is constant
+
+char * const ptr2 = str;
+ptr2 = str2;       // ERROR - pointer is constant
+*ptr2 = 'H';       // OK - data can change</pre>
+                    <strong>Tip:</strong> Read from right to left: "ptr is a const pointer to char" vs "ptr is a pointer to const char".
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is function pointer and how is it used?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert14')">View Answer</button>
+                <div id="answer-expert14" class="answer">
+                    A function pointer stores the address of a function and can be used to call the function indirectly. Useful for callbacks and polymorphism in C.
+                    <pre>// Declaration: return_type (*pointer_name)(parameters)
+int (*func_ptr)(int, int);
+
+int add(int a, int b) { return a + b; }
+int subtract(int a, int b) { return a - b; }
+
+func_ptr = add;
+printf("%d\n", func_ptr(5, 3));  // 8
+
+func_ptr = subtract;
+printf("%d\n", func_ptr(5, 3));  // 2
+
+// Callback example
+void execute(int (*operation)(int, int), int x, int y) {
+    printf("Result: %d\n", operation(x, y));
+}
+
+execute(add, 10, 5);       // Result: 15
+execute(subtract, 10, 5);  // Result: 5</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>Explain memory layout of a C program</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert15')">View Answer</button>
+                <div id="answer-expert15" class="answer">
+                    A C program's memory is divided into several segments:
+                    <pre>High Address
+┌─────────────────┐
+│  Stack          │ ← Local variables, function parameters (grows down)
+│       ↓         │
+├─────────────────┤
+│                 │
+│  Free Space     │
+│                 │
+├─────────────────┤
+│       ↑         │
+│  Heap           │ ← Dynamic memory (malloc/calloc) (grows up)
+├─────────────────┤
+│  BSS Segment    │ ← Uninitialized global/static variables
+├─────────────────┤
+│  Data Segment   │ ← Initialized global/static variables
+├─────────────────┤
+│  Text Segment   │ ← Machine code (read-only)
+└─────────────────┘
+Low Address</pre>
+                    <ul>
+                        <li><strong>Text:</strong> Program instructions (read-only, sharable)</li>
+                        <li><strong>Data:</strong> Initialized globals: <code>int x = 10;</code></li>
+                        <li><strong>BSS:</strong> Uninitialized globals: <code>int y;</code></li>
+                        <li><strong>Heap:</strong> Dynamic allocation: <code>malloc()</code></li>
+                        <li><strong>Stack:</strong> Local variables, function calls</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is volatile keyword and when to use it?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert16')">View Answer</button>
+                <div id="answer-expert16" class="answer">
+                    The <code>volatile</code> keyword tells the compiler that a variable's value may change unexpectedly, preventing optimization.
+                    <pre>volatile int *hardware_register = (int *)0x40000000;
+
+// Without volatile, compiler might optimize:
+int x = *hardware_register;
+int y = *hardware_register;  // Compiler: "x already has this value!"
+
+// With volatile, compiler always reads from memory
+volatile int x = *hardware_register;
+volatile int y = *hardware_register;  // Always reads again</pre>
+                    <strong>Use cases:</strong>
+                    <ul>
+                        <li>Memory-mapped hardware registers</li>
+                        <li>Shared variables in multi-threaded programs</li>
+                        <li>Variables modified by interrupt service routines (ISR)</li>
+                        <li>Variables modified by signal handlers</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the difference between macro and inline function?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert17')">View Answer</button>
+                <div id="answer-expert17" class="answer">
+                    <table style="width:100%; border-collapse: collapse;">
+                        <tr style="background: #f1f5f9;">
+                            <th style="padding: 10px; border: 1px solid #e2e8f0;">Aspect</th>
+                            <th style="padding: 10px; border: 1px solid #e2e8f0;">Macro</th>
+                            <th style="padding: 10px; border: 1px solid #e2e8f0;">Inline Function</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Processing</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Preprocessor (text replacement)</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Compiler</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Type checking</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">No type checking</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Type checking performed</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Side effects</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Can cause issues (x++ evaluated multiple times)</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">No side effects</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Debugging</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Difficult</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Easier</td>
+                        </tr>
+                    </table>
+                    <pre>// Macro - dangerous with side effects
+#define SQUARE(x) ((x) * (x))
+int a = 5;
+int b = SQUARE(a++);  // a++ * a++ = 5 * 6 = 30, a becomes 7!
+
+// Inline function - safe
+inline int square(int x) { return x * x; }
+int c = 5;
+int d = square(c++);  // c is incremented once, result = 25</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is structure padding and alignment?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert18')">View Answer</button>
+                <div id="answer-expert18" class="answer">
+                    Structure padding adds unused bytes between members to align data for efficient memory access.
+                    <pre>struct Example1 {
+    char a;      // 1 byte
+    // 3 bytes padding
+    int b;       // 4 bytes
+    char c;      // 1 byte
+    // 3 bytes padding
+};  // Total: 12 bytes (not 6!)
+
+struct Example2 {
+    char a;      // 1 byte
+    char c;      // 1 byte
+    // 2 bytes padding
+    int b;       // 4 bytes
+};  // Total: 8 bytes (optimized!)
+
+// Check size
+printf("%zu\n", sizeof(struct Example1));  // 12
+printf("%zu\n", sizeof(struct Example2));  // 8
+
+// Disable padding (use with caution!)
+struct __attribute__((packed)) Packed {
+    char a;
+    int b;
+    char c;
+};  // Total: 6 bytes, but slower access</pre>
+                    <strong>Tip:</strong> Order structure members from largest to smallest to minimize padding.
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the difference between <code>malloc</code> and <code>calloc</code>?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert19')">View Answer</button>
+                <div id="answer-expert19" class="answer">
+                    <ul>
+                        <li><code>malloc(size)</code> - Allocates a single block of memory, uninitialized (contains garbage values)</li>
+                        <li><code>calloc(count, size)</code> - Allocates memory for an array, initializes all bytes to zero</li>
+                    </ul>
+                    <pre>// malloc - faster, but uninitialized
+int *arr1 = (int *)malloc(5 * sizeof(int));
+// arr1[0] might be 3456789 (garbage)
+
+// calloc - slightly slower, but initialized to 0
+int *arr2 = (int *)calloc(5, sizeof(int));
+// arr2[0] is guaranteed to be 0
+
+// Manual initialization with malloc
+int *arr3 = (int *)malloc(5 * sizeof(int));
+memset(arr3, 0, 5 * sizeof(int));  // Now same as calloc</pre>
+                    <strong>When to use:</strong>
+                    <ul>
+                        <li>Use <code>malloc</code> when you'll immediately initialize the data</li>
+                        <li>Use <code>calloc</code> when you need zero-initialized data (safer for pointers)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>Explain <code>restrict</code> keyword in C</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert20')">View Answer</button>
+                <div id="answer-expert20" class="answer">
+                    The <code>restrict</code> keyword (C99) tells the compiler that a pointer is the only way to access the data it points to, enabling optimization.
+                    <pre>// Without restrict - compiler assumes aliasing
+void add_arrays(int *a, int *b, int *result, int n) {
+    for (int i = 0; i < n; i++) {
+        result[i] = a[i] + b[i];
+        // Compiler must reload a[i] and b[i] each iteration
+        // because result might point to same memory
+    }
+}
+
+// With restrict - compiler knows no aliasing
+void add_arrays_fast(int *restrict a, int *restrict b, 
+                     int *restrict result, int n) {
+    for (int i = 0; i < n; i++) {
+        result[i] = a[i] + b[i];
+        // Compiler can optimize: result doesn't alias a or b
+    }
+}</pre>
+                    <strong>Benefits:</strong> Enables vectorization and better optimization
+                    <br><strong>Warning:</strong> If you violate the restriction (pointers do overlap), behavior is undefined!
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the difference between stack overflow and buffer overflow?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert21')">View Answer</button>
+                <div id="answer-expert21" class="answer">
+                    <strong>Stack Overflow:</strong> Occurs when the stack memory is exhausted, usually from deep/infinite recursion.
+                    <pre>// Stack overflow - too many function calls
+void recursive() {
+    int largeArray[10000];  // Each call uses 40KB
+    recursive();            // Infinite recursion
+}  // Crashes when stack space exhausted</pre>
+
+                    <strong>Buffer Overflow:</strong> Occurs when data is written beyond the allocated buffer boundaries.
+                    <pre>// Buffer overflow - security vulnerability
+char buffer[10];
+strcpy(buffer, "This is a very long string");  // Overwrites adjacent memory!
+
+// Safe version
+char buffer[10];
+strncpy(buffer, "This is a very long string", sizeof(buffer) - 1);
+buffer[9] = '\0';  // Ensure null termination</pre>
+                    
+                    <strong>Impact:</strong>
+                    <ul>
+                        <li>Stack overflow: Program crash (stack exhausted)</li>
+                        <li>Buffer overflow: Memory corruption, security vulnerabilities (can be exploited by attackers)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>How does <code>setjmp</code> and <code>longjmp</code> work?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert22')">View Answer</button>
+                <div id="answer-expert22" class="answer">
+                    <code>setjmp</code> and <code>longjmp</code> provide non-local goto capability for error handling and exception-like behavior.
+                    <pre>#include &lt;setjmp.h&gt;
+
+jmp_buf jump_buffer;
+
+void level3() {
+    printf("Level 3\n");
+    longjmp(jump_buffer, 42);  // Jump back to setjmp
+    printf("Never executed\n");
+}
+
+void level2() {
+    printf("Level 2\n");
+    level3();
+}
+
+void level1() {
+    printf("Level 1\n");
+    level2();
+}
+
+int main() {
+    int ret = setjmp(jump_buffer);  // Save execution context
+    
+    if (ret == 0) {
+        printf("First call\n");
+        level1();  // Call deep nested functions
+    } else {
+        printf("Returned via longjmp: %d\n", ret);  // 42
+    }
+    
+    return 0;
+}</pre>
+                    <strong>Use cases:</strong> Error recovery, implementing exception handling, escaping from deeply nested calls
+                    <br><strong>Warning:</strong> Can cause resource leaks (destructors not called), use with caution!
+                </div>
+            </div>
+
             <!-- Multiple Choice Questions -->
-            <div class="category-header">📝 Multiple Choice Questions</div>
+            <div class="category-header" id="mcq">📝 Multiple Choice Questions</div>
 
             <style>
                 .mcq-item {
@@ -915,6 +1175,161 @@ str[0] = 'h';  // Modifying string literal</pre>
 
         </div>
     </div>
+
+    <script>
+        function showAnswer(answerId) {
+            const answerDiv = document.getElementById(answerId);
+            const button = answerDiv.previousElementSibling;
+            
+            // Toggle the answer visibility
+            answerDiv.classList.toggle('show');
+            
+            // Toggle button state
+            button.classList.toggle('expanded');
+            
+            // Update button text
+            if (answerDiv.classList.contains('show')) {
+                button.textContent = 'Hide Answer';
+            } else {
+                button.textContent = 'View Answer';
+            }
+        }
+    </script>
+
+    <div class="page-navigation">
+        <a href="split.html" class="page-nav-btn">Previous</a>
+        <div class="page-nav-center">
+            <strong>C Programming Q&A</strong>
+            Page 3 of 5
+        </div>
+        <a href="embedded-interview.html" class="page-nav-btn next">Next</a>
+    </div>
+
+            </div><!-- End content-area -->
+
+            <!-- Right Sidebar - Table of Contents & Bookmarks -->
+            <aside class="right-sidebar">
+                <div class="right-sidebar-header">
+                    📑 Table of Contents
+                </div>
+                <ul class="toc-list">
+                    <li><a href="#basic-concepts">📚 Basic Concepts</a></li>
+                    <li><a href="#data-types">🔢 Data Types & Variables</a></li>
+                    <li><a href="#pointers">🎯 Pointers</a></li>
+                    <li><a href="#memory-management">💾 Memory Management</a></li>
+                    <li><a href="#arrays-strings">📊 Arrays & Strings</a></li>
+                    <li><a href="#functions">⚙️ Functions</a></li>
+                    <li><a href="#structures-unions">🏗️ Structures & Unions</a></li>
+                    <li><a href="#file-handling">📁 File Handling</a></li>
+                    <li><a href="#advanced-topics">🚀 Advanced Topics</a></li>
+                    <li><a href="#expert-level">🔥 Expert Level</a></li>
+                    <li><a href="#mcq">📝 MCQ</a></li>
+                </ul>
+
+                <div class="bookmark-section">
+                    <div class="right-sidebar-header">
+                        ⭐ Bookmarks
+                    </div>
+                    <button class="bookmark-btn" onclick="addBookmark()">
+                        <span class="bookmark-icon">🔖</span>
+                        Bookmark Current Position
+                    </button>
+                    <ul class="bookmarks-list" id="bookmarks-list">
+                        <li class="bookmarks-empty">No bookmarks yet</li>
+                    </ul>
+                </div>
+            </aside>
+
+        </div><!-- End main-content -->
+    </div><!-- End page-wrapper -->
+
+    <script>
+        // Bookmark functionality
+        let bookmarks = JSON.parse(localStorage.getItem('c-bookmarks') || '[]');
+
+        function addBookmark() {
+            const scrollPos = window.scrollY;
+            const timestamp = new Date().toLocaleString();
+            bookmarks.push({ pos: scrollPos, time: timestamp });
+            localStorage.setItem('c-bookmarks', JSON.stringify(bookmarks));
+            renderBookmarks();
+        }
+
+        function renderBookmarks() {
+            const list = document.getElementById('bookmarks-list');
+            if (bookmarks.length === 0) {
+                list.innerHTML = '<li class="bookmarks-empty">No bookmarks yet</li>';
+            } else {
+                list.innerHTML = bookmarks.map((b, i) => 
+                    `<li onclick="window.scrollTo(0, ${b.pos})">${b.time}</li>`
+                ).join('');
+            }
+        }
+
+        renderBookmarks();
+
+        // Highlight active TOC item on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.category-header');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // MCQ functionality
+        document.querySelectorAll('.mcq-options').forEach(optionList => {
+            optionList.addEventListener('click', function(e) {
+                if (e.target.tagName === 'LI' && !optionList.classList.contains('answered')) {
+                    const clickedOption = e.target;
+                    const allOptions = optionList.querySelectorAll('li');
+                    const answerDiv = optionList.nextElementSibling;
+                    
+                    // Mark as answered
+                    optionList.classList.add('answered');
+                    
+                    // Disable all options
+                    allOptions.forEach(opt => opt.classList.add('disabled'));
+                    
+                    if (clickedOption.classList.contains('correct')) {
+                        // Correct answer clicked - turn green and show explanation
+                        clickedOption.classList.add('selected-correct');
+                        if (answerDiv && answerDiv.classList.contains('mcq-answer')) {
+                            answerDiv.classList.add('show');
+                        }
+                    } else {
+                        // Wrong answer clicked - turn red
+                        clickedOption.classList.add('selected-wrong');
+                        // Show the correct answer in green
+                        const correctOption = optionList.querySelector('li.correct');
+                        if (correctOption) {
+                            setTimeout(() => {
+                                correctOption.classList.add('show-correct');
+                            }, 300);
+                        }
+                        // Show answer explanation even for wrong answers
+                        if (answerDiv && answerDiv.classList.contains('mcq-answer')) {
+                            setTimeout(() => {
+                                answerDiv.classList.add('show');
+                            }, 600);
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>

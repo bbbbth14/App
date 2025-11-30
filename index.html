@@ -5,38 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Finance & Investment Planner</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .navbar {
-            background: #6b2d5c;
-            padding: 15px 0;
-            text-align: center;
-            margin-bottom: 30px;
-            border-radius: 8px;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            padding: 10px 25px;
-            margin: 0 10px;
-            border-radius: 6px;
-            display: inline-block;
-            transition: background 0.2s;
-        }
-        .navbar a:hover { background: rgba(255, 255, 255, 0.2); }
-        .navbar a.active { background: white; color: #6b2d5c; font-weight: 700; }
-    </style>
 </head>
 <body>
 
-    <div class="navbar">
-        <a href="index.html" class="active">Finance</a>
-        <a href="split.html">Split Money</a>
-        <a href="c-interview.html">C Q&A</a>
-        <a href="embedded-interview.html">Embedded</a>
-        <a href="linux-interview.html">Linux/Driver</a>
-    </div>
+    <div class="page-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">📚 Learning Hub</div>
+                <div class="sidebar-subtitle">Navigation Menu</div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="home.html"><span class="sidebar-icon">🏠</span> Home</a></li>
+                <li><a href="index.html" class="active"><span class="sidebar-icon">💰</span> Finance</a></li>
+                <li><a href="split.html"><span class="sidebar-icon">🧾</span> Split Money</a></li>
+                <li><a href="c-interview.html"><span class="sidebar-icon">💻</span> C Q&A</a></li>
+                <li><a href="embedded-interview.html"><span class="sidebar-icon">🔧</span> Embedded</a></li>
+                <li><a href="linux-interview.html"><span class="sidebar-icon">🐧</span> Linux/Driver</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+
+            <div class="content-area">
+
+            <div class="navbar">
+                <a href="home.html">🏠 Home</a>
+                <a href="index.html" class="active">Finance</a>
+                <a href="split.html">Split Money</a>
+                <a href="c-interview.html">C Q&A</a>
+                <a href="embedded-interview.html">Embedded</a>
+                <a href="linux-interview.html">Linux/Driver</a>
+            </div>
 
     <div class="container">
         <h1>Personal Finance & Investment Planner (₫)</h1>
@@ -123,7 +124,21 @@
                 <p>Total Portfolio Value: <span id="total-portfolio">0</span> ₫</p>
             </div>
         </div>
+
+        <div class="page-navigation">
+            <a href="#" class="page-nav-btn disabled">Previous</a>
+            <div class="page-nav-center">
+                <strong>Finance & Investment Planner</strong>
+                Page 1 of 5
+            </div>
+            <a href="split.html" class="page-nav-btn next">Next</a>
+        </div>
     </div>
+
+            </div><!-- End content-area -->
+
+        </div><!-- End main-content -->
+    </div><!-- End page-wrapper -->
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
