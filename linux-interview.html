@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux & Device Driver Interview Questions & Answers</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .navbar {
+            background: #6b2d5c;
+            padding: 15px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 8px 15px;
+            margin: 0 5px;
+            border-radius: 6px;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+        .navbar a:hover { background: rgba(255, 255, 255, 0.2); }
+        .navbar a.active { background: white; color: #6b2d5c; font-weight: 700; }
+
+        .qa-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .qa-item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .qa-item h3 {
+            color: #6b2d5c;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qa-item h3::before {
+            content: 'Q:';
+            background: #6b2d5c;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .qa-item .answer {
+            color: #2d3748;
+            line-height: 1.8;
+            padding-left: 45px;
+        }
+
+        .qa-item .answer::before {
+            content: 'A:';
+            background: #16a34a;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+
+        .qa-item pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .qa-item code {
+            background: #f4f7fc;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #6b2d5c;
+        }
+
+        .category-header {
+            background: #6b2d5c;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 30px 0 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .category-header:first-of-type {
+            margin-top: 0;
+        }
+
+        .mcq-item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .mcq-item h3 {
+            color: #6b2d5c;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        .mcq-item h3::before {
+            content: 'MCQ:';
+            background: #3b82f6;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+        .mcq-options {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        .mcq-options li {
+            padding: 10px 15px;
+            margin: 8px 0;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .mcq-options li:hover {
+            background: #e2e8f0;
+        }
+        .mcq-options li.correct {
+            background: #dcfce7;
+            border-color: #16a34a;
+        }
+        .mcq-answer {
+            background: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            padding: 12px 15px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+        .mcq-answer strong {
+            color: #16a34a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="index.html">Finance</a>
+        <a href="split.html">Split Money</a>
+        <a href="c-interview.html">C Q&A</a>
+        <a href="embedded-interview.html">Embedded</a>
+        <a href="linux-interview.html" class="active">Linux/Driver</a>
+    </div>
+
+    <div class="container">
+        <h1>Linux & Device Driver Interview Questions</h1>
+
+        <div class="qa-container">
+
+            <!-- Linux Basics -->
+            <div class="category-header">🐧 Linux Basics</div>
+
+            <div class="qa-item">
+                <h3>What is Linux?</h3>
+                <div class="answer">
+                    Linux is a free, open-source, Unix-like operating system kernel created by Linus Torvalds in 1991. It forms the core of many operating systems (distributions) like Ubuntu, Fedora, Debian, and Android. Linux is known for its stability, security, and flexibility.
+                    <pre>Key characteristics:
+- Open source (GPL license)
+- Multi-user and multi-tasking
+- Portable across hardware platforms
+- Strong security model
+- Extensive networking support
+- Command-line interface (shell)</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the difference between Linux Kernel and Linux Distribution?</h3>
+                <div class="answer">
+                    <ul>
+                        <li><strong>Linux Kernel:</strong> The core of the OS that manages hardware, memory, processes, and system calls. It's the actual "Linux" created by Linus Torvalds.</li>
+                        <li><strong>Linux Distribution:</strong> A complete OS package containing the kernel plus utilities, libraries, GUI, package manager, and applications.</li>
+                    </ul>
+                    <pre>Kernel: linux-5.15.0
+         ↓
+Distribution: Ubuntu 22.04
+├── Kernel (linux-5.15)
+├── GNU utilities (bash, coreutils)
+├── Package manager (apt)
+├── Desktop environment (GNOME)
+├── System services (systemd)
+└── Applications (Firefox, LibreOffice)</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>Explain the Linux boot process.</h3>
+                <div class="answer">
+                    The Linux boot process involves several stages from power-on to user login:
+                    <pre>1. BIOS/UEFI
+   - POST (Power-On Self Test)
+   - Locate and load bootloader
+
+2. Bootloader (GRUB)
+   - Load kernel and initramfs into memory
+   - Pass control to kernel
+
+3. Kernel Initialization
+   - Decompress and initialize
+   - Mount initramfs as temporary root
+   - Initialize hardware drivers
+   - Mount real root filesystem
+
+4. Init System (systemd/init)
+   - First userspace process (PID 1)
+   - Start system services
+   - Set runlevel/target
+
+5. Login
+   - Display login prompt (getty/display manager)
+   - User authentication</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What are User Space and Kernel Space?</h3>
+                <div class="answer">
+                    Linux divides memory into two distinct regions for security and stability:
+                    <ul>
+                        <li><strong>Kernel Space:</strong> Protected memory area where the kernel executes. Has full access to hardware and all memory. Only kernel code runs here.</li>
+                        <li><strong>User Space:</strong> Where user applications run. Restricted access - cannot directly access hardware or kernel memory. Must use system calls to request kernel services.</li>
+                    </ul>
+                    <pre>Virtual Memory Layout (32-bit):
+┌─────────────────┐ 0xFFFFFFFF
+│   Kernel Space  │ (1GB)
+│   (Protected)   │
+├─────────────────┤ 0xC0000000
+│                 │
+│   User Space    │ (3GB)
+│  (Applications) │
+│                 │
+└─────────────────┘ 0x00000000
+
+Communication: System Calls (syscall)</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is a System Call?</h3>
+                <div class="answer">
+                    A system call is the interface between user space and kernel space. Applications use syscalls to request services from the kernel (file I/O, process management, networking, etc.).
+                    <pre>Common System Calls:
+- open(), read(), write(), close()  // File I/O
+- fork(), exec(), exit(), wait()    // Process
+- socket(), connect(), send()       // Networking
+- mmap(), brk()                     // Memory
+
+Example flow:
+User App → printf("Hello")
+         → write() syscall
+         → Kernel handles I/O
+         → Returns to user space
+
+// Syscall invocation (x86-64)
+mov rax, 1        // syscall number (write)
+mov rdi, 1        // fd (stdout)
+mov rsi, msg      // buffer
+mov rdx, len      // length
+syscall           // trigger syscall</pre>
+                </div>
+            </div>
+
+            <!-- Linux Commands -->
+            <div class="category-header">💻 Essential Linux Commands</div>
+
+            <div class="qa-item">
+                <h3>What are important Linux commands for embedded development?</h3>
+                <div class="answer">
+                    <pre>File Operations:
+ls -la          # List files with details
+cat /proc/cpuinfo  # View CPU info
+hexdump -C file    # View binary file
+dd if=/dev/sda of=backup.img  # Disk copy
+
+Process Management:
+ps aux          # List all processes
+top / htop      # System monitor
+kill -9 PID     # Force kill process
+nice -n 10 cmd  # Run with priority
+
+Memory:
+free -h         # Memory usage
+cat /proc/meminfo  # Detailed memory info
+vmstat          # Virtual memory stats
+
+Debugging:
+dmesg           # Kernel messages
+strace cmd      # Trace syscalls
+ltrace cmd      # Trace library calls
+lsof            # List open files
+
+Device:
+lsmod           # List loaded modules
+modprobe driver # Load kernel module
+lspci / lsusb   # List PCI/USB devices
+cat /proc/interrupts  # View interrupts</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the /proc filesystem?</h3>
+                <div class="answer">
+                    The /proc filesystem is a virtual filesystem that provides an interface to kernel data structures. It doesn't exist on disk - files are generated dynamically by the kernel.
+                    <pre>Important /proc entries:
+/proc/cpuinfo      # CPU information
+/proc/meminfo      # Memory statistics
+/proc/interrupts   # IRQ usage
+/proc/devices      # Registered devices
+/proc/modules      # Loaded kernel modules
+/proc/cmdline      # Kernel boot parameters
+/proc/version      # Kernel version
+/proc/[PID]/       # Per-process info
+  ├── status       # Process status
+  ├── maps         # Memory mappings
+  ├── fd/          # File descriptors
+  └── cmdline      # Command line args
+
+# Example: Check kernel version
+cat /proc/version
+# Linux version 5.15.0-generic ...</pre>
+                </div>
+            </div>
+
+            <!-- Device Drivers -->
+            <div class="category-header">🔧 Linux Device Drivers</div>
+
+            <div class="qa-item">
+                <h3>What is a Linux Device Driver?</h3>
+                <div class="answer">
+                    A device driver is kernel code that controls a hardware device. It provides a standard interface between the hardware and the kernel/applications.
+                    <pre>Driver responsibilities:
+- Initialize and configure hardware
+- Handle data transfer (read/write)
+- Manage interrupts
+- Implement power management
+- Provide user-space interface
+
+Types of drivers:
+1. Character drivers (char dev)
+   - Sequential access (byte stream)
+   - Examples: serial ports, keyboards
+
+2. Block drivers (block dev)
+   - Random access (blocks)
+   - Examples: hard drives, SSDs
+
+3. Network drivers
+   - Packet-based communication
+   - Examples: Ethernet, WiFi adapters</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>Explain the structure of a basic Linux kernel module.</h3>
+                <div class="answer">
+                    <pre>#include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+#include &lt;linux/kernel.h&gt;
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Your Name");
+MODULE_DESCRIPTION("Simple module");
+MODULE_VERSION("1.0");
+
+// Called when module is loaded
+static int __init my_init(void)
+{
+    printk(KERN_INFO "Hello, Kernel!\n");
+    return 0;  // 0 = success
+}
+
+// Called when module is unloaded
+static void __exit my_exit(void)
+{
+    printk(KERN_INFO "Goodbye, Kernel!\n");
+}
+
+module_init(my_init);
+module_exit(my_exit);
+
+// Build commands:
+// make -C /lib/modules/$(uname -r)/build M=$(PWD) modules
+// sudo insmod mymodule.ko   # Load
+// sudo rmmod mymodule       # Unload
+// dmesg | tail              # View messages</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What are Character Device Drivers?</h3>
+                <div class="answer">
+                    Character devices transfer data as a stream of bytes (character by character). They're accessed through device files in /dev.
+                    <pre>Character Driver Components:
+
+1. Device Numbers (Major:Minor)
+   - Major: Identifies the driver
+   - Minor: Identifies specific device
+
+2. File Operations Structure:
+struct file_operations fops = {
+    .owner   = THIS_MODULE,
+    .open    = device_open,
+    .release = device_release,
+    .read    = device_read,
+    .write   = device_write,
+    .unlocked_ioctl = device_ioctl,
+};
+
+3. Registration:
+// Allocate device numbers
+alloc_chrdev_region(&dev_num, 0, 1, "mydevice");
+
+// Initialize and add cdev
+cdev_init(&my_cdev, &fops);
+cdev_add(&my_cdev, dev_num, 1);
+
+// Create device file
+class_create(THIS_MODULE, "myclass");
+device_create(my_class, NULL, dev_num, NULL, "mydev");
+
+// Access from user space:
+// sudo mknod /dev/mydev c 240 0
+// cat /dev/mydev
+// echo "data" > /dev/mydev</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>Explain the file_operations structure.</h3>
+                <div class="answer">
+                    The file_operations structure defines the functions a driver implements to handle file operations on a device.
+                    <pre>struct file_operations {
+    struct module *owner;
+    
+    // File open/close
+    int (*open)(struct inode *, struct file *);
+    int (*release)(struct inode *, struct file *);
+    
+    // Data transfer
+    ssize_t (*read)(struct file *, char __user *, 
+                    size_t, loff_t *);
+    ssize_t (*write)(struct file *, const char __user *, 
+                     size_t, loff_t *);
+    
+    // Seek position
+    loff_t (*llseek)(struct file *, loff_t, int);
+    
+    // Device control
+    long (*unlocked_ioctl)(struct file *, 
+                           unsigned int, unsigned long);
+    
+    // Memory mapping
+    int (*mmap)(struct file *, struct vm_area_struct *);
+    
+    // Polling/select
+    unsigned int (*poll)(struct file *, 
+                         struct poll_table_struct *);
+};
+
+// User space call → Driver function:
+open()  → .open
+close() → .release
+read()  → .read
+write() → .write
+ioctl() → .unlocked_ioctl</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>How do you transfer data between User Space and Kernel Space?</h3>
+                <div class="answer">
+                    Direct memory access between kernel and user space is not allowed. Special functions must be used:
+                    <pre>// Copy from user space to kernel
+unsigned long copy_from_user(void *to, 
+                             const void __user *from, 
+                             unsigned long n);
+
+// Copy from kernel to user space
+unsigned long copy_to_user(void __user *to, 
+                           const void *from, 
+                           unsigned long n);
+
+// Single value transfer
+get_user(kernel_var, user_ptr);
+put_user(kernel_val, user_ptr);
+
+// Example: read function
+static ssize_t dev_read(struct file *filp, 
+                        char __user *buf,
+                        size_t len, loff_t *off)
+{
+    char kernel_buf[] = "Hello from kernel";
+    int bytes = strlen(kernel_buf);
+    
+    if (copy_to_user(buf, kernel_buf, bytes))
+        return -EFAULT;
+    
+    return bytes;
+}
+
+// Returns 0 on success, non-zero = bytes not copied</pre>
+                </div>
+            </div>
+
+            <!-- Interrupts & Concurrency -->
+            <div class="category-header">⚡ Interrupts & Concurrency</div>
+
+            <div class="qa-item">
+                <h3>How do you handle interrupts in Linux drivers?</h3>
+                <div class="answer">
+                    <pre>// Request an IRQ
+int request_irq(unsigned int irq,
+                irq_handler_t handler,
+                unsigned long flags,
+                const char *name,
+                void *dev_id);
+
+// IRQ handler function
+static irqreturn_t my_irq_handler(int irq, void *dev_id)
+{
+    // Handle interrupt (minimal work)
+    // Schedule bottom half for heavy work
+    
+    return IRQ_HANDLED;  // or IRQ_NONE
+}
+
+// Free IRQ on cleanup
+free_irq(irq, dev_id);
+
+// IRQ flags:
+IRQF_SHARED     // Shared interrupt line
+IRQF_TRIGGER_RISING   // Rising edge trigger
+IRQF_TRIGGER_FALLING  // Falling edge trigger
+
+// Top Half vs Bottom Half:
+// Top Half: Runs in interrupt context (fast, no sleep)
+// Bottom Half: Deferred work (tasklets, workqueues)</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What are Tasklets and Workqueues?</h3>
+                <div class="answer">
+                    Both are mechanisms for deferring work from interrupt handlers (bottom half processing):
+                    <pre>TASKLETS:
+- Run in software interrupt context
+- Cannot sleep
+- Fast, low overhead
+
+DECLARE_TASKLET(my_tasklet, tasklet_fn, data);
+
+void tasklet_fn(unsigned long data) {
+    // Deferred work (can't sleep)
+}
+
+// Schedule from ISR
+tasklet_schedule(&my_tasklet);
+
+
+WORKQUEUES:
+- Run in process context
+- CAN sleep (use mutexes, allocate memory)
+- More flexible, slightly higher overhead
+
+static void work_handler(struct work_struct *work) {
+    // Can sleep here
+    msleep(100);
+}
+
+DECLARE_WORK(my_work, work_handler);
+
+// Schedule work
+schedule_work(&my_work);
+
+// Use cases:
+// Tasklet: Quick processing, no blocking needed
+// Workqueue: I2C/SPI transfers, memory allocation</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What synchronization mechanisms are available in the kernel?</h3>
+                <div class="answer">
+                    <pre>1. SPINLOCKS (busy-wait, interrupt-safe)
+spinlock_t lock;
+spin_lock_init(&lock);
+spin_lock(&lock);
+// Critical section
+spin_unlock(&lock);
+
+// In interrupt context:
+spin_lock_irqsave(&lock, flags);
+spin_unlock_irqrestore(&lock, flags);
+
+
+2. MUTEXES (can sleep, process context only)
+struct mutex my_mutex;
+mutex_init(&my_mutex);
+mutex_lock(&my_mutex);
+// Critical section (can sleep)
+mutex_unlock(&my_mutex);
+
+
+3. SEMAPHORES
+struct semaphore sem;
+sema_init(&sem, 1);
+down(&sem);       // Acquire (can sleep)
+up(&sem);         // Release
+
+
+4. ATOMIC OPERATIONS
+atomic_t counter = ATOMIC_INIT(0);
+atomic_inc(&counter);
+atomic_dec(&counter);
+int val = atomic_read(&counter);
+
+
+5. RW LOCKS (multiple readers, single writer)
+rwlock_t rwlock;
+read_lock(&rwlock);    // Multiple readers OK
+read_unlock(&rwlock);
+write_lock(&rwlock);   // Exclusive access
+write_unlock(&rwlock);</pre>
+                </div>
+            </div>
+
+            <!-- Memory Management -->
+            <div class="category-header">💾 Kernel Memory Management</div>
+
+            <div class="qa-item">
+                <h3>What are the different ways to allocate memory in the kernel?</h3>
+                <div class="answer">
+                    <pre>1. kmalloc() - Small allocations (< 128KB)
+void *ptr = kmalloc(size, GFP_KERNEL);
+kfree(ptr);
+
+// GFP flags:
+GFP_KERNEL  // Normal allocation (can sleep)
+GFP_ATOMIC  // Interrupt context (no sleep)
+GFP_DMA     // DMA-capable memory
+
+
+2. kzalloc() - Zero-initialized
+void *ptr = kzalloc(size, GFP_KERNEL);
+
+
+3. vmalloc() - Large allocations (virtually contiguous)
+void *ptr = vmalloc(large_size);
+vfree(ptr);
+// Note: Not physically contiguous
+
+
+4. get_free_pages() - Page-aligned allocation
+unsigned long addr = __get_free_pages(GFP_KERNEL, order);
+// order: 2^order pages
+free_pages(addr, order);
+
+
+5. DMA allocations
+void *cpu_addr = dma_alloc_coherent(dev, size, 
+                                    &dma_handle, GFP_KERNEL);
+dma_free_coherent(dev, size, cpu_addr, dma_handle);
+
+
+Memory pools for frequent same-size allocations:
+struct kmem_cache *cache;
+cache = kmem_cache_create("my_cache", sizeof(struct mystruct),
+                          0, 0, NULL);
+ptr = kmem_cache_alloc(cache, GFP_KERNEL);
+kmem_cache_free(cache, ptr);</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the difference between kmalloc and vmalloc?</h3>
+                <div class="answer">
+                    <pre>kmalloc():
+- Physically contiguous memory
+- Limited size (typically < 128KB)
+- Fast allocation
+- Required for DMA operations
+- Use for most kernel allocations
+
+vmalloc():
+- Virtually contiguous, physically scattered
+- Can allocate large buffers (MBs)
+- Slower (requires page table setup)
+- NOT suitable for DMA
+- Use for large buffers not needing physical contiguity
+
+Comparison:
+┌────────────────┬──────────────┬──────────────┐
+│ Feature        │ kmalloc      │ vmalloc      │
+├────────────────┼──────────────┼──────────────┤
+│ Phys. contig.  │ Yes          │ No           │
+│ Max size       │ ~128KB       │ Large (MBs)  │
+│ Speed          │ Fast         │ Slower       │
+│ DMA safe       │ Yes          │ No           │
+│ Common use     │ Small bufs   │ Large bufs   │
+└────────────────┴──────────────┴──────────────┘</pre>
+                </div>
+            </div>
+
+            <!-- Platform Drivers -->
+            <div class="category-header">🔌 Platform & Device Tree</div>
+
+            <div class="qa-item">
+                <h3>What is a Platform Driver?</h3>
+                <div class="answer">
+                    Platform drivers are used for devices that are not discoverable (no bus enumeration). They rely on platform device definitions in device tree or board files.
+                    <pre>static int my_probe(struct platform_device *pdev)
+{
+    // Device initialization
+    struct resource *res;
+    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+    // Map registers, request IRQ, etc.
+    return 0;
+}
+
+static int my_remove(struct platform_device *pdev)
+{
+    // Cleanup
+    return 0;
+}
+
+static const struct of_device_id my_of_match[] = {
+    { .compatible = "vendor,my-device" },
+    { }
+};
+MODULE_DEVICE_TABLE(of, my_of_match);
+
+static struct platform_driver my_driver = {
+    .probe  = my_probe,
+    .remove = my_remove,
+    .driver = {
+        .name = "my-driver",
+        .of_match_table = my_of_match,
+    },
+};
+
+module_platform_driver(my_driver);</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is Device Tree?</h3>
+                <div class="answer">
+                    Device Tree is a data structure describing hardware components. It allows a single kernel to support multiple hardware configurations.
+                    <pre>Device Tree Source (.dts):
+/dts-v1/;
+
+/ {
+    compatible = "vendor,board";
+    
+    memory@80000000 {
+        device_type = "memory";
+        reg = <0x80000000 0x20000000>;
+    };
+    
+    my_device@40000000 {
+        compatible = "vendor,my-device";
+        reg = <0x40000000 0x1000>;
+        interrupts = <0 42 4>;
+        clocks = <&clk_uart>;
+        status = "okay";
+    };
+};
+
+// Accessing in driver:
+static int my_probe(struct platform_device *pdev)
+{
+    struct device_node *np = pdev->dev.of_node;
+    u32 value;
+    
+    // Read property
+    of_property_read_u32(np, "my-property", &value);
+    
+    // Get resource from reg property
+    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+    
+    return 0;
+}</pre>
+                </div>
+            </div>
+
+            <!-- Advanced Topics -->
+            <div class="category-header">🔥 Advanced Topics</div>
+
+            <div class="qa-item">
+                <h3>What is IOCTL and how is it implemented?</h3>
+                <div class="answer">
+                    IOCTL (Input/Output Control) allows user space to send commands and data to drivers beyond simple read/write.
+                    <pre>// Define IOCTL commands (in header file)
+#define MY_IOC_MAGIC 'k'
+#define MY_IOCTL_RESET    _IO(MY_IOC_MAGIC, 0)
+#define MY_IOCTL_GET_VAL  _IOR(MY_IOC_MAGIC, 1, int)
+#define MY_IOCTL_SET_VAL  _IOW(MY_IOC_MAGIC, 2, int)
+#define MY_IOCTL_RW_VAL   _IOWR(MY_IOC_MAGIC, 3, int)
+
+// Driver implementation
+static long my_ioctl(struct file *filp, 
+                     unsigned int cmd, 
+                     unsigned long arg)
+{
+    int val;
+    
+    switch (cmd) {
+    case MY_IOCTL_RESET:
+        // Reset device
+        break;
+        
+    case MY_IOCTL_GET_VAL:
+        val = device_value;
+        if (copy_to_user((int *)arg, &val, sizeof(val)))
+            return -EFAULT;
+        break;
+        
+    case MY_IOCTL_SET_VAL:
+        if (copy_from_user(&val, (int *)arg, sizeof(val)))
+            return -EFAULT;
+        device_value = val;
+        break;
+        
+    default:
+        return -ENOTTY;
+    }
+    return 0;
+}
+
+// User space usage:
+int fd = open("/dev/mydev", O_RDWR);
+ioctl(fd, MY_IOCTL_RESET);
+ioctl(fd, MY_IOCTL_GET_VAL, &value);</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is Memory Mapping (mmap) in drivers?</h3>
+                <div class="answer">
+                    mmap allows user space to directly access device memory/registers without copy operations.
+                    <pre>// Driver mmap implementation
+static int my_mmap(struct file *filp, 
+                   struct vm_area_struct *vma)
+{
+    unsigned long size = vma->vm_end - vma->vm_start;
+    unsigned long pfn = device_phys_addr >> PAGE_SHIFT;
+    
+    // Disable caching for hardware registers
+    vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+    
+    if (remap_pfn_range(vma, vma->vm_start, pfn,
+                        size, vma->vm_page_prot))
+        return -EAGAIN;
+    
+    return 0;
+}
+
+// User space usage:
+int fd = open("/dev/mydev", O_RDWR);
+void *addr = mmap(NULL, 4096, PROT_READ | PROT_WRITE,
+                  MAP_SHARED, fd, 0);
+
+// Direct register access
+volatile uint32_t *regs = (uint32_t *)addr;
+regs[0] = 0x1234;  // Write to register
+
+munmap(addr, 4096);
+close(fd);</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the I2C subsystem in Linux?</h3>
+                <div class="answer">
+                    <pre>I2C Client Driver Structure:
+
+static int my_i2c_probe(struct i2c_client *client,
+                        const struct i2c_device_id *id)
+{
+    // Read from device
+    u8 buf[2];
+    i2c_master_recv(client, buf, 2);
+    
+    // Write to device
+    u8 data[] = {0x00, 0x42};
+    i2c_master_send(client, data, 2);
+    
+    // Read register
+    u8 reg = 0x10;
+    i2c_master_send(client, &reg, 1);
+    i2c_master_recv(client, buf, 1);
+    
+    // Or use smbus functions
+    int val = i2c_smbus_read_byte_data(client, reg);
+    i2c_smbus_write_byte_data(client, reg, value);
+    
+    return 0;
+}
+
+static const struct i2c_device_id my_id[] = {
+    { "my-sensor", 0 },
+    { }
+};
+
+static struct i2c_driver my_driver = {
+    .driver = {
+        .name = "my-i2c-driver",
+    },
+    .probe = my_i2c_probe,
+    .remove = my_i2c_remove,
+    .id_table = my_id,
+};
+
+module_i2c_driver(my_driver);</pre>
+                </div>
+            </div>
+
+            <!-- MCQ Section -->
+            <div class="category-header">📝 Multiple Choice Questions</div>
+
+            <div class="mcq-item">
+                <h3>Which function is used to copy data from user space to kernel space?</h3>
+                <ul class="mcq-options">
+                    <li>A) memcpy()</li>
+                    <li class="correct">B) copy_from_user()</li>
+                    <li>C) copy_to_user()</li>
+                    <li>D) kmalloc()</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - copy_from_user() safely copies data from user space to kernel space, handling potential page faults.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What is the first process started by the Linux kernel (PID 1)?</h3>
+                <ul class="mcq-options">
+                    <li>A) kernel</li>
+                    <li>B) bash</li>
+                    <li class="correct">C) init/systemd</li>
+                    <li>D) getty</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: C</strong> - init (or systemd on modern systems) is the first userspace process, responsible for starting all other services.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>Which memory allocation function provides physically contiguous memory?</h3>
+                <ul class="mcq-options">
+                    <li class="correct">A) kmalloc()</li>
+                    <li>B) vmalloc()</li>
+                    <li>C) malloc()</li>
+                    <li>D) alloc()</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: A</strong> - kmalloc() allocates physically contiguous memory, required for DMA operations. vmalloc() provides only virtually contiguous memory.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What synchronization mechanism should be used in interrupt context?</h3>
+                <ul class="mcq-options">
+                    <li>A) mutex</li>
+                    <li>B) semaphore</li>
+                    <li class="correct">C) spinlock</li>
+                    <li>D) wait queue</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: C</strong> - Spinlocks must be used in interrupt context because mutexes and semaphores can sleep, which is not allowed in interrupt handlers.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>Which type of device driver provides sequential byte-stream access?</h3>
+                <ul class="mcq-options">
+                    <li class="correct">A) Character driver</li>
+                    <li>B) Block driver</li>
+                    <li>C) Network driver</li>
+                    <li>D) Platform driver</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: A</strong> - Character drivers provide sequential access to data as a stream of bytes. Block drivers provide random access in fixed-size blocks.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What does GFP_ATOMIC flag mean in kmalloc()?</h3>
+                <ul class="mcq-options">
+                    <li>A) Allocate from high memory</li>
+                    <li class="correct">B) Don't sleep during allocation</li>
+                    <li>C) Allocate DMA-capable memory</li>
+                    <li>D) Zero-initialize memory</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - GFP_ATOMIC is used when the allocation cannot sleep (in interrupt context or while holding spinlocks).
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>Which directory contains information about running processes?</h3>
+                <ul class="mcq-options">
+                    <li>A) /sys</li>
+                    <li class="correct">B) /proc</li>
+                    <li>C) /dev</li>
+                    <li>D) /var</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - /proc is a virtual filesystem containing process and kernel information. /proc/[PID]/ contains info about each process.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What is the purpose of device_create() function?</h3>
+                <ul class="mcq-options">
+                    <li>A) Allocate memory for device</li>
+                    <li>B) Register file operations</li>
+                    <li class="correct">C) Create device node in /dev</li>
+                    <li>D) Initialize device hardware</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: C</strong> - device_create() automatically creates the device node file in /dev (with udev), so users don't need to manually use mknod.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>Which bottom-half mechanism can sleep?</h3>
+                <ul class="mcq-options">
+                    <li>A) Tasklet</li>
+                    <li>B) Softirq</li>
+                    <li class="correct">C) Workqueue</li>
+                    <li>D) None of the above</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: C</strong> - Workqueues run in process context and can sleep. Tasklets and softirqs run in software interrupt context and cannot sleep.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What is the purpose of __init macro in kernel modules?</h3>
+                <ul class="mcq-options">
+                    <li>A) Mark function as interrupt handler</li>
+                    <li class="correct">B) Mark function to be discarded after init</li>
+                    <li>C) Initialize static variables</li>
+                    <li>D) Make function thread-safe</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - __init marks initialization functions that can be freed after module loading, saving memory.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What is the difference between request_irq() and devm_request_irq()?</h3>
+                <ul class="mcq-options">
+                    <li>A) devm version is faster</li>
+                    <li class="correct">B) devm version is automatically freed on driver removal</li>
+                    <li>C) devm version supports shared interrupts</li>
+                    <li>D) No difference</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - devm_ (device-managed) functions automatically clean up resources when the device is removed, preventing memory leaks.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>Which macro is used to define IOCTL commands for reading data?</h3>
+                <ul class="mcq-options">
+                    <li>A) _IO()</li>
+                    <li class="correct">B) _IOR()</li>
+                    <li>C) _IOW()</li>
+                    <li>D) _IOWR()</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - _IOR() defines commands that read data from the driver (R = read). _IOW() is for writing, _IOWR() for both, _IO() for no data.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
