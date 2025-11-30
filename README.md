@@ -5,6 +5,7 @@ A comprehensive web-based learning platform for technical interview preparation 
 ## 🎯 Overview
 
 Learning Hub is an interactive educational application featuring:
+
 - **C Programming Q&A** - 22 expert-level questions with detailed explanations
 - **Embedded Systems** - Comprehensive embedded systems interview prep
 - **Linux & Device Drivers** - In-depth Linux and driver development content
@@ -15,18 +16,21 @@ Learning Hub is an interactive educational application featuring:
 ## ✨ Key Features
 
 ### 🔍 Smart Search
+
 - Real-time question filtering
 - Keyboard shortcut: `Ctrl/Cmd+K`
 - Text highlighting for matches
 - Search statistics
 
 ### 📊 Progress Tracking
+
 - Mark questions as learned
 - Visual progress bars
 - Statistics dashboard
 - Persistent storage
 
 ### ⌨️ Keyboard Shortcuts
+
 - `J/K` - Navigate questions
 - `Enter` - Expand/collapse answers
 - `D` - Toggle dark mode
@@ -34,26 +38,31 @@ Learning Hub is an interactive educational application featuring:
 - `?` - Show all shortcuts
 
 ### 🌙 Dark Mode
+
 - Eye-friendly theme
 - Persistent preference
 - One-click toggle
 
 ### ⏱️ Study Timer
+
 - Pomodoro technique support
 - Multiple presets (25/5/15/50 min)
 - Start/Pause/Reset controls
 
 ### 💾 Export/Import
+
 - Save custom questions as JSON
 - Backup and restore data
 - Share questions easily
 
 ### 📋 Code Features
+
 - One-click code copying
 - Syntax highlighting
 - Copy buttons on all code blocks
 
 ### 🖨️ Print-Friendly
+
 - Clean print layouts
 - All answers expanded
 - PDF export ready
@@ -61,12 +70,14 @@ Learning Hub is an interactive educational application featuring:
 ## 🚀 Getting Started
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/bbbbth14/App.git
    cd App
    ```
 
 2. **Open in browser**
+
    - Simply open `home.html` in your web browser
    - No build process required
    - Works offline
@@ -79,24 +90,28 @@ Learning Hub is an interactive educational application featuring:
 ## 📖 Pages
 
 ### C Interview Questions (`c-interview.html`)
+
 - 22 expert-level C programming questions
 - Topics: Pointers, memory, preprocessor, data structures
 - MCQ section with instant feedback
 - Add your own custom questions
 
 ### Embedded Systems (`embedded-interview.html`)
+
 - Microcontroller basics
 - RTOS concepts
 - Hardware interfacing
 - Memory management
 
 ### Linux & Drivers (`linux-interview.html`)
+
 - Linux fundamentals
 - Device driver development
 - Kernel concepts
 - System programming
 
 ### Olympia Quiz (`olympia-quiz.html`)
+
 - 200+ Vietnamese quiz questions
 - Multiple categories
 - Difficulty levels
@@ -145,12 +160,14 @@ App/
 ## 🔧 Configuration
 
 ### Customization
+
 - Edit `styles.css` to change colors/fonts
 - Modify `features.js` to adjust feature behavior
 - Add questions directly in HTML files
 - Use the "Add Question" form for custom content
 
 ### LocalStorage Keys
+
 - `darkMode` - Theme preference
 - `progress-{page}` - Learning progress
 - `{page}-custom-questions` - User-added questions

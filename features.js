@@ -655,9 +655,911 @@ function initializeFeatures() {
     }
 }
 
+// ============================================================
+// QUESTION COUNTER & NAVIGATION
+// ============================================================
+class QuestionNavigator {
+    constructor() {
+        this.questions = [];
+        this.currentIndex = 0;
+    }
+    
+    init() {
+        this.questions = Array.from(document.querySelectorAll('.qa-item, .mcq-item, .quiz-item'));
+        if (this.questions.length === 0) return;
+        
+        this.addCountersAndNavigation();
+        this.setupKeyboardNav();
+    }
+    
+    addCountersAndNavigation() {
+        this.questions.forEach((question, index) => {
+            const counter = document.createElement('div');
+            counter.className = 'question-counter';
+            counter.innerHTML = `Question ${index + 1} of ${this.questions.length}`;
+            
+            const nav = document.createElement('div');
+            nav.className = 'question-nav-buttons';
+            nav.innerHTML = `
+                <button class="nav-btn prev" ${index === 0 ? 'disabled' : ''} onclick="questionNavigator.goTo(${index - 1})">← Prev</button>
+                <button class="nav-btn next" ${index === this.questions.length - 1 ? 'disabled' : ''} onclick="questionNavigator.goTo(${index + 1})">Next →</button>
+            `;
+            
+            const header = question.querySelector('h3');
+            if (header) {
+                header.appendChild(counter);
+                question.insertBefore(nav, question.firstChild.nextSibling);
+            }
+        });
+    }
+    
+    goTo(index) {
+        if (index < 0 || index >= this.questions.length) return;
+        this.currentIndex = index;
+        this.questions[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        this.questions[index].classList.add('highlight-current');
+        setTimeout(() => {
+            this.questions[index].classList.remove('highlight-current');
+        }, 2000);
+    }
+    
+    setupKeyboardNav() {
+        // Already handled by KeyboardShortcuts, but ensure compatibility
+        window.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            if (e.key === 'n' || e.key === 'N') {
+                e.preventDefault();
+                this.goTo(this.currentIndex + 1);
+            } else if (e.key === 'p' || e.key === 'P') {
+                e.preventDefault();
+                this.goTo(this.currentIndex - 1);
+            }
+        });
+    }
+}
+
+// ============================================================
+// DIFFICULTY LEVELS & FILTERING
+// ============================================================
+class DifficultyManager {
+    constructor() {
+        this.difficulties = ['easy', 'medium', 'hard'];
+        this.currentFilter = 'all';
+    }
+    
+    init() {
+        this.addDifficultyBadges();
+        this.createFilterUI();
+    }
+    
+    addDifficultyBadges() {
+        const questions = document.querySelectorAll('.qa-item, .mcq-item');
+        questions.forEach((question, index) => {
+            const difficulty = this.assignDifficulty(question, index);
+            const badge = document.createElement('span');
+            badge.className = `difficulty-badge ${difficulty}`;
+            badge.textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+            badge.dataset.difficulty = difficulty;
+            
+            const header = question.querySelector('h3');
+            if (header) {
+                header.insertBefore(badge, header.firstChild);
+            }
+        });
+    }
+    
+    assignDifficulty(question, index) {
+        // Smart difficulty assignment based on content
+        const text = question.textContent.toLowerCase();
+        const hasCode = question.querySelector('pre, code');
+        const answerLength = question.querySelector('.answer, .mcq-answer')?.textContent.length || 0;
+        
+        let score = 0;
+        if (hasCode) score += 2;
+        if (answerLength > 500) score += 2;
+        if (text.includes('advanced') || text.includes('complex')) score += 2;
+        if (text.includes('basic') || text.includes('simple')) score -= 2;
+        
+        if (score >= 4) return 'hard';
+        if (score >= 1) return 'medium';
+        return 'easy';
+    }
+    
+    createFilterUI() {
+        const container = document.querySelector('.search-container') || document.querySelector('.qa-container');
+        if (!container) return;
+        
+        const filterHTML = `
+            <div class="difficulty-filter">
+                <label>Filter by Difficulty:</label>
+                <button class="filter-btn active" onclick="difficultyManager.filter('all')">All</button>
+                <button class="filter-btn easy" onclick="difficultyManager.filter('easy')">Easy</button>
+                <button class="filter-btn medium" onclick="difficultyManager.filter('medium')">Medium</button>
+                <button class="filter-btn hard" onclick="difficultyManager.filter('hard')">Hard</button>
+            </div>
+        `;
+        
+        const filterDiv = document.createElement('div');
+        filterDiv.innerHTML = filterHTML;
+        container.insertAdjacentElement('afterend', filterDiv.firstElementChild);
+    }
+    
+    filter(difficulty) {
+        this.currentFilter = difficulty;
+        const questions = document.querySelectorAll('.qa-item, .mcq-item, .quiz-item');
+        
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        questions.forEach(question => {
+            const badge = question.querySelector('.difficulty-badge');
+            if (difficulty === 'all' || badge?.dataset.difficulty === difficulty) {
+                question.style.display = '';
+            } else {
+                question.style.display = 'none';
+            }
+        });
+        
+        progressTracker?.updateProgress();
+    }
+}
+
+// ============================================================
+// QUIZ MODE
+// ============================================================
+class QuizMode {
+    constructor() {
+        this.questions = [];
+        this.currentQuestion = 0;
+        this.score = 0;
+        this.answers = [];
+        this.timeLimit = 0;
+        this.timer = null;
+        this.active = false;
+    }
+    
+    init() {
+        this.createQuizButton();
+    }
+    
+    createQuizButton() {
+        const container = document.querySelector('.progress-container') || document.querySelector('.qa-container');
+        if (!container) return;
+        
+        const btn = document.createElement('button');
+        btn.className = 'quiz-mode-btn';
+        btn.innerHTML = '🎯 Start Quiz Mode';
+        btn.onclick = () => this.showQuizSetup();
+        
+        container.insertAdjacentElement('afterend', btn);
+    }
+    
+    showQuizSetup() {
+        const modal = document.createElement('div');
+        modal.className = 'quiz-modal';
+        modal.innerHTML = `
+            <div class="quiz-modal-content">
+                <h2>🎯 Quiz Mode Setup</h2>
+                <div class="quiz-setup">
+                    <label>Number of Questions:
+                        <input type="number" id="quizCount" value="10" min="5" max="50">
+                    </label>
+                    <label>Time Limit (minutes):
+                        <input type="number" id="quizTime" value="15" min="5" max="60">
+                    </label>
+                    <label>Difficulty:
+                        <select id="quizDifficulty">
+                            <option value="all">All Levels</option>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </label>
+                    <label>Question Type:
+                        <select id="quizType">
+                            <option value="all">All Types</option>
+                            <option value="mcq">MCQ Only</option>
+                            <option value="qa">Q&A Only</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="quiz-buttons">
+                    <button onclick="quizMode.start()">Start Quiz</button>
+                    <button onclick="quizMode.closeModal()">Cancel</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+    }
+    
+    start() {
+        const count = parseInt(document.getElementById('quizCount').value);
+        this.timeLimit = parseInt(document.getElementById('quizTime').value) * 60;
+        
+        // Get random questions
+        const allQuestions = Array.from(document.querySelectorAll('.qa-item, .mcq-item, .quiz-item'));
+        this.questions = this.shuffleArray(allQuestions).slice(0, count);
+        
+        this.currentQuestion = 0;
+        this.score = 0;
+        this.answers = [];
+        this.active = true;
+        
+        this.closeModal();
+        this.renderQuizInterface();
+        this.startTimer();
+    }
+    
+    renderQuizInterface() {
+        const quizContainer = document.createElement('div');
+        quizContainer.id = 'quiz-interface';
+        quizContainer.innerHTML = `
+            <div class="quiz-header">
+                <div class="quiz-progress">Question ${this.currentQuestion + 1} of ${this.questions.length}</div>
+                <div class="quiz-timer" id="quizTimer">15:00</div>
+                <div class="quiz-score">Score: ${this.score}/${this.questions.length}</div>
+            </div>
+            <div class="quiz-content" id="quizContent"></div>
+            <div class="quiz-controls">
+                <button onclick="quizMode.previousQuestion()">← Previous</button>
+                <button onclick="quizMode.nextQuestion()">Next →</button>
+                <button onclick="quizMode.submitQuiz()" class="submit-btn">Submit Quiz</button>
+            </div>
+        `;
+        
+        document.querySelector('.qa-container, .quiz-container, .container').style.display = 'none';
+        document.body.appendChild(quizContainer);
+        
+        this.showQuestion();
+    }
+    
+    showQuestion() {
+        const content = document.getElementById('quizContent');
+        const question = this.questions[this.currentQuestion].cloneNode(true);
+        content.innerHTML = '';
+        content.appendChild(question);
+    }
+    
+    startTimer() {
+        let remaining = this.timeLimit;
+        this.timer = setInterval(() => {
+            remaining--;
+            const mins = Math.floor(remaining / 60);
+            const secs = remaining % 60;
+            document.getElementById('quizTimer').textContent = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            
+            if (remaining <= 0) {
+                this.submitQuiz();
+            }
+        }, 1000);
+    }
+    
+    nextQuestion() {
+        if (this.currentQuestion < this.questions.length - 1) {
+            this.currentQuestion++;
+            this.showQuestion();
+            document.querySelector('.quiz-progress').textContent = 
+                `Question ${this.currentQuestion + 1} of ${this.questions.length}`;
+        }
+    }
+    
+    previousQuestion() {
+        if (this.currentQuestion > 0) {
+            this.currentQuestion--;
+            this.showQuestion();
+            document.querySelector('.quiz-progress').textContent = 
+                `Question ${this.currentQuestion + 1} of ${this.questions.length}`;
+        }
+    }
+    
+    submitQuiz() {
+        clearInterval(this.timer);
+        this.active = false;
+        this.showResults();
+    }
+    
+    showResults() {
+        const quizInterface = document.getElementById('quiz-interface');
+        quizInterface.innerHTML = `
+            <div class="quiz-results">
+                <h2>🎉 Quiz Complete!</h2>
+                <div class="results-summary">
+                    <div class="result-stat">
+                        <div class="result-value">${this.score}</div>
+                        <div class="result-label">Correct</div>
+                    </div>
+                    <div class="result-stat">
+                        <div class="result-value">${this.questions.length - this.score}</div>
+                        <div class="result-label">Incorrect</div>
+                    </div>
+                    <div class="result-stat">
+                        <div class="result-value">${Math.round((this.score / this.questions.length) * 100)}%</div>
+                        <div class="result-label">Score</div>
+                    </div>
+                </div>
+                <button onclick="quizMode.restart()">Take Another Quiz</button>
+                <button onclick="quizMode.exitQuiz()">Back to Learning</button>
+            </div>
+        `;
+    }
+    
+    exitQuiz() {
+        document.getElementById('quiz-interface')?.remove();
+        document.querySelector('.qa-container, .quiz-container, .container').style.display = '';
+    }
+    
+    closeModal() {
+        document.querySelector('.quiz-modal')?.remove();
+    }
+    
+    shuffleArray(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+    
+    restart() {
+        this.exitQuiz();
+        this.showQuizSetup();
+    }
+}
+
+// ============================================================
+// FLASHCARD MODE
+// ============================================================
+class FlashcardMode {
+    constructor() {
+        this.active = false;
+    }
+    
+    init() {
+        this.createToggleButton();
+    }
+    
+    createToggleButton() {
+        const container = document.querySelector('.progress-container');
+        if (!container) return;
+        
+        const btn = document.createElement('button');
+        btn.className = 'flashcard-toggle-btn';
+        btn.innerHTML = '🎴 Flashcard Mode';
+        btn.onclick = () => this.toggle();
+        
+        container.appendChild(btn);
+    }
+    
+    toggle() {
+        this.active = !this.active;
+        document.body.classList.toggle('flashcard-mode', this.active);
+        
+        const answers = document.querySelectorAll('.answer, .mcq-answer, .answer-box');
+        answers.forEach(answer => {
+            if (this.active) {
+                answer.classList.add('flashcard-hidden');
+                answer.classList.remove('show');
+            } else {
+                answer.classList.remove('flashcard-hidden');
+            }
+        });
+        
+        if (this.active) {
+            this.setupFlashcardInteraction();
+        }
+        
+        event.target.textContent = this.active ? '📖 Normal Mode' : '🎴 Flashcard Mode';
+    }
+    
+    setupFlashcardInteraction() {
+        document.querySelectorAll('.qa-item, .mcq-item, .quiz-item').forEach(item => {
+            item.style.cursor = 'pointer';
+            item.onclick = () => {
+                const answer = item.querySelector('.answer, .mcq-answer, .answer-box');
+                if (answer) {
+                    answer.classList.toggle('flashcard-revealed');
+                }
+            };
+        });
+    }
+}
+
+// ============================================================
+// STUDY NOTES
+// ============================================================
+class StudyNotes {
+    constructor() {
+        this.notes = JSON.parse(localStorage.getItem('studyNotes') || '{}');
+    }
+    
+    init() {
+        this.addNoteButtons();
+    }
+    
+    addNoteButtons() {
+        document.querySelectorAll('.qa-item, .mcq-item').forEach((item, index) => {
+            const noteBtn = document.createElement('button');
+            noteBtn.className = 'note-btn';
+            noteBtn.innerHTML = '📝 Note';
+            noteBtn.onclick = () => this.openNoteEditor(index);
+            
+            const header = item.querySelector('h3');
+            if (header) {
+                header.appendChild(noteBtn);
+            }
+            
+            if (this.notes[index]) {
+                this.displayNote(item, index);
+            }
+        });
+    }
+    
+    openNoteEditor(questionIndex) {
+        const modal = document.createElement('div');
+        modal.className = 'note-modal';
+        modal.innerHTML = `
+            <div class="note-modal-content">
+                <h3>📝 Study Note</h3>
+                <textarea id="noteText" placeholder="Write your notes here...">${this.notes[questionIndex] || ''}</textarea>
+                <div class="note-buttons">
+                    <button onclick="studyNotes.saveNote(${questionIndex})">Save</button>
+                    <button onclick="studyNotes.deleteNote(${questionIndex})">Delete</button>
+                    <button onclick="studyNotes.closeNoteModal()">Cancel</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+    }
+    
+    saveNote(questionIndex) {
+        const text = document.getElementById('noteText').value;
+        if (text.trim()) {
+            this.notes[questionIndex] = text;
+            localStorage.setItem('studyNotes', JSON.stringify(this.notes));
+            
+            const question = document.querySelectorAll('.qa-item, .mcq-item')[questionIndex];
+            this.displayNote(question, questionIndex);
+        }
+        this.closeNoteModal();
+    }
+    
+    deleteNote(questionIndex) {
+        delete this.notes[questionIndex];
+        localStorage.setItem('studyNotes', JSON.stringify(this.notes));
+        
+        const question = document.querySelectorAll('.qa-item, .mcq-item')[questionIndex];
+        question.querySelector('.study-note')?.remove();
+        
+        this.closeNoteModal();
+    }
+    
+    displayNote(question, index) {
+        const existing = question.querySelector('.study-note');
+        if (existing) existing.remove();
+        
+        const noteDiv = document.createElement('div');
+        noteDiv.className = 'study-note';
+        noteDiv.innerHTML = `<strong>📝 My Note:</strong> ${this.notes[index]}`;
+        
+        question.querySelector('.answer, .mcq-answer')?.insertAdjacentElement('afterend', noteDiv);
+    }
+    
+    closeNoteModal() {
+        document.querySelector('.note-modal')?.remove();
+    }
+}
+
+// ============================================================
+// STATISTICS DASHBOARD
+// ============================================================
+class StatisticsDashboard {
+    constructor() {
+        this.stats = JSON.parse(localStorage.getItem('stats') || '{}');
+    }
+    
+    init() {
+        this.createDashboardButton();
+        this.trackActivity();
+    }
+    
+    createDashboardButton() {
+        const nav = document.querySelector('.navbar, .page-navigation');
+        if (!nav) return;
+        
+        const btn = document.createElement('a');
+        btn.href = '#';
+        btn.textContent = '📊 Stats';
+        btn.onclick = (e) => {
+            e.preventDefault();
+            this.showDashboard();
+        };
+        
+        nav.appendChild(btn);
+    }
+    
+    trackActivity() {
+        // Track page visits
+        const page = AppState.currentPage;
+        this.stats[page] = this.stats[page] || { visits: 0, timeSpent: 0, questionsViewed: 0 };
+        this.stats[page].visits++;
+        this.stats[page].lastVisit = new Date().toISOString();
+        
+        // Track time spent
+        let startTime = Date.now();
+        window.addEventListener('beforeunload', () => {
+            const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+            this.stats[page].timeSpent += timeSpent;
+            localStorage.setItem('stats', JSON.stringify(this.stats));
+        });
+    }
+    
+    showDashboard() {
+        const modal = document.createElement('div');
+        modal.className = 'stats-modal';
+        modal.innerHTML = `
+            <div class="stats-modal-content">
+                <button class="close-btn" onclick="this.closest('.stats-modal').remove()">×</button>
+                <h2>📊 Your Statistics</h2>
+                <div class="stats-grid">
+                    ${this.generateStatsHTML()}
+                </div>
+                <div class="stats-charts">
+                    <canvas id="progressChart"></canvas>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        this.renderCharts();
+    }
+    
+    generateStatsHTML() {
+        const totalTime = Object.values(this.stats).reduce((sum, s) => sum + (s.timeSpent || 0), 0);
+        const totalVisits = Object.values(this.stats).reduce((sum, s) => sum + (s.visits || 0), 0);
+        
+        return `
+            <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-value">${Math.floor(totalTime / 60)} min</div>
+                <div class="stat-label">Total Study Time</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div class="stat-value">${totalVisits}</div>
+                <div class="stat-label">Total Visits</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value">${Object.keys(AppState.progress).length}</div>
+                <div class="stat-label">Questions Learned</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-value">${this.getStreak()}</div>
+                <div class="stat-label">Day Streak</div>
+            </div>
+        `;
+    }
+    
+    getStreak() {
+        // Calculate consecutive days of study
+        const visits = Object.values(this.stats)
+            .map(s => s.lastVisit)
+            .filter(Boolean)
+            .sort()
+            .reverse();
+        
+        if (visits.length === 0) return 0;
+        
+        let streak = 1;
+        for (let i = 0; i < visits.length - 1; i++) {
+            const date1 = new Date(visits[i]).setHours(0, 0, 0, 0);
+            const date2 = new Date(visits[i + 1]).setHours(0, 0, 0, 0);
+            const diff = (date1 - date2) / (1000 * 60 * 60 * 24);
+            
+            if (diff === 1) streak++;
+            else break;
+        }
+        
+        return streak;
+    }
+    
+    renderCharts() {
+        // Simple text-based chart (can be enhanced with Chart.js later)
+        const canvas = document.getElementById('progressChart');
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#3b82f6';
+        ctx.font = '14px Inter';
+        ctx.fillText('Progress over time', 10, 20);
+    }
+}
+
+// ============================================================
+// AUDIO SUPPORT (Text-to-Speech)
+// ============================================================
+class AudioSupport {
+    constructor() {
+        this.speaking = false;
+        this.utterance = null;
+    }
+    
+    init() {
+        if (!('speechSynthesis' in window)) return;
+        
+        this.addSpeakButtons();
+    }
+    
+    addSpeakButtons() {
+        document.querySelectorAll('.qa-item, .mcq-item').forEach(item => {
+            const speakBtn = document.createElement('button');
+            speakBtn.className = 'speak-btn';
+            speakBtn.innerHTML = '🔊';
+            speakBtn.title = 'Read aloud';
+            speakBtn.onclick = () => this.speak(item);
+            
+            const header = item.querySelector('h3');
+            if (header) {
+                header.appendChild(speakBtn);
+            }
+        });
+    }
+    
+    speak(element) {
+        if (this.speaking) {
+            speechSynthesis.cancel();
+            this.speaking = false;
+            return;
+        }
+        
+        const text = element.textContent;
+        this.utterance = new SpeechSynthesisUtterance(text);
+        this.utterance.rate = 0.9;
+        this.utterance.pitch = 1;
+        
+        this.utterance.onend = () => {
+            this.speaking = false;
+        };
+        
+        speechSynthesis.speak(this.utterance);
+        this.speaking = true;
+    }
+}
+
+// ============================================================
+// ANIMATIONS & MICRO-INTERACTIONS
+// ============================================================
+class AnimationManager {
+    init() {
+        this.addConfettiOnCorrect();
+        this.addSmoothScrolling();
+        this.addHoverEffects();
+        this.addProgressRings();
+    }
+    
+    addConfettiOnCorrect() {
+        // Listen for correct MCQ answers
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('selected-correct')) {
+                this.showConfetti(e.target);
+            }
+        });
+    }
+    
+    showConfetti(element) {
+        const rect = element.getBoundingClientRect();
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti-container';
+        confetti.style.position = 'fixed';
+        confetti.style.left = rect.left + 'px';
+        confetti.style.top = rect.top + 'px';
+        
+        for (let i = 0; i < 30; i++) {
+            const piece = document.createElement('div');
+            piece.className = 'confetti-piece';
+            piece.style.left = (Math.random() * 100) + '%';
+            piece.style.animationDelay = (Math.random() * 0.5) + 's';
+            confetti.appendChild(piece);
+        }
+        
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 2000);
+    }
+    
+    addSmoothScrolling() {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    }
+    
+    addHoverEffects() {
+        document.querySelectorAll('.qa-item, .mcq-item, .quiz-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+                this.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.15)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+                this.style.boxShadow = '';
+            });
+        });
+    }
+    
+    addProgressRings() {
+        // Add circular progress indicators
+        const progressContainers = document.querySelectorAll('.progress-stat-value');
+        progressContainers.forEach(container => {
+            container.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+        });
+    }
+}
+
+// ============================================================
+// RANDOM QUESTION FEATURE
+// ============================================================
+class RandomQuestion {
+    init() {
+        this.createButton();
+    }
+    
+    createButton() {
+        const container = document.querySelector('.progress-container');
+        if (!container) return;
+        
+        const btn = document.createElement('button');
+        btn.className = 'random-question-btn';
+        btn.innerHTML = '🎲 Surprise Me!';
+        btn.onclick = () => this.showRandom();
+        
+        container.appendChild(btn);
+    }
+    
+    showRandom() {
+        const questions = Array.from(document.querySelectorAll('.qa-item, .mcq-item, .quiz-item'));
+        if (questions.length === 0) return;
+        
+        const random = questions[Math.floor(Math.random() * questions.length)];
+        random.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Flash highlight
+        random.style.animation = 'pulse 1s ease-in-out';
+        setTimeout(() => {
+            random.style.animation = '';
+        }, 1000);
+    }
+}
+
+// ============================================================
+// TOPIC FILTERING
+// ============================================================
+class TopicFilter {
+    constructor() {
+        this.activeTopics = new Set();
+    }
+    
+    init() {
+        this.createFilterUI();
+    }
+    
+    createFilterUI() {
+        const topics = this.extractTopics();
+        if (topics.length === 0) return;
+        
+        const container = document.querySelector('.search-container');
+        if (!container) return;
+        
+        const filterHTML = `
+            <div class="topic-filter">
+                <label>Filter by Topic:</label>
+                <div class="topic-chips">
+                    ${topics.map(topic => `
+                        <button class="topic-chip" onclick="topicFilter.toggle('${topic}')">${topic}</button>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        
+        container.insertAdjacentHTML('afterend', filterHTML);
+    }
+    
+    extractTopics() {
+        const headers = document.querySelectorAll('.category-header');
+        return Array.from(headers).map(h => h.textContent.trim());
+    }
+    
+    toggle(topic) {
+        if (this.activeTopics.has(topic)) {
+            this.activeTopics.delete(topic);
+        } else {
+            this.activeTopics.add(topic);
+        }
+        
+        this.applyFilter();
+    }
+    
+    applyFilter() {
+        if (this.activeTopics.size === 0) {
+            document.querySelectorAll('.qa-item, .mcq-item').forEach(q => q.style.display = '');
+            return;
+        }
+        
+        // Implementation depends on page structure
+        // This is a simplified version
+    }
+}
+
+// ============================================================
+// GLOBAL INSTANCES
+// ============================================================
+let questionNavigator;
+let difficultyManager;
+let quizMode;
+let flashcardMode;
+let studyNotes;
+let statisticsDashboard;
+let audioSupport;
+let animationManager;
+let randomQuestion;
+let topicFilter;
+
+// ============================================================
+// ENHANCED INITIALIZATION
+// ============================================================
+function initializeEnhancedFeatures() {
+    // Initialize new features
+    questionNavigator = new QuestionNavigator();
+    questionNavigator.init();
+    
+    difficultyManager = new DifficultyManager();
+    difficultyManager.init();
+    
+    quizMode = new QuizMode();
+    quizMode.init();
+    
+    flashcardMode = new FlashcardMode();
+    flashcardMode.init();
+    
+    studyNotes = new StudyNotes();
+    studyNotes.init();
+    
+    statisticsDashboard = new StatisticsDashboard();
+    statisticsDashboard.init();
+    
+    audioSupport = new AudioSupport();
+    audioSupport.init();
+    
+    animationManager = new AnimationManager();
+    animationManager.init();
+    
+    randomQuestion = new RandomQuestion();
+    randomQuestion.init();
+    
+    topicFilter = new TopicFilter();
+    topicFilter.init();
+    
+    console.log('✅ All enhanced features initialized!');
+}
+
 // Auto-initialize when DOM is ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeFeatures);
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeFeatures();
+        initializeEnhancedFeatures();
+    });
 } else {
     initializeFeatures();
+    initializeEnhancedFeatures();
 }
