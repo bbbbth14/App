@@ -454,6 +454,463 @@ printf("%d\n", i);    // Prints 7</pre>
                 </div>
             </div>
 
+            <!-- More Advanced Topics -->
+            <div class="category-header">🔥 Expert Level Questions</div>
+
+            <div class="qa-item">
+                <h3>What is a dangling pointer?</h3>
+                <div class="answer">
+                    A dangling pointer is a pointer that references memory that has been freed or deallocated. Accessing a dangling pointer leads to undefined behavior.
+                    <pre>int *ptr = (int *)malloc(sizeof(int));
+*ptr = 10;
+free(ptr);      // Memory is freed
+// ptr is now a dangling pointer
+*ptr = 20;      // DANGEROUS: Undefined behavior
+
+// Solution: Set pointer to NULL after freeing
+free(ptr);
+ptr = NULL;</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is pointer arithmetic?</h3>
+                <div class="answer">
+                    Pointer arithmetic allows you to perform mathematical operations on pointers. When you add or subtract from a pointer, it moves by the size of the data type it points to.
+                    <pre>int arr[] = {10, 20, 30, 40, 50};
+int *ptr = arr;
+
+printf("%d\n", *ptr);       // 10
+printf("%d\n", *(ptr + 1)); // 20
+printf("%d\n", *(ptr + 2)); // 30
+
+ptr++;  // Moves 4 bytes (sizeof(int))
+printf("%d\n", *ptr);       // 20</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the difference between <code>realloc()</code> and <code>malloc()</code>?</h3>
+                <div class="answer">
+                    <ul>
+                        <li><code>malloc()</code> allocates a new block of memory</li>
+                        <li><code>realloc()</code> resizes an existing memory block, preserving the data</li>
+                    </ul>
+                    <pre>int *arr = (int *)malloc(5 * sizeof(int));
+// arr has space for 5 integers
+
+arr = (int *)realloc(arr, 10 * sizeof(int));
+// arr now has space for 10 integers
+// Original 5 values are preserved</pre>
+                    If realloc fails, it returns NULL and the original memory is unchanged.
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is a void pointer?</h3>
+                <div class="answer">
+                    A void pointer (<code>void *</code>) is a generic pointer that can hold the address of any data type. It must be cast to the appropriate type before dereferencing.
+                    <pre>void *ptr;
+int num = 10;
+float f = 3.14;
+
+ptr = &amp;num;
+printf("%d\n", *(int *)ptr);    // Cast to int*
+
+ptr = &amp;f;
+printf("%.2f\n", *(float *)ptr); // Cast to float*</pre>
+                    Void pointers are commonly used in functions like <code>malloc()</code> and generic data structures.
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is a double pointer (pointer to pointer)?</h3>
+                <div class="answer">
+                    A double pointer stores the address of another pointer. It's commonly used for dynamic 2D arrays and modifying pointer values in functions.
+                    <pre>int num = 10;
+int *ptr = &amp;num;
+int **dptr = &amp;ptr;
+
+printf("%d\n", **dptr);  // 10
+
+// Modifying pointer in function
+void allocate(int **p) {
+    *p = (int *)malloc(sizeof(int));
+    **p = 100;
+}
+
+int *myPtr = NULL;
+allocate(&amp;myPtr);  // myPtr now points to allocated memory</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the <code>extern</code> keyword?</h3>
+                <div class="answer">
+                    The <code>extern</code> keyword declares a variable or function that is defined in another file. It tells the compiler that the definition exists elsewhere.
+                    <pre>// file1.c
+int globalVar = 100;
+
+// file2.c
+extern int globalVar;  // Declaration, not definition
+printf("%d\n", globalVar);  // Uses variable from file1.c</pre>
+                    <code>extern</code> is essential for sharing variables across multiple source files.
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the <code>register</code> keyword?</h3>
+                <div class="answer">
+                    The <code>register</code> keyword suggests to the compiler that a variable should be stored in a CPU register for faster access. However, modern compilers often ignore this hint and optimize automatically.
+                    <pre>register int counter;
+for (counter = 0; counter < 1000000; counter++) {
+    // Fast loop variable
+}</pre>
+                    Note: You cannot take the address of a register variable using <code>&amp;</code>.
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is a bit field in structures?</h3>
+                <div class="answer">
+                    Bit fields allow you to specify the number of bits a structure member should occupy. They're useful for memory optimization and hardware programming.
+                    <pre>struct PackedData {
+    unsigned int flag1 : 1;   // 1 bit
+    unsigned int flag2 : 1;   // 1 bit
+    unsigned int value : 6;   // 6 bits (0-63)
+};  // Total: 1 byte instead of 12 bytes
+
+struct PackedData data;
+data.flag1 = 1;
+data.flag2 = 0;
+data.value = 42;</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the difference between <code>typedef</code> and <code>#define</code>?</h3>
+                <div class="answer">
+                    <ul>
+                        <li><code>typedef</code> creates an alias for a type, processed by the compiler with type checking</li>
+                        <li><code>#define</code> is a preprocessor macro that does text replacement</li>
+                    </ul>
+                    <pre>typedef int* IntPtr;
+#define INT_PTR int*
+
+IntPtr a, b;      // Both are int pointers
+INT_PTR c, d;     // c is int*, d is just int!
+
+// typedef is safer and more readable</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is an inline function?</h3>
+                <div class="answer">
+                    An inline function suggests to the compiler to insert the function's code directly at the call site, avoiding function call overhead.
+                    <pre>inline int square(int x) {
+    return x * x;
+}
+
+int result = square(5);
+// Compiler may replace with: int result = 5 * 5;</pre>
+                    Use inline for small, frequently called functions. The compiler may ignore the hint for complex functions.
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is recursion vs iteration? When to use which?</h3>
+                <div class="answer">
+                    <ul>
+                        <li><strong>Recursion:</strong> Function calls itself. Elegant for tree/graph problems, but uses more memory (stack frames).</li>
+                        <li><strong>Iteration:</strong> Uses loops. More memory efficient, better for simple repetitive tasks.</li>
+                    </ul>
+                    <pre>// Recursion
+int factorial_rec(int n) {
+    return (n <= 1) ? 1 : n * factorial_rec(n - 1);
+}
+
+// Iteration
+int factorial_iter(int n) {
+    int result = 1;
+    for (int i = 2; i <= n; i++) result *= i;
+    return result;
+}</pre>
+                    Use recursion for naturally recursive problems (trees, backtracking). Use iteration for performance-critical code.
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is a segmentation fault?</h3>
+                <div class="answer">
+                    A segmentation fault (segfault) occurs when a program tries to access memory it doesn't have permission to access.
+                    <pre>// Common causes:
+int *ptr = NULL;
+*ptr = 10;  // Dereferencing NULL pointer
+
+int arr[5];
+arr[10] = 1;  // Array index out of bounds
+
+char *str = "Hello";
+str[0] = 'h';  // Modifying string literal</pre>
+                    Debug using tools like <code>gdb</code> or <code>valgrind</code>.
+                </div>
+            </div>
+
+            <!-- Multiple Choice Questions -->
+            <div class="category-header">📝 Multiple Choice Questions</div>
+
+            <style>
+                .mcq-item {
+                    background: #fff;
+                    border-radius: 12px;
+                    padding: 20px;
+                    margin-bottom: 20px;
+                    border: 1px solid #e2e8f0;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                }
+                .mcq-item h3 {
+                    color: #6b2d5c;
+                    font-size: 1.2rem;
+                    margin-bottom: 15px;
+                }
+                .mcq-item h3::before {
+                    content: 'MCQ:';
+                    background: #3b82f6;
+                    color: white;
+                    padding: 4px 10px;
+                    border-radius: 6px;
+                    font-size: 0.9rem;
+                    margin-right: 10px;
+                }
+                .mcq-options {
+                    list-style: none;
+                    padding: 0;
+                    margin: 15px 0;
+                }
+                .mcq-options li {
+                    padding: 10px 15px;
+                    margin: 8px 0;
+                    background: #f8fafc;
+                    border-radius: 8px;
+                    border: 1px solid #e2e8f0;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .mcq-options li:hover {
+                    background: #e2e8f0;
+                }
+                .mcq-options li.correct {
+                    background: #dcfce7;
+                    border-color: #16a34a;
+                }
+                .mcq-answer {
+                    background: #f0fdf4;
+                    border-left: 4px solid #16a34a;
+                    padding: 12px 15px;
+                    margin-top: 15px;
+                    border-radius: 0 8px 8px 0;
+                }
+                .mcq-answer strong {
+                    color: #16a34a;
+                }
+            </style>
+
+            <div class="mcq-item">
+                <h3>What is the size of <code>int</code> in C?</h3>
+                <ul class="mcq-options">
+                    <li>A) Always 2 bytes</li>
+                    <li>B) Always 4 bytes</li>
+                    <li>C) Always 8 bytes</li>
+                    <li class="correct">D) Depends on the compiler and system architecture</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: D</strong> - The size of int is implementation-defined. It's typically 4 bytes on modern systems, but can be 2 bytes on older systems. Use <code>sizeof(int)</code> to check.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What will be the output of: <code>printf("%d", 5 + 3 * 2);</code></h3>
+                <ul class="mcq-options">
+                    <li>A) 16</li>
+                    <li class="correct">B) 11</li>
+                    <li>C) 13</li>
+                    <li>D) Error</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - Multiplication has higher precedence than addition. So 3 * 2 = 6, then 5 + 6 = 11.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>Which of the following is NOT a valid variable name in C?</h3>
+                <ul class="mcq-options">
+                    <li>A) _myVar</li>
+                    <li>B) my_var</li>
+                    <li class="correct">C) 2ndValue</li>
+                    <li>D) myVar2</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: C</strong> - Variable names cannot start with a digit in C. They must start with a letter or underscore.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What does <code>NULL</code> represent in C?</h3>
+                <ul class="mcq-options">
+                    <li>A) An empty string</li>
+                    <li>B) The character '\0'</li>
+                    <li class="correct">C) A null pointer constant (typically 0)</li>
+                    <li>D) An undefined value</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: C</strong> - NULL is a macro that represents a null pointer constant. It's typically defined as ((void *)0) or just 0.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What is the output of: <code>printf("%d", sizeof('A'));</code></h3>
+                <ul class="mcq-options">
+                    <li>A) 1</li>
+                    <li class="correct">B) 4</li>
+                    <li>C) 2</li>
+                    <li>D) 8</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - In C, character constants like 'A' are treated as <code>int</code>, so sizeof returns 4 (on most systems). In C++, it would return 1.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>Which storage class is used to define a local variable that retains its value?</h3>
+                <ul class="mcq-options">
+                    <li>A) auto</li>
+                    <li>B) extern</li>
+                    <li class="correct">C) static</li>
+                    <li>D) register</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: C</strong> - Static variables retain their value between function calls. They are initialized only once.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What is the correct way to declare a pointer to an integer?</h3>
+                <ul class="mcq-options">
+                    <li>A) int ptr;</li>
+                    <li>B) *int ptr;</li>
+                    <li class="correct">C) int *ptr;</li>
+                    <li>D) pointer int ptr;</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: C</strong> - The asterisk (*) is placed before the variable name to declare a pointer. <code>int *ptr</code> declares ptr as a pointer to an integer.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What is the output of: <code>int x = 5; printf("%d", x++);</code></h3>
+                <ul class="mcq-options">
+                    <li class="correct">A) 5</li>
+                    <li>B) 6</li>
+                    <li>C) 4</li>
+                    <li>D) Error</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: A</strong> - Post-increment (x++) returns the current value first, then increments. So it prints 5, and x becomes 6 after.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>Which function is used to dynamically allocate memory and initialize it to zero?</h3>
+                <ul class="mcq-options">
+                    <li>A) malloc()</li>
+                    <li class="correct">B) calloc()</li>
+                    <li>C) realloc()</li>
+                    <li>D) free()</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - <code>calloc()</code> allocates memory and initializes all bytes to zero. <code>malloc()</code> allocates memory but doesn't initialize it.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What is the output of: <code>printf("%d", 10 / 3);</code></h3>
+                <ul class="mcq-options">
+                    <li class="correct">A) 3</li>
+                    <li>B) 3.33</li>
+                    <li>C) 3.0</li>
+                    <li>D) 4</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: A</strong> - Integer division in C truncates the decimal part. 10 / 3 = 3 (not 3.33). For decimal result, use float: 10.0 / 3.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What does the <code>break</code> statement do in a loop?</h3>
+                <ul class="mcq-options">
+                    <li>A) Skips current iteration</li>
+                    <li class="correct">B) Exits the loop immediately</li>
+                    <li>C) Restarts the loop</li>
+                    <li>D) Pauses the loop</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - <code>break</code> immediately exits the innermost loop or switch statement. Use <code>continue</code> to skip only the current iteration.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>Which header file is required for <code>malloc()</code> and <code>free()</code>?</h3>
+                <ul class="mcq-options">
+                    <li>A) stdio.h</li>
+                    <li class="correct">B) stdlib.h</li>
+                    <li>C) string.h</li>
+                    <li>D) memory.h</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - Memory allocation functions (<code>malloc</code>, <code>calloc</code>, <code>realloc</code>, <code>free</code>) are declared in <code>stdlib.h</code>.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What is the correct syntax for a multi-line comment in C?</h3>
+                <ul class="mcq-options">
+                    <li>A) // comment //</li>
+                    <li class="correct">B) /* comment */</li>
+                    <li>C) &lt;!-- comment --&gt;</li>
+                    <li>D) # comment #</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - Multi-line comments use <code>/* */</code>. Single-line comments use <code>//</code> (C99 and later).
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What is the result of: <code>int a = 5, b = 2; float c = a / b;</code></h3>
+                <ul class="mcq-options">
+                    <li class="correct">A) c = 2.0</li>
+                    <li>B) c = 2.5</li>
+                    <li>C) c = 2</li>
+                    <li>D) Compilation error</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: A</strong> - Integer division happens first (5/2 = 2), then the result is converted to float (2.0). For 2.5, cast one operand: <code>(float)a / b</code>.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>Which operator is used to access a structure member through a pointer?</h3>
+                <ul class="mcq-options">
+                    <li>A) . (dot)</li>
+                    <li class="correct">B) -> (arrow)</li>
+                    <li>C) * (asterisk)</li>
+                    <li>D) & (ampersand)</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - The arrow operator (<code>-></code>) is used with pointers to structures. Dot (<code>.</code>) is used with structure variables directly.
+                </div>
+            </div>
+
         </div>
     </div>
 
