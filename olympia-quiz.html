@@ -67,9 +67,26 @@
             border-color: #6b2d5c;
         }
 
-        .options li.correct {
-            background: #d4edda;
-            border-color: #28a745;
+        .options li.selected-correct {
+            background: #dcfce7;
+            border-color: #16a34a;
+            font-weight: 600;
+        }
+
+        .options li.selected-wrong {
+            background: #fee2e2;
+            border-color: #dc2626;
+        }
+
+        .options li.show-correct {
+            background: #dcfce7;
+            border-color: #16a34a;
+            font-weight: 600;
+            animation: pulse 0.5s;
+        }
+
+        .options li.disabled {
+            cursor: not-allowed;
         }
 
         .answer-box {
@@ -78,6 +95,33 @@
             padding: 15px;
             margin-top: 15px;
             border-radius: 0 8px 8px 0;
+            display: none;
+        }
+
+        .answer-box.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 15px rgba(22, 163, 74, 0.5);
+            }
         }
 
         .answer-box strong {
@@ -976,6 +1020,49 @@
 
         </div><!-- End main-content -->
     </div><!-- End page-wrapper -->
+
+    <script>
+        // MCQ functionality for Olympia Quiz
+        document.querySelectorAll('.options').forEach(optionList => {
+            optionList.addEventListener('click', function(e) {
+                if (e.target.tagName === 'LI' && !optionList.classList.contains('answered')) {
+                    const clickedOption = e.target;
+                    const allOptions = optionList.querySelectorAll('li');
+                    const answerDiv = optionList.nextElementSibling;
+                    
+                    // Mark as answered
+                    optionList.classList.add('answered');
+                    
+                    // Disable all options
+                    allOptions.forEach(opt => opt.classList.add('disabled'));
+                    
+                    if (clickedOption.classList.contains('correct')) {
+                        // Correct answer clicked - turn green and show explanation
+                        clickedOption.classList.add('selected-correct');
+                        if (answerDiv && answerDiv.classList.contains('answer-box')) {
+                            answerDiv.classList.add('show');
+                        }
+                    } else {
+                        // Wrong answer clicked - turn red
+                        clickedOption.classList.add('selected-wrong');
+                        // Show the correct answer in green
+                        const correctOption = optionList.querySelector('li.correct');
+                        if (correctOption) {
+                            setTimeout(() => {
+                                correctOption.classList.add('show-correct');
+                            }, 300);
+                        }
+                        // Show answer explanation even for wrong answers
+                        if (answerDiv && answerDiv.classList.contains('answer-box')) {
+                            setTimeout(() => {
+                                answerDiv.classList.add('show');
+                            }, 600);
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
