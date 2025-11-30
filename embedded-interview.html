@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded Systems Interview Questions & Answers</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .navbar {
+            background: #6b2d5c;
+            padding: 15px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 10px 25px;
+            margin: 0 10px;
+            border-radius: 6px;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+        .navbar a:hover { background: rgba(255, 255, 255, 0.2); }
+        .navbar a.active { background: white; color: #6b2d5c; font-weight: 700; }
+
+        .qa-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .qa-item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .qa-item h3 {
+            color: #6b2d5c;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qa-item h3::before {
+            content: 'Q:';
+            background: #6b2d5c;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .qa-item .answer {
+            color: #2d3748;
+            line-height: 1.8;
+            padding-left: 45px;
+        }
+
+        .qa-item .answer::before {
+            content: 'A:';
+            background: #16a34a;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+
+        .qa-item pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .qa-item code {
+            background: #f4f7fc;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #6b2d5c;
+        }
+
+        .category-header {
+            background: #6b2d5c;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 30px 0 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .category-header:first-of-type {
+            margin-top: 0;
+        }
+
+        .mcq-item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .mcq-item h3 {
+            color: #6b2d5c;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        .mcq-item h3::before {
+            content: 'MCQ:';
+            background: #3b82f6;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+        .mcq-options {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        .mcq-options li {
+            padding: 10px 15px;
+            margin: 8px 0;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .mcq-options li:hover {
+            background: #e2e8f0;
+        }
+        .mcq-options li.correct {
+            background: #dcfce7;
+            border-color: #16a34a;
+        }
+        .mcq-answer {
+            background: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            padding: 12px 15px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+        .mcq-answer strong {
+            color: #16a34a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="index.html">Finance & Investments</a>
+        <a href="split.html">Split Money</a>
+        <a href="c-interview.html">C Interview Q&A</a>
+        <a href="embedded-interview.html" class="active">Embedded Q&A</a>
+    </div>
+
+    <div class="container">
+        <h1>Embedded Systems Interview Questions & Answers</h1>
+
+        <div class="qa-container">
+
+            <!-- Basic Concepts -->
+            <div class="category-header">🔧 Embedded Systems Basics</div>
+
+            <div class="qa-item">
+                <h3>What is an Embedded System?</h3>
+                <div class="answer">
+                    An embedded system is a specialized computer system designed to perform dedicated functions within a larger mechanical or electrical system. Unlike general-purpose computers, embedded systems are optimized for specific tasks with constraints on size, power, and real-time performance. Examples include microwave ovens, automotive ECUs, medical devices, and smart watches.
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What are the key characteristics of embedded systems?</h3>
+                <div class="answer">
+                    Key characteristics include:
+                    <ul>
+                        <li><strong>Task-specific:</strong> Designed for a particular application</li>
+                        <li><strong>Real-time operation:</strong> Must respond within strict timing constraints</li>
+                        <li><strong>Resource-constrained:</strong> Limited memory, processing power, and energy</li>
+                        <li><strong>Reliability:</strong> Must operate continuously without failure</li>
+                        <li><strong>Cost-sensitive:</strong> Optimized for mass production</li>
+                        <li><strong>Power efficiency:</strong> Often battery-powered or energy-constrained</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the difference between a Microprocessor and a Microcontroller?</h3>
+                <div class="answer">
+                    <ul>
+                        <li><strong>Microprocessor:</strong> Contains only the CPU. Requires external memory (RAM, ROM), I/O peripherals, and other components. Used in general-purpose computers.</li>
+                        <li><strong>Microcontroller:</strong> Contains CPU, memory (RAM, ROM/Flash), and peripherals (GPIO, ADC, timers, UART) all on a single chip. Ideal for embedded applications.</li>
+                    </ul>
+                    <pre>Microprocessor: CPU only → needs external components
+Microcontroller: CPU + Memory + Peripherals → self-contained
+
+Examples:
+- Microprocessor: Intel Core i7, AMD Ryzen
+- Microcontroller: ATmega328 (Arduino), STM32, ESP32</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is RTOS (Real-Time Operating System)?</h3>
+                <div class="answer">
+                    An RTOS is an operating system designed to serve real-time applications that process data as it comes in, with strict timing constraints. It provides deterministic timing guarantees for task execution.
+                    <pre>Key features of RTOS:
+- Task scheduling (preemptive/cooperative)
+- Interrupt handling
+- Inter-task communication (queues, semaphores)
+- Memory management
+- Timing services
+
+Popular RTOS: FreeRTOS, VxWorks, QNX, Zephyr, RTLinux</pre>
+                </div>
+            </div>
+
+            <!-- Interrupts -->
+            <div class="category-header">⚡ Interrupts</div>
+
+            <div class="qa-item">
+                <h3>What is an Interrupt?</h3>
+                <div class="answer">
+                    An interrupt is a signal to the processor indicating an event that requires immediate attention. When an interrupt occurs, the processor suspends the current task, saves its state, executes an Interrupt Service Routine (ISR), then resumes the original task.
+                    <pre>Interrupt Flow:
+1. Event triggers interrupt
+2. CPU completes current instruction
+3. CPU saves context (registers, PC)
+4. CPU jumps to ISR (via interrupt vector)
+5. ISR executes
+6. CPU restores context
+7. CPU resumes normal execution</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the difference between Hardware and Software Interrupts?</h3>
+                <div class="answer">
+                    <ul>
+                        <li><strong>Hardware Interrupt:</strong> Generated by external hardware devices (keyboard, timer, sensors). Asynchronous to program execution.</li>
+                        <li><strong>Software Interrupt:</strong> Triggered by software instructions (system calls, exceptions). Synchronous to program execution.</li>
+                    </ul>
+                    <pre>Hardware Interrupts:
+- Timer overflow
+- External pin change (GPIO)
+- UART data received
+- ADC conversion complete
+
+Software Interrupts:
+- Division by zero
+- Invalid opcode
+- System calls (SWI/SVC)</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is Interrupt Latency?</h3>
+                <div class="answer">
+                    Interrupt latency is the time between when an interrupt is triggered and when the ISR begins execution. Minimizing interrupt latency is critical in real-time systems.
+                    <pre>Interrupt Latency = Recognition Time + Context Save Time + ISR Entry Time
+
+Factors affecting latency:
+- Current instruction completion time
+- Pipeline flush time
+- Context switching overhead
+- Interrupt priority handling
+- Cache misses</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is Interrupt Priority and Nested Interrupts?</h3>
+                <div class="answer">
+                    Interrupt priority determines which interrupt is serviced first when multiple interrupts occur simultaneously. Nested interrupts allow a higher-priority interrupt to preempt a lower-priority ISR.
+                    <pre>Priority Levels (example):
+- Level 0: Highest priority (e.g., NMI)
+- Level 1: Timer interrupt
+- Level 2: UART interrupt
+- Level 3: Lowest priority
+
+Nested Interrupt:
+ISR_Low executing → High priority IRQ occurs
+→ ISR_Low paused → ISR_High executes
+→ ISR_High completes → ISR_Low resumes</pre>
+                </div>
+            </div>
+
+            <!-- Memory -->
+            <div class="category-header">💾 Memory & Storage</div>
+
+            <div class="qa-item">
+                <h3>What are the different types of memory in embedded systems?</h3>
+                <div class="answer">
+                    <ul>
+                        <li><strong>RAM (Volatile):</strong> SRAM (fast, expensive), DRAM (slower, cheaper)</li>
+                        <li><strong>ROM (Non-volatile):</strong> Mask ROM, PROM, EPROM, EEPROM</li>
+                        <li><strong>Flash:</strong> NOR Flash (code execution), NAND Flash (data storage)</li>
+                        <li><strong>Registers:</strong> Fastest memory, inside CPU</li>
+                        <li><strong>Cache:</strong> High-speed buffer between CPU and main memory</li>
+                    </ul>
+                    <pre>Memory Hierarchy (Fast to Slow):
+Registers → Cache → SRAM → DRAM → Flash → External Storage</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is Memory-Mapped I/O vs Port-Mapped I/O?</h3>
+                <div class="answer">
+                    <ul>
+                        <li><strong>Memory-Mapped I/O:</strong> I/O devices share the same address space as memory. Access using normal load/store instructions.</li>
+                        <li><strong>Port-Mapped I/O:</strong> I/O devices have a separate address space. Access using special I/O instructions (IN, OUT).</li>
+                    </ul>
+                    <pre>Memory-Mapped I/O (ARM, most modern MCUs):
+volatile uint32_t *GPIO_PORT = (uint32_t *)0x40020000;
+*GPIO_PORT = 0xFF;  // Write to GPIO
+
+Port-Mapped I/O (x86):
+outb(0x60, data);   // Write to port 0x60
+data = inb(0x60);   // Read from port 0x60</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the purpose of the <code>volatile</code> keyword in embedded C?</h3>
+                <div class="answer">
+                    The <code>volatile</code> keyword tells the compiler that a variable's value may change unexpectedly (by hardware, ISR, or another thread), preventing optimization that could skip reading the actual value.
+                    <pre>// Without volatile - compiler may optimize away the loop
+int *status_reg = (int *)0x40000000;
+while (*status_reg == 0);  // May become infinite loop!
+
+// With volatile - compiler always reads from memory
+volatile int *status_reg = (volatile int *)0x40000000;
+while (*status_reg == 0);  // Correctly checks hardware register
+
+Use cases:
+- Hardware registers
+- Variables modified in ISR
+- Shared variables in multi-threaded code</pre>
+                </div>
+            </div>
+
+            <!-- Communication Protocols -->
+            <div class="category-header">📡 Communication Protocols</div>
+
+            <div class="qa-item">
+                <h3>Explain I2C (Inter-Integrated Circuit) protocol.</h3>
+                <div class="answer">
+                    I2C is a synchronous, multi-master, multi-slave serial communication protocol using two wires: SDA (data) and SCL (clock).
+                    <pre>I2C Features:
+- 2 wires: SDA (data), SCL (clock)
+- Addressing: 7-bit or 10-bit slave addresses
+- Speeds: Standard (100 kHz), Fast (400 kHz), Fast+ (1 MHz)
+- Multi-master capable
+- Open-drain outputs with pull-up resistors
+
+Communication Flow:
+1. START condition
+2. Slave address + R/W bit
+3. ACK from slave
+4. Data transfer (8 bits + ACK)
+5. STOP condition</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>Explain SPI (Serial Peripheral Interface) protocol.</h3>
+                <div class="answer">
+                    SPI is a synchronous, full-duplex serial communication protocol using four wires. It's faster than I2C but requires more pins.
+                    <pre>SPI Signals:
+- MOSI: Master Out, Slave In
+- MISO: Master In, Slave Out
+- SCLK: Serial Clock (from master)
+- SS/CS: Slave Select (active low)
+
+SPI Features:
+- Full-duplex communication
+- No addressing (uses chip select)
+- Faster speeds (up to 50+ MHz)
+- Simple protocol, no ACK
+- 4 clock modes (CPOL, CPHA combinations)</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>Explain UART (Universal Asynchronous Receiver/Transmitter).</h3>
+                <div class="answer">
+                    UART is an asynchronous serial communication protocol. Both devices must agree on baud rate, data bits, parity, and stop bits.
+                    <pre>UART Features:
+- 2 wires: TX (transmit), RX (receive)
+- Asynchronous (no clock line)
+- Common baud rates: 9600, 115200
+- Frame: Start bit + Data bits + Parity + Stop bit(s)
+
+UART Frame (8N1):
+|Start|D0|D1|D2|D3|D4|D5|D6|D7|Stop|
+   0   ← 8 data bits →         1
+
+Configuration: 115200 8N1
+- 115200 baud
+- 8 data bits
+- No parity
+- 1 stop bit</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>Compare I2C, SPI, and UART protocols.</h3>
+                <div class="answer">
+                    <pre>
+| Feature      | I2C           | SPI            | UART          |
+|--------------|---------------|----------------|---------------|
+| Wires        | 2 (SDA, SCL)  | 4 (+ CS)       | 2 (TX, RX)    |
+| Speed        | Up to 3.4 MHz | Up to 50+ MHz  | Up to 1 Mbps  |
+| Duplex       | Half-duplex   | Full-duplex    | Full-duplex   |
+| Addressing   | Yes (7/10-bit)| No (uses CS)   | No            |
+| Multi-slave  | Yes           | Yes (via CS)   | Point-to-point|
+| Clock        | Synchronous   | Synchronous    | Asynchronous  |
+| Complexity   | Medium        | Low            | Low           |
+                    </pre>
+                </div>
+            </div>
+
+            <!-- GPIO & Peripherals -->
+            <div class="category-header">🔌 GPIO & Peripherals</div>
+
+            <div class="qa-item">
+                <h3>What is GPIO (General Purpose Input/Output)?</h3>
+                <div class="answer">
+                    GPIO pins are digital pins on a microcontroller that can be configured as either input or output. They're used to interface with external devices like LEDs, buttons, sensors, and displays.
+                    <pre>GPIO Configuration:
+- Input modes: Floating, Pull-up, Pull-down
+- Output modes: Push-pull, Open-drain
+- Alternate functions: UART, SPI, I2C, PWM
+
+// Example: Toggle LED on GPIO
+#define LED_PIN (1 << 5)
+GPIO_PORT->DIR |= LED_PIN;     // Set as output
+GPIO_PORT->DATA ^= LED_PIN;    // Toggle LED</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is PWM (Pulse Width Modulation)?</h3>
+                <div class="answer">
+                    PWM is a technique to simulate analog output using digital signals by varying the duty cycle (ratio of ON time to total period).
+                    <pre>PWM Parameters:
+- Frequency: How fast the signal toggles
+- Duty Cycle: Percentage of ON time
+
+Duty Cycle = (TON / Period) × 100%
+
+Applications:
+- LED dimming (50% duty = 50% brightness)
+- Motor speed control
+- Servo motor positioning
+- Audio generation
+
+Example: 1kHz PWM, 75% duty cycle
+|‾‾‾‾‾‾‾‾‾‾‾‾|____|‾‾‾‾‾‾‾‾‾‾‾‾|____|
+   750µs      250µs   750µs    250µs</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is ADC (Analog-to-Digital Converter)?</h3>
+                <div class="answer">
+                    ADC converts continuous analog signals (voltage) to discrete digital values. Key parameters include resolution (bits), sampling rate, and reference voltage.
+                    <pre>ADC Parameters:
+- Resolution: Number of bits (8, 10, 12, 16-bit)
+- Sampling Rate: Samples per second
+- Reference Voltage: Vref determines input range
+
+Digital Value = (Vin / Vref) × (2^n - 1)
+
+Example: 10-bit ADC, Vref = 3.3V, Vin = 1.65V
+Digital Value = (1.65 / 3.3) × 1023 = 511
+
+Types: SAR, Sigma-Delta, Flash, Pipeline</pre>
+                </div>
+            </div>
+
+            <!-- Firmware -->
+            <div class="category-header">💻 Firmware & Programming</div>
+
+            <div class="qa-item">
+                <h3>What is the Boot Process in embedded systems?</h3>
+                <div class="answer">
+                    The boot process initializes the hardware and loads the application firmware when power is applied.
+                    <pre>Boot Sequence:
+1. Power-on Reset (POR)
+2. Hardware initialization (clock, memory)
+3. Bootloader executes from ROM/Flash
+4. Bootloader loads application to RAM (optional)
+5. Jump to application entry point (main)
+6. Application runs
+
+Bootloader functions:
+- Hardware initialization
+- Firmware update capability
+- Integrity checking
+- Jump to application</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is a Watchdog Timer?</h3>
+                <div class="answer">
+                    A watchdog timer (WDT) is a hardware timer that resets the system if not periodically "fed" (reset). It's used to recover from software hangs or crashes.
+                    <pre>Watchdog Operation:
+1. WDT starts counting down
+2. Software must reset WDT before timeout
+3. If timeout occurs → System reset
+
+// Watchdog usage pattern
+void main() {
+    WDT_init(1000);  // 1 second timeout
+    while(1) {
+        do_work();
+        WDT_feed();  // Reset watchdog
+    }
+}
+
+Use cases:
+- Recover from infinite loops
+- Detect hardware failures
+- Safety-critical systems</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is DMA (Direct Memory Access)?</h3>
+                <div class="answer">
+                    DMA allows peripherals to transfer data directly to/from memory without CPU intervention, improving performance and reducing CPU load.
+                    <pre>DMA Benefits:
+- CPU free during data transfer
+- Higher transfer speeds
+- Lower power consumption (CPU can sleep)
+
+DMA Transfer Types:
+- Memory-to-Memory
+- Peripheral-to-Memory
+- Memory-to-Peripheral
+
+Example: UART receiving 1KB data
+Without DMA: CPU handles each byte interrupt
+With DMA: CPU configures DMA once, gets interrupt when complete</pre>
+                </div>
+            </div>
+
+            <!-- Advanced Topics -->
+            <div class="category-header">🔥 Advanced Topics</div>
+
+            <div class="qa-item">
+                <h3>What is Big Endian vs Little Endian?</h3>
+                <div class="answer">
+                    Endianness refers to the order in which bytes are stored in memory.
+                    <pre>Value: 0x12345678
+
+Big Endian (MSB first):
+Address: 0x00  0x01  0x02  0x03
+Data:    0x12  0x34  0x56  0x78
+
+Little Endian (LSB first):
+Address: 0x00  0x01  0x02  0x03
+Data:    0x78  0x56  0x34  0x12
+
+ARM: Usually Little Endian (configurable)
+PowerPC: Usually Big Endian
+Network protocols: Big Endian (network byte order)</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the difference between polling and interrupt-driven I/O?</h3>
+                <div class="answer">
+                    <ul>
+                        <li><strong>Polling:</strong> CPU continuously checks device status in a loop. Simple but wastes CPU cycles.</li>
+                        <li><strong>Interrupt-driven:</strong> CPU is notified by hardware when data is ready. More efficient, allows CPU to do other work.</li>
+                    </ul>
+                    <pre>Polling:
+while (!(UART->STATUS & RX_READY));  // Waste cycles waiting
+data = UART->DATA;
+
+Interrupt-driven:
+void UART_IRQHandler() {
+    data = UART->DATA;  // Only called when data ready
+}
+// CPU can do other work or sleep</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>Explain the concept of bit manipulation in embedded systems.</h3>
+                <div class="answer">
+                    Bit manipulation is essential for controlling hardware registers efficiently.
+                    <pre>Common Bit Operations:
+
+// Set bit n
+REG |= (1 << n);
+
+// Clear bit n
+REG &= ~(1 << n);
+
+// Toggle bit n
+REG ^= (1 << n);
+
+// Check if bit n is set
+if (REG & (1 << n))
+
+// Set multiple bits (bits 2,3,4)
+REG |= (0x07 << 2);
+
+// Clear bits in a field, then set new value
+REG = (REG & ~MASK) | NEW_VALUE;
+
+// Example: Configure GPIO pin 5 as output, high
+#define PIN5 (1 << 5)
+GPIO->DIR |= PIN5;    // Set direction
+GPIO->DATA |= PIN5;   // Set high</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is a Semaphore and Mutex in RTOS?</h3>
+                <div class="answer">
+                    Both are synchronization primitives used in RTOS to manage shared resources.
+                    <pre>Mutex (Mutual Exclusion):
+- Binary lock (0 or 1)
+- Ownership: Only the task that locks can unlock
+- Priority inheritance to prevent priority inversion
+- Used for: Protecting shared resources
+
+Semaphore:
+- Counting or binary
+- No ownership concept
+- Can be signaled by any task
+- Used for: Signaling, resource counting
+
+// Mutex example
+mutex_lock(&resource_mutex);
+access_shared_resource();
+mutex_unlock(&resource_mutex);
+
+// Semaphore example (producer-consumer)
+sem_wait(&items_available);  // Consumer waits
+consume_item();
+sem_post(&slots_available);  // Signal producer</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is Power Management in Embedded Systems?</h3>
+                <div class="answer">
+                    Power management techniques are critical for battery-powered embedded devices.
+                    <pre>Power Saving Modes:
+- Active: Full operation
+- Idle/Sleep: CPU stopped, peripherals running
+- Deep Sleep: Most peripherals off, RAM retained
+- Shutdown: Only RTC/wakeup logic powered
+
+Techniques:
+- Clock gating: Disable unused peripheral clocks
+- Voltage scaling: Lower voltage at lower frequencies
+- Peripheral shutdown: Turn off unused I/O
+- Duty cycling: Periodically wake for tasks
+
+Example: IoT Sensor Node
+1. Wake from deep sleep (RTC timer)
+2. Read sensor, transmit data
+3. Return to deep sleep
+→ Average current: µA instead of mA</pre>
+                </div>
+            </div>
+
+            <!-- MCQ Section -->
+            <div class="category-header">📝 Multiple Choice Questions</div>
+
+            <div class="mcq-item">
+                <h3>Which memory type is non-volatile?</h3>
+                <ul class="mcq-options">
+                    <li>A) SRAM</li>
+                    <li>B) DRAM</li>
+                    <li class="correct">C) Flash</li>
+                    <li>D) Cache</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: C</strong> - Flash memory retains data without power. SRAM, DRAM, and Cache are volatile (lose data when power is off).
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What is the main purpose of a watchdog timer?</h3>
+                <ul class="mcq-options">
+                    <li>A) Measure time intervals</li>
+                    <li class="correct">B) Reset the system if software hangs</li>
+                    <li>C) Generate PWM signals</li>
+                    <li>D) Count external events</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - Watchdog timer automatically resets the system if not periodically "fed" by software, recovering from crashes or infinite loops.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>How many wires does I2C use for communication?</h3>
+                <ul class="mcq-options">
+                    <li>A) 1</li>
+                    <li class="correct">B) 2</li>
+                    <li>C) 3</li>
+                    <li>D) 4</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - I2C uses 2 wires: SDA (data) and SCL (clock). Both are bidirectional and require pull-up resistors.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>Which protocol is asynchronous?</h3>
+                <ul class="mcq-options">
+                    <li>A) I2C</li>
+                    <li>B) SPI</li>
+                    <li class="correct">C) UART</li>
+                    <li>D) CAN</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: C</strong> - UART is asynchronous (no clock line). I2C, SPI, and CAN all use a clock signal for synchronization.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What does PWM stand for?</h3>
+                <ul class="mcq-options">
+                    <li>A) Power Width Mode</li>
+                    <li class="correct">B) Pulse Width Modulation</li>
+                    <li>C) Pulse Wave Multiplexing</li>
+                    <li>D) Power Wave Modulation</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - PWM stands for Pulse Width Modulation, a technique to control analog-like output using digital signals by varying the duty cycle.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>In Little Endian format, how is 0x1234 stored in memory (starting at address 0)?</h3>
+                <ul class="mcq-options">
+                    <li>A) 0x12 at address 0, 0x34 at address 1</li>
+                    <li class="correct">B) 0x34 at address 0, 0x12 at address 1</li>
+                    <li>C) 0x12 at both addresses</li>
+                    <li>D) 0x34 at both addresses</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - Little Endian stores the least significant byte (0x34) at the lowest address.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What is the purpose of DMA?</h3>
+                <ul class="mcq-options">
+                    <li>A) To increase CPU speed</li>
+                    <li class="correct">B) To transfer data without CPU intervention</li>
+                    <li>C) To manage memory allocation</li>
+                    <li>D) To handle interrupts</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - DMA (Direct Memory Access) allows peripherals to transfer data directly to/from memory without CPU involvement, freeing the CPU for other tasks.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What keyword prevents compiler optimization for hardware registers in C?</h3>
+                <ul class="mcq-options">
+                    <li>A) static</li>
+                    <li>B) const</li>
+                    <li class="correct">C) volatile</li>
+                    <li>D) extern</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: C</strong> - <code>volatile</code> tells the compiler that the variable may change unexpectedly, preventing optimization that could skip reading the actual value.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>Which SPI signal carries data from master to slave?</h3>
+                <ul class="mcq-options">
+                    <li class="correct">A) MOSI</li>
+                    <li>B) MISO</li>
+                    <li>C) SCLK</li>
+                    <li>D) SS</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: A</strong> - MOSI stands for Master Out, Slave In - it carries data from the master to the slave device.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What is the typical resolution of an ADC in embedded systems?</h3>
+                <ul class="mcq-options">
+                    <li>A) 1-4 bits</li>
+                    <li class="correct">B) 8-16 bits</li>
+                    <li>C) 32-64 bits</li>
+                    <li>D) 128 bits</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - Common ADC resolutions are 8, 10, 12, or 16 bits. Higher resolution provides more precise measurements but requires more processing.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>What is Interrupt Latency?</h3>
+                <ul class="mcq-options">
+                    <li>A) Time between two consecutive interrupts</li>
+                    <li class="correct">B) Time from interrupt trigger to ISR start</li>
+                    <li>C) Duration of ISR execution</li>
+                    <li>D) Time to return from ISR</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: B</strong> - Interrupt latency is the delay between when an interrupt is triggered and when the Interrupt Service Routine (ISR) begins executing.
+                </div>
+            </div>
+
+            <div class="mcq-item">
+                <h3>Which is NOT a characteristic of embedded systems?</h3>
+                <ul class="mcq-options">
+                    <li>A) Real-time operation</li>
+                    <li>B) Resource constraints</li>
+                    <li class="correct">C) General-purpose computing</li>
+                    <li>D) Task-specific design</li>
+                </ul>
+                <div class="mcq-answer">
+                    <strong>Answer: C</strong> - Embedded systems are designed for specific tasks, not general-purpose computing. They are optimized for particular applications with limited resources.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
