@@ -6,27 +6,6 @@
     <title>Đường Lên Đỉnh Olympia & Ai Là Triệu Phú - Câu Hỏi Quiz</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .navbar {
-            background: #6b2d5c;
-            padding: 15px 0;
-            text-align: center;
-            margin-bottom: 30px;
-            border-radius: 8px;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            padding: 8px 12px;
-            margin: 0 3px;
-            border-radius: 6px;
-            display: inline-block;
-            transition: background 0.2s;
-        }
-        .navbar a:hover { background: rgba(255, 255, 255, 0.2); }
-        .navbar a.active { background: white; color: #6b2d5c; font-weight: 700; }
-
         .quiz-container {
             max-width: 900px;
             margin: 0 auto;
@@ -156,14 +135,38 @@
 </head>
 <body>
 
-    <div class="navbar">
-        <a href="index.html">Finance</a>
-        <a href="split.html">Split</a>
-        <a href="c-interview.html">C</a>
-        <a href="embedded-interview.html">Embedded</a>
-        <a href="linux-interview.html">Linux</a>
-        <a href="olympia-quiz.html" class="active">Olympia Quiz</a>
-    </div>
+    <div class="page-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">📚 Learning Hub</div>
+                <div class="sidebar-subtitle">Navigation Menu</div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="home.html"><span class="sidebar-icon">🏠</span> Home</a></li>
+                <li><a href="index.html"><span class="sidebar-icon">💰</span> Finance</a></li>
+                <li><a href="split.html"><span class="sidebar-icon">🧾</span> Split Money</a></li>
+                <li><a href="c-interview.html"><span class="sidebar-icon">💻</span> C Q&A</a></li>
+                <li><a href="embedded-interview.html"><span class="sidebar-icon">🔧</span> Embedded</a></li>
+                <li><a href="linux-interview.html"><span class="sidebar-icon">🐧</span> Linux/Driver</a></li>
+                <li><a href="olympia-quiz.html" class="active"><span class="sidebar-icon">🏆</span> Olympia Quiz</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+
+            <div class="content-area">
+
+            <div class="navbar">
+                <a href="home.html">🏠 Home</a>
+                <a href="index.html">Finance</a>
+                <a href="split.html">Split Money</a>
+                <a href="c-interview.html">C Q&A</a>
+                <a href="embedded-interview.html">Embedded</a>
+                <a href="linux-interview.html">Linux/Driver</a>
+                <a href="olympia-quiz.html" class="active">Olympia Quiz</a>
+            </div>
 
     <div class="container">
         <h1>🏆 Đường Lên Đỉnh Olympia & Ai Là Triệu Phú</h1>
@@ -959,6 +962,20 @@
 
         </div>
     </div>
+
+    <div class="page-navigation">
+        <a href="linux-interview.html" class="page-nav-btn">Previous</a>
+        <div class="page-nav-center">
+            <strong>Olympia Quiz</strong>
+            Page 6 of 6
+        </div>
+        <a href="home.html" class="page-nav-btn next">Back to Home</a>
+    </div>
+
+            </div><!-- End content-area -->
+
+        </div><!-- End main-content -->
+    </div><!-- End page-wrapper -->
 
 </body>
 </html>
