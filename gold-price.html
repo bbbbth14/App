@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Giá Vàng - Gold Price Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .gold-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .gold-header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: #333;
+            border-radius: 16px;
+            margin-bottom: 30px;
+        }
+
+        .gold-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .gold-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .update-time {
+            background: white;
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .gold-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-card .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #d97706;
+        }
+
+        .stat-card .label {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .price-table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .price-table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .price-table-header h2 {
+            color: #d97706;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .price-table-header h2::after {
+            display: none;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(249, 168, 38, 0.4);
+        }
+
+        .gold-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0;
+        }
+
+        .gold-table th {
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+            color: white;
+            padding: 14px;
+            text-align: center;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .gold-table td {
+            padding: 14px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .gold-table tr:hover td {
+            background: #fffbeb;
+        }
+
+        .gold-type {
+            font-weight: 600;
+            color: #1e293b;
+            text-align: left !important;
+        }
+
+        .price-buy {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .price-sell {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .price-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .price-up {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .price-down {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .price-stable {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .add-form-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .add-form-section h2 {
+            color: #d97706;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .add-form-section h2::after {
+            display: none;
+        }
+
+        .gold-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .gold-form .form-group {
+            margin-bottom: 0;
+        }
+
+        .gold-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .gold-form input,
+        .gold-form select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .gold-form input:focus,
+        .gold-form select:focus {
+            outline: none;
+            border-color: #f59e0b;
+        }
+
+        .gold-form button {
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            align-self: end;
+        }
+
+        .gold-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(249, 168, 38, 0.4);
+        }
+
+        .calculator-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .calculator-section h2 {
+            color: #d97706;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .calculator-section h2::after {
+            display: none;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .calc-group {
+            background: #fffbeb;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #fde68a;
+        }
+
+        .calc-group h3 {
+            color: #92400e;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .calc-result {
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .calc-result .amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .calc-result .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .history-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .history-section h2 {
+            color: #d97706;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .history-section h2::after {
+            display: none;
+        }
+
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-item .type {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .history-item .date {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        .history-item .prices {
+            text-align: right;
+        }
+
+        .history-item .buy {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .history-item .sell {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .gold-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .gold-table {
+                font-size: 0.85rem;
+            }
+            
+            .gold-table th,
+            .gold-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">📚 Learning Hub</div>
+                <div class="sidebar-subtitle">Navigation Menu</div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="home.html"><span class="sidebar-icon">🏠</span> Home</a></li>
+                <li><a href="index.html"><span class="sidebar-icon">💰</span> Finance</a></li>
+                <li><a href="gold-price.html" class="active"><span class="sidebar-icon">🥇</span> Gold Price</a></li>
+                <li><a href="split.html"><span class="sidebar-icon">🧾</span> Split Money</a></li>
+                <li><a href="c-interview.html"><span class="sidebar-icon">💻</span> C Q&A</a></li>
+                <li><a href="embedded-interview.html"><span class="sidebar-icon">🔧</span> Embedded</a></li>
+                <li><a href="linux-interview.html"><span class="sidebar-icon">🐧</span> Linux/Driver</a></li>
+                <li><a href="olympia-quiz.html"><span class="sidebar-icon">🏆</span> Olympia Quiz</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="content-area">
+
+                <div class="navbar">
+                    <a href="home.html">🏠 Home</a>
+                    <a href="index.html">Finance</a>
+                    <a href="gold-price.html" class="active">Gold Price</a>
+                    <a href="split.html">Split</a>
+                    <a href="c-interview.html">C Q&A</a>
+                    <a href="embedded-interview.html">Embedded</a>
+                    <a href="linux-interview.html">Linux</a>
+                    <a href="olympia-quiz.html">Olympia</a>
+                </div>
+
+                <div class="container gold-container">
+                    <div class="gold-header">
+                        <h1>🥇 Quản Lý Giá Vàng</h1>
+                        <p>Theo dõi và quản lý giá vàng hàng ngày - Gold Price Management</p>
+                        <div class="update-time" id="update-time">
+                            ⏰ Cập nhật lần cuối: <span id="last-update">--:--:--</span>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="gold-stats">
+                        <div class="stat-card">
+                            <div class="icon">📊</div>
+                            <div class="value" id="total-types">0</div>
+                            <div class="label">Loại vàng theo dõi</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="icon">💹</div>
+                            <div class="value" id="avg-buy-price">0</div>
+                            <div class="label">Giá mua TB (triệu/lượng)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="icon">💰</div>
+                            <div class="value" id="avg-sell-price">0</div>
+                            <div class="label">Giá bán TB (triệu/lượng)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="icon">📈</div>
+                            <div class="value" id="spread">0</div>
+                            <div class="label">Chênh lệch TB (nghìn)</div>
+                        </div>
+                    </div>
+
+                    <!-- Add New Price Form -->
+                    <div class="add-form-section">
+                        <h2>➕ Thêm/Cập Nhật Giá Vàng</h2>
+                        <form class="gold-form" id="gold-form">
+                            <div class="form-group">
+                                <label for="gold-type">Loại vàng</label>
+                                <select id="gold-type" required>
+                                    <option value="">-- Chọn loại vàng --</option>
+                                    <option value="SJC 1L - 10L">Vàng miếng SJC 1L - 10L</option>
+                                    <option value="SJC 0.5L">Vàng miếng SJC 0.5L</option>
+                                    <option value="SJC 1 Chỉ, 2 Chỉ, 5 Chỉ">Vàng miếng SJC 1, 2, 5 chỉ</option>
+                                    <option value="Nhẫn trơn 99.99%">Vàng nhẫn trơn 99.99%</option>
+                                    <option value="Nhẫn tròn 99.99%">Vàng nhẫn tròn 99.99%</option>
+                                    <option value="Nữ trang 24K">Nữ trang vàng 24K</option>
+                                    <option value="Nữ trang 18K">Nữ trang vàng 18K</option>
+                                    <option value="Nữ trang 14K">Nữ trang vàng 14K</option>
+                                    <option value="custom">Khác (nhập tên)...</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="custom-type-group" style="display: none;">
+                                <label for="custom-type">Tên loại vàng</label>
+                                <input type="text" id="custom-type" placeholder="Nhập tên loại vàng">
+                            </div>
+                            <div class="form-group">
+                                <label for="buy-price">Giá mua (VNĐ/lượng)</label>
+                                <input type="number" id="buy-price" placeholder="VD: 82000000" step="1000" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sell-price">Giá bán (VNĐ/lượng)</label>
+                                <input type="number" id="sell-price" placeholder="VD: 84000000" step="1000" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="price-date">Ngày cập nhật</label>
+                                <input type="date" id="price-date" required>
+                            </div>
+                            <button type="submit">💾 Lưu giá</button>
+                        </form>
+                    </div>
+
+                    <!-- Gold Price Table -->
+                    <div class="price-table-container">
+                        <div class="price-table-header">
+                            <h2>📋 Bảng Giá Vàng Hôm Nay</h2>
+                            <button class="refresh-btn" id="refresh-btn">
+                                🔄 Làm mới
+                            </button>
+                        </div>
+                        <table class="gold-table">
+                            <thead>
+                                <tr>
+                                    <th>Loại vàng</th>
+                                    <th>Giá mua (VNĐ/lượng)</th>
+                                    <th>Giá bán (VNĐ/lượng)</th>
+                                    <th>Chênh lệch</th>
+                                    <th>Ngày</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="gold-table-body">
+                                <!-- Data will be inserted here -->
+                            </tbody>
+                        </table>
+                        <div class="empty-state" id="empty-state" style="display: none;">
+                            <div class="icon">🥇</div>
+                            <p>Chưa có dữ liệu giá vàng. Hãy thêm giá mới!</p>
+                        </div>
+                    </div>
+
+                    <!-- Calculator Section -->
+                    <div class="calculator-section">
+                        <h2>🧮 Máy Tính Giá Vàng</h2>
+                        <div class="calc-grid">
+                            <div class="calc-group">
+                                <h3>💵 Tính giá theo lượng</h3>
+                                <div class="form-group">
+                                    <label for="calc-type">Loại vàng</label>
+                                    <select id="calc-type">
+                                        <option value="">-- Chọn loại vàng --</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="calc-weight">Số lượng (lượng)</label>
+                                    <input type="number" id="calc-weight" placeholder="VD: 1.5" step="0.1" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="calc-mode">Loại giao dịch</label>
+                                    <select id="calc-mode">
+                                        <option value="buy">Mua vào</option>
+                                        <option value="sell">Bán ra</option>
+                                    </select>
+                                </div>
+                                <button onclick="calculatePrice()" style="width: 100%; margin-top: 10px;">📊 Tính giá</button>
+                                <div class="calc-result" id="calc-result" style="display: none;">
+                                    <div class="amount" id="calc-amount">0 VNĐ</div>
+                                    <div class="label" id="calc-label">Tổng tiền</div>
+                                </div>
+                            </div>
+
+                            <div class="calc-group">
+                                <h3>⚖️ Đổi đơn vị</h3>
+                                <div class="form-group">
+                                    <label for="weight-value">Giá trị</label>
+                                    <input type="number" id="weight-value" placeholder="VD: 1" step="0.01" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="weight-from">Từ đơn vị</label>
+                                    <select id="weight-from">
+                                        <option value="luong">Lượng (37.5g)</option>
+                                        <option value="chi">Chỉ (3.75g)</option>
+                                        <option value="phan">Phân (0.375g)</option>
+                                        <option value="gram">Gram</option>
+                                        <option value="ounce">Ounce (31.1035g)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="weight-to">Sang đơn vị</label>
+                                    <select id="weight-to">
+                                        <option value="gram">Gram</option>
+                                        <option value="luong">Lượng (37.5g)</option>
+                                        <option value="chi">Chỉ (3.75g)</option>
+                                        <option value="phan">Phân (0.375g)</option>
+                                        <option value="ounce">Ounce (31.1035g)</option>
+                                    </select>
+                                </div>
+                                <button onclick="convertWeight()" style="width: 100%; margin-top: 10px;">🔄 Chuyển đổi</button>
+                                <div class="calc-result" id="convert-result" style="display: none;">
+                                    <div class="amount" id="convert-amount">0</div>
+                                    <div class="label" id="convert-label">Kết quả</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price History -->
+                    <div class="history-section">
+                        <h2>📜 Lịch Sử Giá Vàng</h2>
+                        <div class="history-list" id="history-list">
+                            <!-- History items will be inserted here -->
+                        </div>
+                        <div class="empty-state" id="history-empty" style="display: none;">
+                            <div class="icon">📜</div>
+                            <p>Chưa có lịch sử giá vàng.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page-navigation">
+                    <a href="index.html" class="page-nav-btn">Previous</a>
+                    <div class="page-nav-center">
+                        <strong>Gold Price Management</strong>
+                        Quản lý giá vàng
+                    </div>
+                    <a href="split.html" class="page-nav-btn next">Next</a>
+                </div>
+
+            </div><!-- End content-area -->
+        </div><!-- End main-content -->
+    </div><!-- End page-wrapper -->
+
+    <script>
+        // Format VND currency
+        function formatVND(amount) {
+            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        // Gold prices data
+        let goldPrices = JSON.parse(localStorage.getItem('goldPrices')) || [];
+        let priceHistory = JSON.parse(localStorage.getItem('priceHistory')) || [];
+
+        // DOM Elements
+        const goldForm = document.getElementById('gold-form');
+        const goldTypeSelect = document.getElementById('gold-type');
+        const customTypeGroup = document.getElementById('custom-type-group');
+        const customTypeInput = document.getElementById('custom-type');
+        const goldTableBody = document.getElementById('gold-table-body');
+        const emptyState = document.getElementById('empty-state');
+        const historyList = document.getElementById('history-list');
+        const historyEmpty = document.getElementById('history-empty');
+        const calcTypeSelect = document.getElementById('calc-type');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default date to today
+            document.getElementById('price-date').value = new Date().toISOString().split('T')[0];
+            
+            // Update last update time
+            updateLastUpdateTime();
+            
+            // Render data
+            renderGoldTable();
+            renderHistory();
+            updateStats();
+            updateCalcTypeOptions();
+        });
+
+        // Show/hide custom type input
+        goldTypeSelect.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customTypeGroup.style.display = 'block';
+                customTypeInput.required = true;
+            } else {
+                customTypeGroup.style.display = 'none';
+                customTypeInput.required = false;
+            }
+        });
+
+        // Form submission
+        goldForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            let goldType = goldTypeSelect.value;
+            if (goldType === 'custom') {
+                goldType = customTypeInput.value.trim();
+                if (!goldType) {
+                    alert('Vui lòng nhập tên loại vàng!');
+                    return;
+                }
+            }
+
+            const buyPrice = parseInt(document.getElementById('buy-price').value);
+            const sellPrice = parseInt(document.getElementById('sell-price').value);
+            const priceDate = document.getElementById('price-date').value;
+
+            if (buyPrice >= sellPrice) {
+                alert('Giá bán phải cao hơn giá mua!');
+                return;
+            }
+
+            // Check if type already exists
+            const existingIndex = goldPrices.findIndex(p => p.type === goldType);
+            
+            if (existingIndex !== -1) {
+                // Save old price to history
+                const oldPrice = goldPrices[existingIndex];
+                priceHistory.unshift({
+                    ...oldPrice,
+                    savedAt: new Date().toISOString()
+                });
+                
+                // Update existing
+                goldPrices[existingIndex] = {
+                    id: oldPrice.id,
+                    type: goldType,
+                    buyPrice,
+                    sellPrice,
+                    date: priceDate,
+                    updatedAt: new Date().toISOString()
+                };
+            } else {
+                // Add new
+                goldPrices.push({
+                    id: Date.now(),
+                    type: goldType,
+                    buyPrice,
+                    sellPrice,
+                    date: priceDate,
+                    updatedAt: new Date().toISOString()
+                });
+            }
+
+            saveData();
+            renderGoldTable();
+            renderHistory();
+            updateStats();
+            updateCalcTypeOptions();
+            updateLastUpdateTime();
+
+            // Reset form
+            goldForm.reset();
+            document.getElementById('price-date').value = new Date().toISOString().split('T')[0];
+            customTypeGroup.style.display = 'none';
+
+            alert(existingIndex !== -1 ? 'Đã cập nhật giá vàng!' : 'Đã thêm giá vàng mới!');
+        });
+
+        // Render gold table
+        function renderGoldTable() {
+            if (goldPrices.length === 0) {
+                goldTableBody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            goldTableBody.innerHTML = goldPrices.map(price => {
+                const spread = price.sellPrice - price.buyPrice;
+                return `
+                    <tr>
+                        <td class="gold-type">${price.type}</td>
+                        <td class="price-buy">${formatVND(price.buyPrice)}</td>
+                        <td class="price-sell">${formatVND(price.sellPrice)}</td>
+                        <td>
+                            <span class="price-change price-stable">
+                                ${formatVND(spread)}
+                            </span>
+                        </td>
+                        <td>${formatDate(price.date)}</td>
+                        <td>
+                            <button class="delete-btn" onclick="deletePrice(${price.id})">🗑️ Xóa</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Render history
+        function renderHistory() {
+            if (priceHistory.length === 0) {
+                historyList.innerHTML = '';
+                historyEmpty.style.display = 'block';
+                return;
+            }
+
+            historyEmpty.style.display = 'none';
+            historyList.innerHTML = priceHistory.slice(0, 20).map(item => `
+                <div class="history-item">
+                    <div>
+                        <div class="type">${item.type}</div>
+                        <div class="date">${formatDateTime(item.savedAt)}</div>
+                    </div>
+                    <div class="prices">
+                        <span class="buy">Mua: ${formatVND(item.buyPrice)}</span>
+                        <span class="sell"> | Bán: ${formatVND(item.sellPrice)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('total-types').textContent = goldPrices.length;
+
+            if (goldPrices.length === 0) {
+                document.getElementById('avg-buy-price').textContent = '0';
+                document.getElementById('avg-sell-price').textContent = '0';
+                document.getElementById('spread').textContent = '0';
+                return;
+            }
+
+            const totalBuy = goldPrices.reduce((sum, p) => sum + p.buyPrice, 0);
+            const totalSell = goldPrices.reduce((sum, p) => sum + p.sellPrice, 0);
+            const avgBuy = totalBuy / goldPrices.length;
+            const avgSell = totalSell / goldPrices.length;
+            const avgSpread = (avgSell - avgBuy) / 1000;
+
+            document.getElementById('avg-buy-price').textContent = (avgBuy / 1000000).toFixed(2);
+            document.getElementById('avg-sell-price').textContent = (avgSell / 1000000).toFixed(2);
+            document.getElementById('spread').textContent = avgSpread.toFixed(0);
+        }
+
+        // Update calculator options
+        function updateCalcTypeOptions() {
+            calcTypeSelect.innerHTML = '<option value="">-- Chọn loại vàng --</option>';
+            goldPrices.forEach(price => {
+                calcTypeSelect.innerHTML += `<option value="${price.id}">${price.type}</option>`;
+            });
+        }
+
+        // Delete price
+        function deletePrice(id) {
+            if (!confirm('Bạn có chắc muốn xóa giá này?')) return;
+            
+            const deleted = goldPrices.find(p => p.id === id);
+            if (deleted) {
+                priceHistory.unshift({
+                    ...deleted,
+                    savedAt: new Date().toISOString(),
+                    deletedAt: new Date().toISOString()
+                });
+            }
+            
+            goldPrices = goldPrices.filter(p => p.id !== id);
+            saveData();
+            renderGoldTable();
+            renderHistory();
+            updateStats();
+            updateCalcTypeOptions();
+        }
+
+        // Calculate price
+        function calculatePrice() {
+            const typeId = parseInt(calcTypeSelect.value);
+            const weight = parseFloat(document.getElementById('calc-weight').value);
+            const mode = document.getElementById('calc-mode').value;
+
+            if (!typeId || !weight) {
+                alert('Vui lòng chọn loại vàng và nhập số lượng!');
+                return;
+            }
+
+            const price = goldPrices.find(p => p.id === typeId);
+            if (!price) {
+                alert('Không tìm thấy loại vàng!');
+                return;
+            }
+
+            const pricePerUnit = mode === 'buy' ? price.buyPrice : price.sellPrice;
+            const total = pricePerUnit * weight;
+
+            document.getElementById('calc-result').style.display = 'block';
+            document.getElementById('calc-amount').textContent = formatVND(total) + ' VNĐ';
+            document.getElementById('calc-label').textContent = 
+                `${weight} lượng ${price.type} - Giá ${mode === 'buy' ? 'mua' : 'bán'}`;
+        }
+
+        // Convert weight units
+        function convertWeight() {
+            const value = parseFloat(document.getElementById('weight-value').value);
+            const fromUnit = document.getElementById('weight-from').value;
+            const toUnit = document.getElementById('weight-to').value;
+
+            if (!value) {
+                alert('Vui lòng nhập giá trị!');
+                return;
+            }
+
+            // Conversion factors to grams
+            const gramsPerUnit = {
+                luong: 37.5,
+                chi: 3.75,
+                phan: 0.375,
+                gram: 1,
+                ounce: 31.1035
+            };
+
+            const inGrams = value * gramsPerUnit[fromUnit];
+            const result = inGrams / gramsPerUnit[toUnit];
+
+            const unitNames = {
+                luong: 'lượng',
+                chi: 'chỉ',
+                phan: 'phân',
+                gram: 'gram',
+                ounce: 'ounce'
+            };
+
+            document.getElementById('convert-result').style.display = 'block';
+            document.getElementById('convert-amount').textContent = result.toFixed(4);
+            document.getElementById('convert-label').textContent = 
+                `${value} ${unitNames[fromUnit]} = ${result.toFixed(4)} ${unitNames[toUnit]}`;
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('goldPrices', JSON.stringify(goldPrices));
+            localStorage.setItem('priceHistory', JSON.stringify(priceHistory));
+        }
+
+        // Update last update time
+        function updateLastUpdateTime() {
+            const now = new Date();
+            document.getElementById('last-update').textContent = now.toLocaleString('vi-VN');
+        }
+
+        // Format date
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('vi-VN');
+        }
+
+        // Format datetime
+        function formatDateTime(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleString('vi-VN');
+        }
+
+        // Refresh button
+        document.getElementById('refresh-btn').addEventListener('click', function() {
+            updateLastUpdateTime();
+            renderGoldTable();
+            updateStats();
+            alert('Đã làm mới dữ liệu!');
+        });
+
+        // Add sample data button (for demo)
+        function addSampleData() {
+            const sampleData = [
+                { type: 'SJC 1L - 10L', buyPrice: 82000000, sellPrice: 84500000 },
+                { type: 'SJC 0.5L', buyPrice: 82000000, sellPrice: 84700000 },
+                { type: 'Nhẫn trơn 99.99%', buyPrice: 81500000, sellPrice: 83000000 },
+                { type: 'Nữ trang 24K', buyPrice: 80500000, sellPrice: 82000000 },
+                { type: 'Nữ trang 18K', buyPrice: 59500000, sellPrice: 61000000 }
+            ];
+
+            const today = new Date().toISOString().split('T')[0];
+            
+            sampleData.forEach(item => {
+                if (!goldPrices.find(p => p.type === item.type)) {
+                    goldPrices.push({
+                        id: Date.now() + Math.random(),
+                        type: item.type,
+                        buyPrice: item.buyPrice,
+                        sellPrice: item.sellPrice,
+                        date: today,
+                        updatedAt: new Date().toISOString()
+                    });
+                }
+            });
+
+            saveData();
+            renderGoldTable();
+            renderHistory();
+            updateStats();
+            updateCalcTypeOptions();
+            updateLastUpdateTime();
+        }
+    </script>
+
+</body>
+</html>
