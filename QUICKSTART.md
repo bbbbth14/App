@@ -9,6 +9,7 @@
 ## ⚡ Quick Feature Access
 
 ### Navigation & Discovery
+
 - **Press `?`** - Show all keyboard shortcuts
 - **Press `Ctrl/Cmd+K`** - Open search
 - **Press `D`** - Toggle dark mode
@@ -17,11 +18,13 @@
 - **Press `L`** - Mark question as learned
 
 ### Learning Modes
+
 - **🎯 Quiz Mode** - Test yourself with timed quizzes
 - **🎴 Flashcard Mode** - Hide answers for rapid review
 - **🎲 Surprise Me** - Random question practice
 
 ### Productivity
+
 - **📊 Statistics** - Track your progress and streaks
 - **📝 Notes** - Add personal notes to questions
 - **🔊 Audio** - Listen to questions read aloud
@@ -32,6 +35,7 @@
 ## 📊 Feature Categories
 
 ### 🎯 Learning Enhancement (7 features)
+
 1. Quiz Mode - Interactive testing
 2. Flashcard Mode - Quick review
 3. Study Notes - Personal annotations
@@ -41,6 +45,7 @@
 7. Statistics Dashboard - Track habits
 
 ### ⚡ Productivity Tools (6 features)
+
 8. Search & Filter - Find anything instantly
 9. Keyboard Shortcuts - Navigate efficiently
 10. Study Timer - Pomodoro technique
@@ -49,12 +54,14 @@
 13. Topic Filtering - Focus on categories
 
 ### 🎨 Content Features (4 features)
+
 14. Code Copy - One-click code copying
 15. Export/Import - Backup questions
 16. Audio Support - Text-to-speech
 17. Print Mode - Printer-friendly layout
 
 ### ✨ UX Enhancements (2 features)
+
 18. Animations - Confetti, smooth scrolls
 19. Back to Top - Quick navigation
 
@@ -63,6 +70,7 @@
 ## 🎮 How to Use Each Feature
 
 ### 🔍 Search (Ctrl+K)
+
 ```
 1. Press Ctrl+K or Cmd+K
 2. Type keywords
@@ -71,6 +79,7 @@
 ```
 
 ### 🎯 Quiz Mode
+
 ```
 1. Click "Start Quiz Mode"
 2. Choose: # questions, time limit, difficulty
@@ -80,6 +89,7 @@
 ```
 
 ### 🎴 Flashcard Mode
+
 ```
 1. Click "Flashcard Mode" button
 2. All answers hide
@@ -89,6 +99,7 @@
 ```
 
 ### 📝 Study Notes
+
 ```
 1. Click "📝 Note" on any question
 2. Write your personal notes
@@ -98,6 +109,7 @@
 ```
 
 ### 📊 Statistics
+
 ```
 1. Click "📊 Stats" in navbar
 2. View study time, visits, streak
@@ -106,6 +118,7 @@
 ```
 
 ### 🌙 Dark Mode (Press D)
+
 ```
 1. Press 'D' key
 2. Or click theme toggle (top-right)
@@ -114,6 +127,7 @@
 ```
 
 ### ⏱️ Study Timer
+
 ```
 1. Click preset time (25/5/15/50 min)
 2. Click Start
@@ -127,17 +141,20 @@
 ## 🎨 Visual Features
 
 ### Difficulty Badges
+
 - 🟢 **Green** = Easy
-- 🟡 **Yellow** = Medium  
+- 🟡 **Yellow** = Medium
 - 🔴 **Red** = Hard
 
 ### Progress Indicators
+
 - ✅ Checkboxes on questions
 - 📊 Progress bar (0-100%)
 - 📈 Statistics display
 - 🔥 Streak counter
 
 ### Animations
+
 - 🎊 Confetti on correct answers
 - ✨ Smooth scroll transitions
 - 💫 Hover effects
@@ -195,11 +212,13 @@ You now have access to a **professional-grade learning platform** with:
 ## 🚀 What's Next?
 
 ### Upcoming in v2.1.0
+
 - PWA (works offline)
 - Spaced repetition
 - AI question recommendations
 
 ### Future Roadmap
+
 - Cloud sync
 - Mobile app
 - Community features
@@ -229,4 +248,4 @@ You now have access to a **professional-grade learning platform** with:
 
 ---
 
-*Learning Hub v2.0.0 - Developed with ❤️ for learners*
+_Learning Hub v2.0.0 - Developed with ❤️ for learners_

@@ -32,12 +32,13 @@
 
     <div class="navbar">
         <a href="home.html">🏠 Home</a>
-        <a href="index.html">Finance</a>
-        <a href="split.html">Split</a>
-        <a href="c-interview.html" class="active">C</a>
-        <a href="embedded-interview.html">Embedded</a>
-        <a href="linux-interview.html">Linux</a>
-        <a href="olympia-quiz.html">Olympia</a>
+        <a href="home.html">🏠 Home</a>
+        <a href="index.html">💰 Finance</a>
+        <a href="split.html">🧾 Split Money</a>
+        <a href="c-interview.html" class="active">💻 C Q&A</a>
+        <a href="embedded-interview.html">🔧 Embedded</a>
+        <a href="linux-interview.html">🐧 Linux/Driver</a>
+        <a href="olympia-quiz.html">🏆 Olympia</a>
     </div>
 
     <div class="container">
@@ -1025,6 +1026,1022 @@ int main() {
 }</pre>
                     <strong>Use cases:</strong> Error recovery, implementing exception handling, escaping from deeply nested calls
                     <br><strong>Warning:</strong> Can cause resource leaks (destructors not called), use with caution!
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>Explain memory-mapped I/O and how it's used in embedded systems</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert23')">View Answer</button>
+                <div id="answer-expert23" class="answer">
+                    Memory-mapped I/O treats device registers as memory addresses, allowing direct hardware access.
+                    <pre>// Example: LED control on embedded device
+#define LED_PORT    ((volatile unsigned int*)0x40020014)
+#define LED_DDR     ((volatile unsigned int*)0x40020010)
+
+// Configure LED pin as output
+*LED_DDR |= (1 << 5);
+
+// Turn LED on/off
+*LED_PORT |= (1 << 5);   // LED ON
+*LED_PORT &= ~(1 << 5);  // LED OFF
+
+// Volatile is critical!
+volatile unsigned int *reg = (unsigned int*)0x40001000;
+while (*reg & 0x01);  // Wait for bit to clear
+// Without volatile, compiler might optimize away the loop!</pre>
+                    <strong>Why volatile is essential:</strong>
+                    <ul>
+                        <li>Prevents compiler optimization that caches values</li>
+                        <li>Forces actual memory reads each time</li>
+                        <li>Hardware can change values independently</li>
+                        <li>Critical for MMIO, interrupts, multi-threading</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What are compound literals and designated initializers in C99?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert24')">View Answer</button>
+                <div id="answer-expert24" class="answer">
+                    <strong>Compound Literals:</strong> Create unnamed array/struct objects on-the-fly.
+                    <pre>// Compound literal - creates temporary array
+int sum(int arr[], int n) { /* ... */ }
+
+// Call without creating named array
+int result = sum((int[]){1, 2, 3, 4, 5}, 5);
+
+// Struct compound literal
+typedef struct { int x, y; } Point;
+void print_point(Point p) { printf("%d,%d\n", p.x, p.y); }
+
+print_point((Point){.x = 10, .y = 20});  // No temp variable needed!</pre>
+
+                    <strong>Designated Initializers:</strong> Initialize specific members by name/index.
+                    <pre>// Array designated initializers
+int arr[100] = {
+    [0] = 1,
+    [50] = 100,
+    [99] = 200
+    // Rest are 0
+};
+
+// Struct designated initializers
+struct Config {
+    char *name;
+    int port;
+    int timeout;
+    int max_conn;
+};
+
+struct Config cfg = {
+    .name = "Server",
+    .port = 8080,
+    .timeout = 30
+    // max_conn defaults to 0
+};
+
+// Can mix with positional
+int mixed[] = {1, 2, [5] = 6, 7};  // {1,2,0,0,0,6,7}</pre>
+                    <strong>Benefits:</strong> Cleaner code, fewer bugs, self-documenting
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>Explain the different storage durations in C</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert25')">View Answer</button>
+                <div id="answer-expert25" class="answer">
+                    C has 4 storage durations: automatic, static, allocated, and thread.
+                    <pre>// 1. AUTOMATIC (stack) - default for local variables
+void func() {
+    int x = 10;  // Created when func called, destroyed on return
+    // Lifetime: function execution
+}
+
+// 2. STATIC - exists for program lifetime
+int global = 5;  // File scope, static duration
+
+void counter() {
+    static int count = 0;  // Initialized once, persists between calls
+    count++;
+    printf("%d\n", count);
+}
+
+// 3. ALLOCATED (heap) - manual control
+void heap_example() {
+    int *ptr = malloc(sizeof(int));  // Exists until freed
+    *ptr = 100;
+    free(ptr);  // Must manually free
+}
+
+// 4. THREAD (_Thread_local in C11) - per-thread storage
+_Thread_local int thread_var = 0;  // Each thread has own copy
+
+// Storage class specifiers
+auto int a;      // Automatic (rarely used, default for locals)
+register int b;  // Hint for CPU register (obsolete)
+static int c;    // Static duration + internal linkage
+extern int d;    // Declaration, defined elsewhere</pre>
+                    <strong>Memory segments:</strong>
+                    <ul>
+                        <li><strong>Stack:</strong> Automatic variables, fast but limited size</li>
+                        <li><strong>Data:</strong> Initialized static/global (global = 10)</li>
+                        <li><strong>BSS:</strong> Uninitialized static/global (static int x;)</li>
+                        <li><strong>Heap:</strong> malloc/calloc/realloc, flexible but slower</li>
+                        <li><strong>Code:</strong> Executable instructions (read-only)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is strict aliasing and why does it matter?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert26')">View Answer</button>
+                <div id="answer-expert26" class="answer">
+                    Strict aliasing rule: Accessing an object through incompatible pointer types is undefined behavior.
+                    <pre>// WRONG - Violates strict aliasing!
+int i = 42;
+float *fp = (float*)&i;  // Incompatible types
+float f = *fp;  // Undefined behavior! Reads int as float
+
+// Compiler assumes pointers to different types don't alias
+void update(int *a, float *b) {
+    *a = 10;
+    *b = 20.0f;
+    return *a;  // Compiler may optimize to return 10 directly
+}
+// If a and b actually point to same memory (aliased), result is wrong!
+
+// CORRECT - Use union for type punning
+union Convert {
+    int i;
+    float f;
+};
+
+union Convert c;
+c.i = 42;
+float result = c.f;  // Defined behavior via union</pre>
+
+                    <strong>Exceptions (allowed aliasing):</strong>
+                    <ul>
+                        <li><code>char*</code> can alias anything (byte access)</li>
+                        <li>Signed ↔ unsigned of same type</li>
+                        <li>Union members</li>
+                        <li>Aggregate/union containing the type</li>
+                    </ul>
+
+                    <pre>// Valid: char* can alias anything
+int value = 0x12345678;
+unsigned char *bytes = (unsigned char*)&value;
+printf("%02x %02x %02x %02x\n", bytes[0], bytes[1], bytes[2], bytes[3]);
+
+// Disable strict aliasing (when necessary)
+// gcc: -fno-strict-aliasing</pre>
+                    <strong>Why it matters:</strong> Enables aggressive compiler optimizations, violations cause subtle bugs
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>How do function pointers work and what are their use cases?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert27')">View Answer</button>
+                <div id="answer-expert27" class="answer">
+                    Function pointers store addresses of functions, enabling callbacks, polymorphism, and plugin systems.
+                    <pre>// Basic function pointer
+int add(int a, int b) { return a + b; }
+int sub(int a, int b) { return a - b; }
+
+int (*operation)(int, int);  // Declare function pointer
+operation = add;             // Assign
+int result = operation(5, 3);  // Call: returns 8
+
+operation = sub;
+result = operation(5, 3);  // Returns 2
+
+// Callback example
+void forEach(int arr[], int n, void (*callback)(int)) {
+    for (int i = 0; i < n; i++) {
+        callback(arr[i]);
+    }
+}
+
+void print(int x) { printf("%d ", x); }
+void square_print(int x) { printf("%d ", x * x); }
+
+int arr[] = {1, 2, 3, 4, 5};
+forEach(arr, 5, print);        // 1 2 3 4 5
+forEach(arr, 5, square_print); // 1 4 9 16 25
+
+// Array of function pointers (dispatch table)
+typedef int (*MathOp)(int, int);
+MathOp operations[] = {add, sub, mul, div};
+int choice = 0;  // User selects operation
+int result = operations[choice](10, 5);
+
+// Function returning function pointer
+int (*getOperation(char op))(int, int) {
+    switch(op) {
+        case '+': return add;
+        case '-': return sub;
+        default: return NULL;
+    }
+}
+
+int (*op)(int, int) = getOperation('+');
+result = op(7, 3);  // 10</pre>
+                    <strong>Real-world uses:</strong> Event handlers, state machines, qsort comparators, signal handlers
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>Explain sequence points and undefined behavior in expressions</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert28')">View Answer</button>
+                <div id="answer-expert28" class="answer">
+                    Sequence points define when side effects of expressions must be complete. Between sequence points, order is undefined.
+                    <pre>// UNDEFINED - Multiple modifications without sequence point
+int i = 5;
+i = i++;  // UB! i modified twice without sequence point
+
+int arr[10];
+int j = 0;
+arr[j] = j++;  // UB! j read and modified
+
+// More subtle examples
+int x = f() + g();  // UB if f() or g() modify same global
+printf("%d %d\n", i++, i++);  // UB! Order of evaluation undefined
+
+// DEFINED - Sequence points present
+int a = 5;
+a = a + 1;  // OK: Only one modification
+a++;        // OK: Full expression is sequence point
+
+int b = 5;
+b = b + 1, b = b * 2;  // OK: Comma operator has sequence point
+// First: b = 6, then: b = 12
+
+// Logical operators have sequence points
+if (ptr != NULL && *ptr == 5)  // OK: && guarantees left evaluated first
+
+// Function calls have sequence points
+printf("%d\n", i++);  // OK: i++ complete before printf processes args</pre>
+
+                    <strong>Sequence points occur:</strong>
+                    <ul>
+                        <li>End of full expression (;)</li>
+                        <li>After function arguments evaluated (before call)</li>
+                        <li>After first operand of <code>&&</code>, <code>||</code>, <code>?:</code>, <code>,</code></li>
+                        <li>Function return</li>
+                    </ul>
+
+                    <pre>// C11 sequencing (modernized)
+// Instead of "sequence points", uses "sequenced before" relation
+i = i++ + 1;  // Still UB in C11
+i = (i + 1) + 1;  // OK</pre>
+                    <strong>Best practice:</strong> One modification per variable per statement
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What are the differences between <code>malloc</code>, <code>calloc</code>, and <code>realloc</code>?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert29')">View Answer</button>
+                <div id="answer-expert29" class="answer">
+                    <strong>malloc:</strong> Allocates memory without initialization.
+                    <pre>// malloc - fast but uninitialized (garbage values)
+int *arr = (int*)malloc(10 * sizeof(int));
+// arr[0..9] contain random garbage!
+if (arr == NULL) { /* handle error */ }
+free(arr);</pre>
+
+                    <strong>calloc:</strong> Allocates and zeros memory.
+                    <pre>// calloc - slower but initialized to zero
+int *arr = (int*)calloc(10, sizeof(int));
+// arr[0..9] are all 0
+// Syntax: calloc(count, size per element)
+free(arr);</pre>
+
+                    <strong>realloc:</strong> Resizes existing allocation.
+                    <pre>// realloc - resize dynamic array
+int *arr = (int*)malloc(5 * sizeof(int));
+// ... use arr[0..4] ...
+
+// Need more space
+int *temp = (int*)realloc(arr, 10 * sizeof(int));
+if (temp == NULL) {
+    // Realloc failed, arr still valid
+    free(arr);
+} else {
+    arr = temp;  // arr now points to larger block
+    // arr[0..4] preserved, arr[5..9] uninitialized
+}
+
+// realloc can move memory!
+// Old arr pointer may be invalid after realloc
+// Always assign to temp first</pre>
+
+                    <strong>Performance comparison:</strong>
+                    <table style="width:100%; border-collapse: collapse; margin: 10px 0;">
+                        <tr style="background: #f1f5f9;">
+                            <th style="padding: 8px; border: 1px solid #e2e8f0; text-align: left;">Function</th>
+                            <th style="padding: 8px; border: 1px solid #e2e8f0; text-align: left;">Speed</th>
+                            <th style="padding: 8px; border: 1px solid #e2e8f0; text-align: left;">Initial Value</th>
+                            <th style="padding: 8px; border: 1px solid #e2e8f0; text-align: left;">Use When</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;"><code>malloc</code></td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Fastest</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Garbage</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Will initialize manually</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;"><code>calloc</code></td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Slower</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Zero</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Need zero-initialized</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;"><code>realloc</code></td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Varies</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Preserved + Garbage</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Resize existing array</td>
+                        </tr>
+                    </table>
+
+                    <pre>// realloc edge cases
+int *p = malloc(100);
+p = realloc(p, 200);  // WRONG! Memory leak if realloc fails
+
+// Shrinking allocation
+p = realloc(arr, 50);  // Make smaller, guaranteed success
+
+// realloc with NULL = malloc
+int *q = realloc(NULL, 100);  // Same as malloc(100)
+
+// realloc with size 0 = free (implementation-defined)
+realloc(arr, 0);  // May free and return NULL</pre>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>How does <code>offsetof</code> macro work and when should you use it?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert30')">View Answer</button>
+                <div id="answer-expert30" class="answer">
+                    <code>offsetof</code> returns the byte offset of a struct member from the start of the struct.
+                    <pre>#include &lt;stddef.h&gt;
+
+struct Employee {
+    int id;          // Offset: 0
+    char name[50];   // Offset: 4
+    double salary;   // Offset: 56 (with padding)
+};
+
+// Get offsets
+size_t id_offset = offsetof(struct Employee, id);        // 0
+size_t name_offset = offsetof(struct Employee, name);    // 4
+size_t salary_offset = offsetof(struct Employee, salary);  // 56
+
+printf("ID at offset: %zu\n", id_offset);
+printf("Name at offset: %zu\n", name_offset);
+printf("Salary at offset: %zu\n", salary_offset);
+
+// Container_of macro (Linux kernel pattern)
+#define container_of(ptr, type, member) \
+    ((type *)((char *)(ptr) - offsetof(type, member)))
+
+struct Employee emp = {123, "John", 50000.0};
+char *name_ptr = emp.name;
+
+// Get struct pointer from member pointer
+struct Employee *emp_ptr = container_of(name_ptr, struct Employee, name);
+printf("ID: %d\n", emp_ptr->id);  // 123
+
+// Use case: Intrusive linked lists
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+struct Container {
+    char tag[10];
+    struct Node node;  // Embedded node
+    int value;
+};
+
+struct Container c1 = {"first", {100, NULL}, 42};
+struct Node *node_ptr = &c1.node;
+
+// Get container from embedded node
+struct Container *container = container_of(node_ptr, struct Container, node);
+printf("Tag: %s, Value: %d\n", container->tag, container->value);</pre>
+
+                    <strong>Why use offsetof:</strong>
+                    <ul>
+                        <li>Portable way to get struct layout</li>
+                        <li>Implement intrusive containers</li>
+                        <li>Serialize/deserialize structures</li>
+                        <li>Network protocol parsing</li>
+                        <li>Reflection-like capabilities in C</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>Explain the differences between signed and unsigned integer overflow</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert31')">View Answer</button>
+                <div id="answer-expert31" class="answer">
+                    <strong>Unsigned overflow:</strong> Well-defined, wraps around (modulo 2^n).
+                    <pre>// Unsigned overflow is DEFINED behavior
+unsigned int u = UINT_MAX;  // 4294967295 (on 32-bit)
+u++;  // Wraps to 0 (guaranteed)
+u--;  // Wraps to UINT_MAX
+
+// Safe for certain algorithms
+unsigned int hash = 0;
+for (int i = 0; i < n; i++) {
+    hash = hash * 31 + data[i];  // Overflow is OK, wraps predictably
+}
+
+// Time calculations
+unsigned int start = get_time();
+// ... work ...
+unsigned int end = get_time();
+unsigned int elapsed = end - start;  // Correct even if timer wrapped!</pre>
+
+                    <strong>Signed overflow:</strong> Undefined behavior!
+                    <pre>// Signed overflow is UNDEFINED BEHAVIOR
+int i = INT_MAX;  // 2147483647
+i++;  // UB! Anything can happen
+
+// Compiler can assume no overflow occurred
+int dangerous(int x) {
+    return x + 1 > x;  // Should always be true, right?
+}
+// Optimizer sees "x+1 can't overflow" and returns true without computing!
+// dangerous(INT_MAX) may return true even though INT_MAX+1 <= INT_MAX
+
+// Real bug example
+int len = strlen(input);
+char *buf = malloc(len + 1);  // If len = INT_MAX, allocates 0 bytes!
+
+// Security vulnerabilities
+int size = width * height;  // Overflow! Allocates too little
+void *buffer = malloc(size);</pre>
+
+                    <strong>Safe overflow checking:</strong>
+                    <pre>// Check before operation
+int safe_add(int a, int b, int *result) {
+    if (a > 0 && b > INT_MAX - a) return -1;  // Would overflow
+    if (a < 0 && b < INT_MIN - a) return -1;  // Would underflow
+    *result = a + b;
+    return 0;
+}
+
+// GCC built-ins (C5+)
+int a, b, result;
+if (__builtin_add_overflow(a, b, &result)) {
+    // Overflow occurred
+} else {
+    // result is valid
+}
+
+// Use unsigned when wrapping is desired
+unsigned int counter = 0;
+counter--;  // Wraps to UINT_MAX (defined behavior)</pre>
+
+                    <strong>Consequences of UB:</strong>
+                    <ul>
+                        <li>Compiler can optimize assuming no overflow</li>
+                        <li>Different results with -O0 vs -O2</li>
+                        <li>Security vulnerabilities (buffer overruns)</li>
+                        <li>Unpredictable behavior across platforms</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What is the purpose of <code>flexible array members</code> in structs?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert32')">View Answer</button>
+                <div id="answer-expert32" class="answer">
+                    Flexible array members (FAM) allow variable-size arrays as the last member of a struct (C99+).
+                    <pre>// Traditional (pre-C99) - "struct hack"
+struct OldString {
+    size_t length;
+    char data[1];  // Actually allocated larger
+};
+
+struct OldString *s = malloc(sizeof(*s) + 100);  // Allocate for 100 chars
+s->length = 100;
+strcpy(s->data, "Hello");  // Works but technically UB
+
+// Modern C99 - Flexible Array Member
+struct String {
+    size_t length;
+    char data[];  // FAM - no size specified!
+};
+
+// Allocate string with 100 characters
+struct String *str = malloc(sizeof(struct String) + 100);
+str->length = 100;
+strcpy(str->data, "Hello, World!");
+printf("%s\n", str->data);
+free(str);
+
+// sizeof behavior
+printf("%zu\n", sizeof(struct String));  // Doesn't include data[]
+
+// Real-world example: Network packet
+struct Packet {
+    uint32_t type;
+    uint32_t length;
+    uint8_t payload[];  // Variable-length payload
+};
+
+// Allocate packet with specific payload size
+size_t payload_size = 1024;
+struct Packet *pkt = malloc(sizeof(struct Packet) + payload_size);
+pkt->type = PKT_DATA;
+pkt->length = payload_size;
+memcpy(pkt->payload, data, payload_size);
+
+// Send packet
+send(sock, pkt, sizeof(struct Packet) + pkt->length, 0);
+free(pkt);</pre>
+
+                    <strong>Rules for FAM:</strong>
+                    <ul>
+                        <li>Must be last member of struct</li>
+                        <li>Struct must have at least one other member</li>
+                        <li>Cannot have array of such structs</li>
+                        <li>sizeof(struct) doesn't include FAM</li>
+                    </ul>
+
+                    <pre>// Incorrect uses
+struct Bad1 {
+    char data[];  // ERROR: No other members
+};
+
+struct Bad2 {
+    char data[];
+    int x;  // ERROR: FAM not last
+};
+
+struct Good {
+    int count;
+    double values[];  // OK
+};
+
+// Cannot create array of FAM structs
+struct Good arr[10];  // ERROR!</pre>
+
+                    <strong>Benefits:</strong> Single allocation (better cache locality), proper semantics (vs struct hack)
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>How do you implement generic data structures in C?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert33')">View Answer</button>
+                <div id="answer-expert33" class="answer">
+                    C provides several approaches for generic programming: void pointers, macros, and code generation.
+                    <pre>// 1. VOID POINTERS - Type-agnostic, runtime overhead
+typedef struct {
+    void **data;
+    size_t size;
+    size_t capacity;
+    size_t elem_size;
+} Vector;
+
+void vector_init(Vector *v, size_t elem_size) {
+    v->data = malloc(10 * sizeof(void*));
+    v->size = 0;
+    v->capacity = 10;
+    v->elem_size = elem_size;
+}
+
+void vector_push(Vector *v, void *elem) {
+    if (v->size >= v->capacity) {
+        v->capacity *= 2;
+        v->data = realloc(v->data, v->capacity * sizeof(void*));
+    }
+    v->data[v->size] = malloc(v->elem_size);
+    memcpy(v->data[v->size], elem, v->elem_size);
+    v->size++;
+}
+
+void* vector_get(Vector *v, size_t index) {
+    return v->data[index];
+}
+
+// Usage
+Vector int_vec;
+vector_init(&int_vec, sizeof(int));
+int x = 42;
+vector_push(&int_vec, &x);
+int *retrieved = (int*)vector_get(&int_vec, 0);
+
+// 2. MACROS - Type-safe, compile-time
+#define DECLARE_VECTOR(type) \
+    typedef struct { \
+        type *data; \
+        size_t size; \
+        size_t capacity; \
+    } Vector_##type; \
+    \
+    void Vector_##type##_init(Vector_##type *v) { \
+        v->data = malloc(10 * sizeof(type)); \
+        v->size = 0; \
+        v->capacity = 10; \
+    } \
+    \
+    void Vector_##type##_push(Vector_##type *v, type elem) { \
+        if (v->size >= v->capacity) { \
+            v->capacity *= 2; \
+            v->data = realloc(v->data, v->capacity * sizeof(type)); \
+        } \
+        v->data[v->size++] = elem; \
+    } \
+    \
+    type Vector_##type##_get(Vector_##type *v, size_t i) { \
+        return v->data[i]; \
+    }
+
+// Instantiate for int
+DECLARE_VECTOR(int)
+DECLARE_VECTOR(double)
+
+// Usage
+Vector_int vec;
+Vector_int_init(&vec);
+Vector_int_push(&vec, 42);
+int val = Vector_int_get(&vec, 0);  // Type-safe!
+
+// 3. GENERIC COMPARISON FUNCTIONS (qsort style)
+void generic_swap(void *a, void *b, size_t size) {
+    unsigned char temp[size];
+    memcpy(temp, a, size);
+    memcpy(a, b, size);
+    memcpy(b, temp, size);
+}
+
+void generic_sort(void *base, size_t nmemb, size_t size,
+                  int (*cmp)(const void*, const void*)) {
+    for (size_t i = 0; i < nmemb-1; i++) {
+        for (size_t j = 0; j < nmemb-i-1; j++) {
+            void *p1 = (char*)base + j*size;
+            void *p2 = (char*)base + (j+1)*size;
+            if (cmp(p1, p2) > 0) {
+                generic_swap(p1, p2, size);
+            }
+        }
+    }
+}
+
+// Comparison functions
+int compare_int(const void *a, const void *b) {
+    return *(int*)a - *(int*)b;
+}
+
+int arr[] = {5, 2, 8, 1, 9};
+generic_sort(arr, 5, sizeof(int), compare_int);</pre>
+
+                    <strong>Trade-offs:</strong>
+                    <ul>
+                        <li>Void pointers: Flexible but not type-safe, runtime overhead</li>
+                        <li>Macros: Type-safe, fast, but code bloat and ugly syntax</li>
+                        <li>Code generation: Best of both, requires build step</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>Explain how <code>sigsetjmp</code> and <code>siglongjmp</code> differ from regular setjmp/longjmp</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert34')">View Answer</button>
+                <div id="answer-expert34" class="answer">
+                    <code>sigsetjmp/siglongjmp</code> additionally save and restore the signal mask, making them signal-safe.
+                    <pre>#include &lt;setjmp.h&gt;
+#include &lt;signal.h&gt;
+
+// Regular setjmp/longjmp - signal mask may change
+jmp_buf env;
+
+void signal_handler(int sig) {
+    longjmp(env, 1);  // Jump back
+}
+
+void example_unsafe() {
+    signal(SIGINT, signal_handler);
+    
+    if (setjmp(env) == 0) {
+        // Block SIGINT
+        sigset_t set;
+        sigemptyset(&set);
+        sigaddset(&set, SIGINT);
+        sigprocmask(SIG_BLOCK, &set, NULL);
+        
+        // Do work... if signal arrives and longjmp executes,
+        // SIGINT remains blocked! (signal mask not restored)
+    }
+}
+
+// sigsetjmp/siglongjmp - restores signal mask
+sigjmp_buf sigenv;
+
+void safe_handler(int sig) {
+    siglongjmp(sigenv, 1);  // Restores signal mask!
+}
+
+void example_safe() {
+    signal(SIGINT, safe_handler);
+    
+    if (sigsetjmp(sigenv, 1) == 0) {  // 1 = save signal mask
+        // Block SIGINT
+        sigset_t set;
+        sigemptyset(&set);
+        sigaddset(&set, SIGINT);
+        sigprocmask(SIG_BLOCK, &set, NULL);
+        
+        // Do work... if signal arrives and siglongjmp executes,
+        // signal mask is restored to what it was at sigsetjmp
+    }
+    // Signal mask restored here
+}
+
+// Error recovery in signal handlers
+volatile sig_atomic_t error_occurred = 0;
+sigjmp_buf recover_point;
+
+void fault_handler(int sig) {
+    error_occurred = 1;
+    siglongjmp(recover_point, 1);
+}
+
+int safe_operation(int *ptr) {
+    signal(SIGSEGV, fault_handler);
+    
+    if (sigsetjmp(recover_point, 1) == 0) {
+        // Try potentially dangerous operation
+        int value = *ptr;  // May fault if ptr is invalid
+        return value;
+    } else {
+        // Recovered from SIGSEGV
+        return -1;
+    }
+}
+
+// Usage
+int *bad_ptr = NULL;
+int result = safe_operation(bad_ptr);  // Returns -1 instead of crashing</pre>
+
+                    <strong>Key differences:</strong>
+                    <table style="width:100%; border-collapse: collapse; margin: 10px 0;">
+                        <tr style="background: #f1f5f9;">
+                            <th style="padding: 8px; border: 1px solid #e2e8f0;">Feature</th>
+                            <th style="padding: 8px; border: 1px solid #e2e8f0;">setjmp/longjmp</th>
+                            <th style="padding: 8px; border: 1px solid #e2e8f0;">sigsetjmp/siglongjmp</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Signal mask</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Not saved</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Optionally saved (if savemask != 0)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Use in signal handlers</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Unsafe</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Safe</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Performance</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Slightly faster</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Slightly slower</td>
+                        </tr>
+                    </table>
+
+                    <strong>When to use:</strong> Use sigsetjmp/siglongjmp when jumping from signal handlers or when signal mask preservation is critical
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>What are the pitfalls of using <code>gets()</code> and how does <code>fgets()</code> solve them?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert35')">View Answer</button>
+                <div id="answer-expert35" class="answer">
+                    <code>gets()</code> is dangerous and removed from C11 due to buffer overflow vulnerabilities.
+                    <pre>// NEVER USE gets() - it's dangerous!
+char buffer[10];
+gets(buffer);  // No bounds checking!
+// If user types more than 9 characters, buffer overflow!
+// Removed from C11 standard
+
+// ALWAYS USE fgets() instead
+char buffer[10];
+if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
+    // Safe: reads at most sizeof(buffer)-1 chars
+    // Includes newline if present
+    
+    // Remove trailing newline
+    size_t len = strlen(buffer);
+    if (len > 0 && buffer[len-1] == '\n') {
+        buffer[len-1] = '\0';
+    }
+}
+
+// Better: handle long inputs
+void read_line(char *buffer, size_t size) {
+    if (fgets(buffer, size, stdin) == NULL) {
+        buffer[0] = '\0';  // Error or EOF
+        return;
+    }
+    
+    // Remove newline
+    size_t len = strlen(buffer);
+    if (len > 0 && buffer[len-1] == '\n') {
+        buffer[len-1] = '\0';
+    } else {
+        // Input was truncated, discard rest of line
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF);
+    }
+}
+
+// Even better: dynamic allocation
+char* read_line_dynamic(void) {
+    char *line = NULL;
+    size_t size = 0;
+    ssize_t len = getline(&line, &size, stdin);  // POSIX, not C standard
+    
+    if (len > 0 && line[len-1] == '\n') {
+        line[len-1] = '\0';
+    }
+    
+    return line;  // Caller must free()
+}
+
+// Usage
+char *input = read_line_dynamic();
+if (input) {
+    printf("You entered: %s\n", input);
+    free(input);
+}
+
+// Comparison
+char buf[100];
+
+// DANGEROUS - buffer overflow
+gets(buf);
+
+// SAFE - bounds checked
+fgets(buf, sizeof(buf), stdin);
+
+// SAFE - specified size
+fgets(buf, 100, stdin);
+
+// SAFE - portable dynamic input (C11)
+#include &lt;stdio.h&gt;
+char buffer[256];
+if (scanf("%255s", buffer) == 1) {  // Leave space for \0
+    printf("Got: %s\n", buffer);
+}</pre>
+
+                    <strong>Why gets() is dangerous:</strong>
+                    <ul>
+                        <li>No way to limit input size</li>
+                        <li>Guaranteed buffer overflow with long input</li>
+                        <li>Primary cause of security vulnerabilities</li>
+                        <li>Exploitable for arbitrary code execution</li>
+                    </ul>
+
+                    <strong>Alternatives comparison:</strong>
+                    <table style="width:100%; border-collapse: collapse; margin: 10px 0;">
+                        <tr style="background: #f1f5f9;">
+                            <th style="padding: 8px; border: 1px solid #e2e8f0;">Function</th>
+                            <th style="padding: 8px; border: 1px solid #e2e8f0;">Safety</th>
+                            <th style="padding: 8px; border: 1px solid #e2e8f0;">Newline</th>
+                            <th style="padding: 8px; border: 1px solid #e2e8f0;">Standard</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;"><code>gets()</code></td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">❌ Unsafe</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Removed</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Removed in C11</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;"><code>fgets()</code></td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">✅ Safe</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Kept</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">C89+</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;"><code>gets_s()</code></td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">✅ Safe</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Removed</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">C11 (optional)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;"><code>getline()</code></td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">✅ Safe + Dynamic</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">Kept</td>
+                            <td style="padding: 8px; border: 1px solid #e2e8f0;">POSIX (not C)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <h3>How do you properly handle endianness in network programming?</h3>
+                <button class="view-answer-btn" onclick="showAnswer('answer-expert36')">View Answer</button>
+                <div id="answer-expert36" class="answer">
+                    Endianness refers to byte order: little-endian (LSB first) vs big-endian (MSB first). Networks use big-endian.
+                    <pre>// Endianness example
+uint32_t value = 0x12345678;
+
+// Little-endian (x86): 78 56 34 12 in memory
+// Big-endian (network): 12 34 56 78 in memory
+
+// Convert host ↔ network byte order
+#include &lt;arpa/inet.h&gt;  // POSIX
+#include &lt;netinet/in.h&gt;
+
+uint32_t host_value = 0x12345678;
+uint32_t net_value = htonl(host_value);  // Host TO Network Long
+uint32_t back = ntohl(net_value);        // Network TO Host Long
+
+uint16_t port = 8080;
+uint16_t net_port = htons(port);  // Host TO Network Short
+uint16_t host_port = ntohs(net_port);
+
+// Sending over network
+struct Packet {
+    uint32_t type;
+    uint32_t length;
+    uint16_t port;
+    char data[100];
+};
+
+void send_packet(int sock, struct Packet *pkt) {
+    struct Packet net_pkt;
+    net_pkt.type = htonl(pkt->type);
+    net_pkt.length = htonl(pkt->length);
+    net_pkt.port = htons(pkt->port);
+    memcpy(net_pkt.data, pkt->data, sizeof(pkt->data));
+    
+    send(sock, &net_pkt, sizeof(net_pkt), 0);
+}
+
+void recv_packet(int sock, struct Packet *pkt) {
+    struct Packet net_pkt;
+    recv(sock, &net_pkt, sizeof(net_pkt), 0);
+    
+    pkt->type = ntohl(net_pkt.type);
+    pkt->length = ntohl(net_pkt.length);
+    pkt->port = ntohs(net_pkt.port);
+    memcpy(pkt->data, net_pkt.data, sizeof(net_pkt.data));
+}
+
+// Detect endianness at runtime
+int is_little_endian(void) {
+    uint32_t test = 1;
+    return *(uint8_t*)&test == 1;
+}
+
+// Portable byte swap
+uint32_t swap32(uint32_t x) {
+    return ((x & 0xFF000000) >> 24) |
+           ((x & 0x00FF0000) >> 8)  |
+           ((x & 0x0000FF00) << 8)  |
+           ((x & 0x000000FF) << 24);
+}
+
+uint16_t swap16(uint16_t x) {
+    return (x >> 8) | (x << 8);
+}
+
+// Conditional swap based on endianness
+uint32_t to_big_endian(uint32_t x) {
+    if (is_little_endian()) {
+        return swap32(x);
+    }
+    return x;
+}
+
+// Reading binary file with specific endianness
+void read_binary_file(const char *filename) {
+    FILE *fp = fopen(filename, "rb");
+    uint32_t value;
+    
+    fread(&value, sizeof(value), 1, fp);
+    
+    // File is always big-endian
+    #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+        value = swap32(value);
+    #endif
+    
+    printf("Value: 0x%08X\n", value);
+    fclose(fp);
+}</pre>
+
+                    <strong>Endianness functions:</strong>
+                    <ul>
+                        <li><code>htonl()</code> - Host TO Network Long (32-bit)</li>
+                        <li><code>htons()</code> - Host TO Network Short (16-bit)</li>
+                        <li><code>ntohl()</code> - Network TO Host Long</li>
+                        <li><code>ntohs()</code> - Network TO Host Short</li>
+                    </ul>
+
+                    <strong>Best practices:</strong> Always convert to network byte order before sending, convert back after receiving
                 </div>
             </div>
 

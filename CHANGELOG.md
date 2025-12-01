@@ -11,6 +11,7 @@ This release represents a complete transformation of the Learning Hub with **19 
 ### ✨ Added
 
 #### Core Learning Features
+
 - **Question Counter & Navigation** - Navigate through questions with prev/next buttons and keyboard shortcuts (N/P)
 - **Difficulty Level System** - Smart auto-assignment of Easy/Medium/Hard badges with filtering capability
 - **Quiz Mode** - Full interactive quiz generator with timer, scoring, and results dashboard
@@ -20,6 +21,7 @@ This release represents a complete transformation of the Learning Hub with **19 
 - **Random Question** - "Surprise Me!" feature for spontaneous practice
 
 #### Productivity Features
+
 - **Search & Filter** - Real-time keyword search with text highlighting and Ctrl/Cmd+K shortcut
 - **Dark Mode** - Complete theme system with 'D' key toggle and localStorage persistence
 - **Progress Tracking** - Mark questions as learned with visual progress bars and statistics
@@ -28,6 +30,7 @@ This release represents a complete transformation of the Learning Hub with **19 
 - **Back to Top Button** - Floating button with Ctrl+↑ shortcut and smooth scroll
 
 #### Content Features
+
 - **Export/Import** - Download and upload custom questions as JSON with backup capability
 - **Code Copy Buttons** - One-click copying on all code blocks with visual feedback
 - **Print Functionality** - Print-friendly layouts with all answers expanded
@@ -35,11 +38,13 @@ This release represents a complete transformation of the Learning Hub with **19 
 - **Topic Filtering** - Filter by category with visual chip interface
 
 #### UX Enhancements
+
 - **Animations & Micro-interactions** - Confetti on correct answers, smooth scrolls, hover effects, pulse animations
 - **Responsive Design** - Mobile-optimized for all features with hamburger menus and touch-friendly controls
 - **Modal System** - Professional modal dialogs for quizzes, notes, and statistics
 
 ### 🎨 Styling
+
 - **800+ lines of new CSS** for all features
 - Complete dark mode color scheme
 - Gradient backgrounds and modern UI
@@ -50,6 +55,7 @@ This release represents a complete transformation of the Learning Hub with **19 
 - Modal slide-in animations
 
 ### 🔧 Technical Improvements
+
 - **~1500 lines of JavaScript** added to features.js
 - Modular class-based architecture
 - LocalStorage integration for all user data
@@ -60,19 +66,23 @@ This release represents a complete transformation of the Learning Hub with **19 
 - Auto-initialization system
 
 ### 📚 Documentation
+
 - Comprehensive FEATURES.md with usage instructions
 - Updated README.md with complete feature list
 - This CHANGELOG.md for version tracking
 - Inline code comments and documentation
 
 ### 🐛 Bug Fixes
+
 - Fixed MCQ answers showing by default (green highlight bug)
 - Fixed answer visibility on Olympia quiz page
 - Corrected inline CSS styles for MCQ items
 - Synchronized all page layouts
 
 ### 🔒 Data Persistence
+
 All user data now saved in localStorage:
+
 - `darkMode` - Theme preference
 - `progress-{page}` - Learning progress per page
 - `studyTime` - Total study time
@@ -82,6 +92,7 @@ All user data now saved in localStorage:
 - `bookmarks` - Saved questions
 
 ### 🎯 Pages Enhanced
+
 - ✅ c-interview.html - All 19 features integrated
 - ✅ embedded-interview.html - All 19 features integrated
 - ✅ linux-interview.html - All 19 features integrated
@@ -92,6 +103,7 @@ All user data now saved in localStorage:
 ## [1.0.0] - 2024-11-29
 
 ### Initial Release
+
 - Basic Q&A pages for C, Embedded Systems, and Linux
 - MCQ interactive functionality
 - Custom question forms
@@ -105,6 +117,7 @@ All user data now saved in localStorage:
 ## Version Numbering
 
 We use [Semantic Versioning](https://semver.org/):
+
 - MAJOR version for incompatible API changes
 - MINOR version for new functionality in a backwards compatible manner
 - PATCH version for backwards compatible bug fixes
@@ -118,12 +131,14 @@ We use [Semantic Versioning](https://semver.org/):
 No breaking changes! All previous features preserved.
 
 **What to know:**
+
 1. New features.js file automatically initializes all enhancements
 2. styles.css expanded with 800+ new lines (no conflicts with existing styles)
 3. No database or server required - all localStorage based
 4. Fully backwards compatible with existing custom questions
 
 **To get the latest:**
+
 ```bash
 git pull origin master
 ```
@@ -135,18 +150,21 @@ git pull origin master
 ## Roadmap
 
 ### Planned for 2.1.0
+
 - PWA (Progressive Web App) support
 - Service worker for offline access
 - Spaced repetition algorithm
 - AI-powered question recommendations
 
 ### Planned for 2.2.0
+
 - Cloud sync for cross-device progress
 - Social features (share, comment, discuss)
 - Community question submissions
 - Leaderboards and achievements
 
 ### Planned for 3.0.0
+
 - Mobile native app
 - Video explanations
 - Interactive code playgrounds

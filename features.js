@@ -262,6 +262,14 @@ class ProgressTracker {
             const h3 = item.querySelector('h3');
             if (!h3) return;
             
+            // Create actions container if it doesn't exist
+            let actionsContainer = h3.querySelector('.question-actions');
+            if (!actionsContainer) {
+                actionsContainer = document.createElement('div');
+                actionsContainer.className = 'question-actions';
+                h3.appendChild(actionsContainer);
+            }
+            
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.className = 'learned-checkbox';
@@ -271,7 +279,7 @@ class ProgressTracker {
             
             checkbox.addEventListener('change', () => this.toggleLearned(id, item));
             
-            h3.appendChild(checkbox);
+            actionsContainer.insertBefore(checkbox, actionsContainer.firstChild);
             
             if (this.learned.has(id)) {
                 item.classList.add('learned');
@@ -656,70 +664,6 @@ function initializeFeatures() {
 }
 
 // ============================================================
-// QUESTION COUNTER & NAVIGATION
-// ============================================================
-class QuestionNavigator {
-    constructor() {
-        this.questions = [];
-        this.currentIndex = 0;
-    }
-    
-    init() {
-        this.questions = Array.from(document.querySelectorAll('.qa-item, .mcq-item, .quiz-item'));
-        if (this.questions.length === 0) return;
-        
-        this.addCountersAndNavigation();
-        this.setupKeyboardNav();
-    }
-    
-    addCountersAndNavigation() {
-        this.questions.forEach((question, index) => {
-            const counter = document.createElement('div');
-            counter.className = 'question-counter';
-            counter.innerHTML = `Question ${index + 1} of ${this.questions.length}`;
-            
-            const nav = document.createElement('div');
-            nav.className = 'question-nav-buttons';
-            nav.innerHTML = `
-                <button class="nav-btn prev" ${index === 0 ? 'disabled' : ''} onclick="questionNavigator.goTo(${index - 1})">← Prev</button>
-                <button class="nav-btn next" ${index === this.questions.length - 1 ? 'disabled' : ''} onclick="questionNavigator.goTo(${index + 1})">Next →</button>
-            `;
-            
-            const header = question.querySelector('h3');
-            if (header) {
-                header.appendChild(counter);
-                question.insertBefore(nav, question.firstChild.nextSibling);
-            }
-        });
-    }
-    
-    goTo(index) {
-        if (index < 0 || index >= this.questions.length) return;
-        this.currentIndex = index;
-        this.questions[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
-        this.questions[index].classList.add('highlight-current');
-        setTimeout(() => {
-            this.questions[index].classList.remove('highlight-current');
-        }, 2000);
-    }
-    
-    setupKeyboardNav() {
-        // Already handled by KeyboardShortcuts, but ensure compatibility
-        window.addEventListener('keydown', (e) => {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-            
-            if (e.key === 'n' || e.key === 'N') {
-                e.preventDefault();
-                this.goTo(this.currentIndex + 1);
-            } else if (e.key === 'p' || e.key === 'P') {
-                e.preventDefault();
-                this.goTo(this.currentIndex - 1);
-            }
-        });
-    }
-}
-
-// ============================================================
 // DIFFICULTY LEVELS & FILTERING
 // ============================================================
 class DifficultyManager {
@@ -1089,7 +1033,14 @@ class StudyNotes {
             
             const header = item.querySelector('h3');
             if (header) {
-                header.appendChild(noteBtn);
+                // Create actions container if it doesn't exist
+                let actionsContainer = header.querySelector('.question-actions');
+                if (!actionsContainer) {
+                    actionsContainer = document.createElement('div');
+                    actionsContainer.className = 'question-actions';
+                    header.appendChild(actionsContainer);
+                }
+                actionsContainer.appendChild(noteBtn);
             }
             
             if (this.notes[index]) {
@@ -1282,57 +1233,6 @@ class StatisticsDashboard {
 }
 
 // ============================================================
-// AUDIO SUPPORT (Text-to-Speech)
-// ============================================================
-class AudioSupport {
-    constructor() {
-        this.speaking = false;
-        this.utterance = null;
-    }
-    
-    init() {
-        if (!('speechSynthesis' in window)) return;
-        
-        this.addSpeakButtons();
-    }
-    
-    addSpeakButtons() {
-        document.querySelectorAll('.qa-item, .mcq-item').forEach(item => {
-            const speakBtn = document.createElement('button');
-            speakBtn.className = 'speak-btn';
-            speakBtn.innerHTML = '🔊';
-            speakBtn.title = 'Read aloud';
-            speakBtn.onclick = () => this.speak(item);
-            
-            const header = item.querySelector('h3');
-            if (header) {
-                header.appendChild(speakBtn);
-            }
-        });
-    }
-    
-    speak(element) {
-        if (this.speaking) {
-            speechSynthesis.cancel();
-            this.speaking = false;
-            return;
-        }
-        
-        const text = element.textContent;
-        this.utterance = new SpeechSynthesisUtterance(text);
-        this.utterance.rate = 0.9;
-        this.utterance.pitch = 1;
-        
-        this.utterance.onend = () => {
-            this.speaking = false;
-        };
-        
-        speechSynthesis.speak(this.utterance);
-        this.speaking = true;
-    }
-}
-
-// ============================================================
 // ANIMATIONS & MICRO-INTERACTIONS
 // ============================================================
 class AnimationManager {
@@ -1504,13 +1404,11 @@ class TopicFilter {
 // ============================================================
 // GLOBAL INSTANCES
 // ============================================================
-let questionNavigator;
 let difficultyManager;
 let quizMode;
 let flashcardMode;
 let studyNotes;
 let statisticsDashboard;
-let audioSupport;
 let animationManager;
 let randomQuestion;
 let topicFilter;
@@ -1520,9 +1418,6 @@ let topicFilter;
 // ============================================================
 function initializeEnhancedFeatures() {
     // Initialize new features
-    questionNavigator = new QuestionNavigator();
-    questionNavigator.init();
-    
     difficultyManager = new DifficultyManager();
     difficultyManager.init();
     
@@ -1537,9 +1432,6 @@ function initializeEnhancedFeatures() {
     
     statisticsDashboard = new StatisticsDashboard();
     statisticsDashboard.init();
-    
-    audioSupport = new AudioSupport();
-    audioSupport.init();
     
     animationManager = new AnimationManager();
     animationManager.init();
