@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15-Day C/C++ Coding Challenge</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .challenge-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .challenge-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 16px;
+            margin-bottom: 30px;
+        }
+
+        .challenge-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .challenge-header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        .progress-overview {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .progress-bar-container {
+            background: #e2e8f0;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .day-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .day-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .day-card.completed {
+            border-color: #4caf50;
+            background: #f1f8f4;
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .day-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .day-card.completed .day-number {
+            color: #4caf50;
+        }
+
+        .day-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 10px 0;
+        }
+
+        .day-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-in-progress {
+            background: #cfe2ff;
+            color: #084298;
+        }
+
+        .status-completed {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .day-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .topic-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .day-tasks {
+            margin: 15px 0;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-checkbox {
+            margin-top: 3px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .task-text {
+            flex: 1;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: #a0aec0;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .difficulty.easy {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .difficulty.medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .difficulty.hard {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .resources {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .resources h4 {
+            margin: 0 0 10px 0;
+            color: #495057;
+            font-size: 1rem;
+        }
+
+        .resources ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .resources li {
+            margin: 5px 0;
+            color: #6c757d;
+        }
+
+        .resources a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .resources a:hover {
+            text-decoration: underline;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .action-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #64748b;
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .challenge-header h1 {
+                font-size: 2rem;
+            }
+
+            .day-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .quick-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">📚 Learning Hub</div>
+                <div class="sidebar-subtitle">Navigation Menu</div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="home.html"><span class="sidebar-icon">🏠</span> Home</a></li>
+                <li><a href="index.html"><span class="sidebar-icon">💰</span> Finance</a></li>
+                <li><a href="gold-price.html"><span class="sidebar-icon">🥇</span> Gold Price</a></li>
+                <li><a href="split.html"><span class="sidebar-icon">🧾</span> Split Money</a></li>
+                <li><a href="c-interview.html"><span class="sidebar-icon">💻</span> C Q&A</a></li>
+                <li><a href="embedded-interview.html"><span class="sidebar-icon">🔧</span> Embedded</a></li>
+                <li><a href="linux-interview.html"><span class="sidebar-icon">🐧</span> Linux/Driver</a></li>
+                <li><a href="olympia-quiz.html"><span class="sidebar-icon">🏆</span> Olympia Quiz</a></li>
+                <li><a href="cpp-challenge.html" class="active"><span class="sidebar-icon">🚀</span> C/C++ Challenge</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="content-area">
+
+                <div class="navbar">
+                    <a href="home.html">🏠 Home</a>
+                    <a href="index.html">💰 Finance</a>
+                    <a href="gold-price.html">🥇 Gold Price</a>
+                    <a href="split.html">🧾 Split Money</a>
+                    <a href="c-interview.html">💻 C Q&A</a>
+                    <a href="embedded-interview.html">🔧 Embedded</a>
+                    <a href="linux-interview.html">🐧 Linux/Driver</a>
+                    <a href="olympia-quiz.html">🏆 Olympia</a>
+                    <a href="cpp-challenge.html" class="active">🚀 C/C++ Challenge</a>
+                </div>
+
+                <div class="container challenge-container">
+                    <div class="challenge-header">
+                        <h1>🚀 15-Day C/C++ Coding Challenge</h1>
+                        <p>Master C/C++ programming through daily focused practice and real-world problems</p>
+                    </div>
+
+                    <!-- Progress Overview -->
+                    <div class="progress-overview">
+                        <h3>📊 Your Progress</h3>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" id="overallProgress" style="width: 0%">0%</div>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number" id="daysCompleted">0</div>
+                                <div class="stat-label">Days Completed</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="tasksCompleted">0</div>
+                                <div class="stat-label">Tasks Done</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="currentStreak">0</div>
+                                <div class="stat-label">Day Streak</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <button class="action-btn btn-primary" onclick="resetProgress()">🔄 Reset Progress</button>
+                        <button class="action-btn btn-secondary" onclick="exportProgress()">💾 Export Progress</button>
+                        <button class="action-btn btn-secondary" onclick="window.print()">🖨️ Print Schedule</button>
+                    </div>
+
+                    <!-- Day 1 -->
+                    <div class="day-card" data-day="1">
+                        <div class="day-header">
+                            <div>
+                                <div class="day-number">Day 1</div>
+                                <div class="day-title">C Basics & Memory Fundamentals</div>
+                            </div>
+                            <span class="day-status status-pending">Pending</span>
+                        </div>
+                        <div class="day-topics">
+                            <span class="topic-tag">Pointers</span>
+                            <span class="topic-tag">Memory</span>
+                            <span class="topic-tag">Arrays</span>
+                        </div>
+                        <span class="difficulty easy">Easy</span>
+                        <div class="day-tasks">
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="1" data-task="1">
+                                <div class="task-text">Review pointer basics and pointer arithmetic</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="1" data-task="2">
+                                <div class="task-text">Write a function to reverse an array using pointers</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="1" data-task="3">
+                                <div class="task-text">Implement swap function using pointers</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="1" data-task="4">
+                                <div class="task-text">Practice: Find largest element in array using pointers</div>
+                            </div>
+                        </div>
+                        <div class="resources">
+                            <h4>📚 Resources</h4>
+                            <ul>
+                                <li><a href="c-interview.html#pointers">Pointer Q&A Section</a></li>
+                                <li>Practice: LeetCode - Array problems</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Day 2 -->
+                    <div class="day-card" data-day="2">
+                        <div class="day-header">
+                            <div>
+                                <div class="day-number">Day 2</div>
+                                <div class="day-title">Dynamic Memory & String Manipulation</div>
+                            </div>
+                            <span class="day-status status-pending">Pending</span>
+                        </div>
+                        <div class="day-topics">
+                            <span class="topic-tag">malloc/free</span>
+                            <span class="topic-tag">Strings</span>
+                            <span class="topic-tag">Memory Leaks</span>
+                        </div>
+                        <span class="difficulty easy">Easy</span>
+                        <div class="day-tasks">
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="2" data-task="1">
+                                <div class="task-text">Practice malloc, calloc, realloc, and free</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="2" data-task="2">
+                                <div class="task-text">Implement string reverse function (in-place)</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="2" data-task="3">
+                                <div class="task-text">Write a function to remove spaces from a string</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="2" data-task="4">
+                                <div class="task-text">Challenge: Reverse words in a sentence (remove extra spaces)</div>
+                            </div>
+                        </div>
+                        <div class="resources">
+                            <h4>📚 Resources</h4>
+                            <ul>
+                                <li><a href="c-interview.html#memory">Memory Management Q&A</a></li>
+                                <li>Valgrind tutorial for memory leak detection</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Day 3 -->
+                    <div class="day-card" data-day="3">
+                        <div class="day-header">
+                            <div>
+                                <div class="day-number">Day 3</div>
+                                <div class="day-title">Bit Manipulation & Operators</div>
+                            </div>
+                            <span class="day-status status-pending">Pending</span>
+                        </div>
+                        <div class="day-topics">
+                            <span class="topic-tag">Bitwise</span>
+                            <span class="topic-tag">Operators</span>
+                            <span class="topic-tag">Optimization</span>
+                        </div>
+                        <span class="difficulty medium">Medium</span>
+                        <div class="day-tasks">
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="3" data-task="1">
+                                <div class="task-text">Master bitwise operators: &, |, ^, ~, <<, >></div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="3" data-task="2">
+                                <div class="task-text">Implement count set bits function (popcount)</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="3" data-task="3">
+                                <div class="task-text">Write functions: isPowerOfTwo, clearRightmostBit</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="3" data-task="4">
+                                <div class="task-text">Challenge: Find single number in array (XOR technique)</div>
+                            </div>
+                        </div>
+                        <div class="resources">
+                            <h4>📚 Resources</h4>
+                            <ul>
+                                <li>Bit manipulation tricks cheat sheet</li>
+                                <li>HackerRank - Bit manipulation track</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Day 4 -->
+                    <div class="day-card" data-day="4">
+                        <div class="day-header">
+                            <div>
+                                <div class="day-number">Day 4</div>
+                                <div class="day-title">Structures, Unions & Type Casting</div>
+                            </div>
+                            <span class="day-status status-pending">Pending</span>
+                        </div>
+                        <div class="day-topics">
+                            <span class="topic-tag">struct</span>
+                            <span class="topic-tag">union</span>
+                            <span class="topic-tag">typedef</span>
+                        </div>
+                        <span class="difficulty easy">Easy</span>
+                        <div class="day-tasks">
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="4" data-task="1">
+                                <div class="task-text">Create student struct with array operations</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="4" data-task="2">
+                                <div class="task-text">Understand struct padding and alignment</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="4" data-task="3">
+                                <div class="task-text">Practice union for type punning examples</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="4" data-task="4">
+                                <div class="task-text">Challenge: Implement a date comparison function</div>
+                            </div>
+                        </div>
+                        <div class="resources">
+                            <h4>📚 Resources</h4>
+                            <ul>
+                                <li><a href="c-interview.html#structures">Structures Q&A</a></li>
+                                <li>sizeof() and offsetof() macros</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Day 5 -->
+                    <div class="day-card" data-day="5">
+                        <div class="day-header">
+                            <div>
+                                <div class="day-number">Day 5</div>
+                                <div class="day-title">File I/O & Error Handling</div>
+                            </div>
+                            <span class="day-status status-pending">Pending</span>
+                        </div>
+                        <div class="day-topics">
+                            <span class="topic-tag">FILE*</span>
+                            <span class="topic-tag">fopen/fclose</span>
+                            <span class="topic-tag">Error Handling</span>
+                        </div>
+                        <span class="difficulty medium">Medium</span>
+                        <div class="day-tasks">
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="5" data-task="1">
+                                <div class="task-text">Practice fopen, fread, fwrite, fclose</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="5" data-task="2">
+                                <div class="task-text">Write a program to copy file contents</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="5" data-task="3">
+                                <div class="task-text">Implement line count function (like wc -l)</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="5" data-task="4">
+                                <div class="task-text">Challenge: CSV parser with error handling</div>
+                            </div>
+                        </div>
+                        <div class="resources">
+                            <h4>📚 Resources</h4>
+                            <ul>
+                                <li><a href="c-interview.html#file-io">File I/O Q&A</a></li>
+                                <li>errno and perror() for error messages</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Day 6 -->
+                    <div class="day-card" data-day="6">
+                        <div class="day-header">
+                            <div>
+                                <div class="day-number">Day 6</div>
+                                <div class="day-title">Function Pointers & Callbacks</div>
+                            </div>
+                            <span class="day-status status-pending">Pending</span>
+                        </div>
+                        <div class="day-topics">
+                            <span class="topic-tag">Function Pointers</span>
+                            <span class="topic-tag">Callbacks</span>
+                            <span class="topic-tag">qsort</span>
+                        </div>
+                        <span class="difficulty medium">Medium</span>
+                        <div class="day-tasks">
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="6" data-task="1">
+                                <div class="task-text">Understand function pointer syntax and usage</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="6" data-task="2">
+                                <div class="task-text">Create calculator with function pointer array</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="6" data-task="3">
+                                <div class="task-text">Practice qsort with custom comparator</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="6" data-task="4">
+                                <div class="task-text">Challenge: Implement generic map/filter functions</div>
+                            </div>
+                        </div>
+                        <div class="resources">
+                            <h4>📚 Resources</h4>
+                            <ul>
+                                <li><a href="c-interview.html#function-pointers">Function Pointers Q&A</a></li>
+                                <li>Callback patterns in C</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Day 7 -->
+                    <div class="day-card" data-day="7">
+                        <div class="day-header">
+                            <div>
+                                <div class="day-number">Day 7</div>
+                                <div class="day-title">Preprocessor & Macros</div>
+                            </div>
+                            <span class="day-status status-pending">Pending</span>
+                        </div>
+                        <div class="day-topics">
+                            <span class="topic-tag">#define</span>
+                            <span class="topic-tag">Conditional</span>
+                            <span class="topic-tag">Macros</span>
+                        </div>
+                        <span class="difficulty easy">Easy</span>
+                        <div class="day-tasks">
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="7" data-task="1">
+                                <div class="task-text">Master #define, #ifdef, #ifndef, #include</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="7" data-task="2">
+                                <div class="task-text">Write safe macros: MIN, MAX, SWAP</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="7" data-task="3">
+                                <div class="task-text">Understand macro pitfalls and side effects</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="7" data-task="4">
+                                <div class="task-text">Challenge: Create debug logging macro system</div>
+                            </div>
+                        </div>
+                        <div class="resources">
+                            <h4>📚 Resources</h4>
+                            <ul>
+                                <li><a href="c-interview.html#preprocessor">Preprocessor Q&A</a></li>
+                                <li>gcc -E flag to see preprocessed output</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Day 8 -->
+                    <div class="day-card" data-day="8">
+                        <div class="day-header">
+                            <div>
+                                <div class="day-number">Day 8</div>
+                                <div class="day-title">C++ Basics - Classes & Objects</div>
+                            </div>
+                            <span class="day-status status-pending">Pending</span>
+                        </div>
+                        <div class="day-topics">
+                            <span class="topic-tag">Classes</span>
+                            <span class="topic-tag">Constructors</span>
+                            <span class="topic-tag">Destructors</span>
+                        </div>
+                        <span class="difficulty easy">Easy</span>
+                        <div class="day-tasks">
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="8" data-task="1">
+                                <div class="task-text">Create a simple class with members and methods</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="8" data-task="2">
+                                <div class="task-text">Practice constructors, destructors, this pointer</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="8" data-task="3">
+                                <div class="task-text">Implement a Rectangle class with area/perimeter</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="8" data-task="4">
+                                <div class="task-text">Challenge: Create a BankAccount class with transactions</div>
+                            </div>
+                        </div>
+                        <div class="resources">
+                            <h4>📚 Resources</h4>
+                            <ul>
+                                <li>C++ class basics tutorial</li>
+                                <li>Constructor initialization list</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Day 9 -->
+                    <div class="day-card" data-day="9">
+                        <div class="day-header">
+                            <div>
+                                <div class="day-number">Day 9</div>
+                                <div class="day-title">OOP - Inheritance & Polymorphism</div>
+                            </div>
+                            <span class="day-status status-pending">Pending</span>
+                        </div>
+                        <div class="day-topics">
+                            <span class="topic-tag">Inheritance</span>
+                            <span class="topic-tag">Virtual</span>
+                            <span class="topic-tag">Polymorphism</span>
+                        </div>
+                        <span class="difficulty medium">Medium</span>
+                        <div class="day-tasks">
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="9" data-task="1">
+                                <div class="task-text">Practice public, protected, private inheritance</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="9" data-task="2">
+                                <div class="task-text">Implement virtual functions and override</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="9" data-task="3">
+                                <div class="task-text">Create Shape hierarchy: Circle, Rectangle, Triangle</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="9" data-task="4">
+                                <div class="task-text">Challenge: Implement abstract base class with pure virtual</div>
+                            </div>
+                        </div>
+                        <div class="resources">
+                            <h4>📚 Resources</h4>
+                            <ul>
+                                <li>Virtual table (vtable) explained</li>
+                                <li>Runtime vs compile-time polymorphism</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Day 10 -->
+                    <div class="day-card" data-day="10">
+                        <div class="day-header">
+                            <div>
+                                <div class="day-number">Day 10</div>
+                                <div class="day-title">STL - Containers & Iterators</div>
+                            </div>
+                            <span class="day-status status-pending">Pending</span>
+                        </div>
+                        <div class="day-topics">
+                            <span class="topic-tag">vector</span>
+                            <span class="topic-tag">map</span>
+                            <span class="topic-tag">set</span>
+                        </div>
+                        <span class="difficulty medium">Medium</span>
+                        <div class="day-tasks">
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="10" data-task="1">
+                                <div class="task-text">Master vector: push_back, pop_back, iterators</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="10" data-task="2">
+                                <div class="task-text">Practice map and unordered_map operations</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="10" data-task="3">
+                                <div class="task-text">Use set for unique elements and sorting</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="10" data-task="4">
+                                <div class="task-text">Challenge: Word frequency counter using map</div>
+                            </div>
+                        </div>
+                        <div class="resources">
+                            <h4>📚 Resources</h4>
+                            <ul>
+                                <li>STL container complexity cheat sheet</li>
+                                <li>cppreference.com - STL documentation</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Day 11 -->
+                    <div class="day-card" data-day="11">
+                        <div class="day-header">
+                            <div>
+                                <div class="day-number">Day 11</div>
+                                <div class="day-title">STL - Algorithms & Lambda</div>
+                            </div>
+                            <span class="day-status status-pending">Pending</span>
+                        </div>
+                        <div class="day-topics">
+                            <span class="topic-tag">sort</span>
+                            <span class="topic-tag">find</span>
+                            <span class="topic-tag">Lambda</span>
+                        </div>
+                        <span class="difficulty medium">Medium</span>
+                        <div class="day-tasks">
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="11" data-task="1">
+                                <div class="task-text">Practice sort, binary_search, find, count</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="11" data-task="2">
+                                <div class="task-text">Learn lambda functions and capture clauses</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="11" data-task="3">
+                                <div class="task-text">Use transform, accumulate, for_each</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="11" data-task="4">
+                                <div class="task-text">Challenge: Custom sort with lambda comparator</div>
+                            </div>
+                        </div>
+                        <div class="resources">
+                            <h4>📚 Resources</h4>
+                            <ul>
+                                <li>STL algorithm library reference</li>
+                                <li>Lambda expressions guide</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Day 12 -->
+                    <div class="day-card" data-day="12">
+                        <div class="day-header">
+                            <div>
+                                <div class="day-number">Day 12</div>
+                                <div class="day-title">Smart Pointers & RAII</div>
+                            </div>
+                            <span class="day-status status-pending">Pending</span>
+                        </div>
+                        <div class="day-topics">
+                            <span class="topic-tag">unique_ptr</span>
+                            <span class="topic-tag">shared_ptr</span>
+                            <span class="topic-tag">RAII</span>
+                        </div>
+                        <span class="difficulty hard">Hard</span>
+                        <div class="day-tasks">
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="12" data-task="1">
+                                <div class="task-text">Understand unique_ptr ownership semantics</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="12" data-task="2">
+                                <div class="task-text">Practice shared_ptr and weak_ptr</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="12" data-task="3">
+                                <div class="task-text">Implement RAII wrapper for file handling</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="12" data-task="4">
+                                <div class="task-text">Challenge: Convert raw pointer code to smart pointers</div>
+                            </div>
+                        </div>
+                        <div class="resources">
+                            <h4>📚 Resources</h4>
+                            <ul>
+                                <li>Modern C++ best practices</li>
+                                <li>Memory management in C++11/14/17</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Day 13 -->
+                    <div class="day-card" data-day="13">
+                        <div class="day-header">
+                            <div>
+                                <div class="day-number">Day 13</div>
+                                <div class="day-title">Templates & Generic Programming</div>
+                            </div>
+                            <span class="day-status status-pending">Pending</span>
+                        </div>
+                        <div class="day-topics">
+                            <span class="topic-tag">Templates</span>
+                            <span class="topic-tag">Generic</span>
+                            <span class="topic-tag">Specialization</span>
+                        </div>
+                        <span class="difficulty hard">Hard</span>
+                        <div class="day-tasks">
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="13" data-task="1">
+                                <div class="task-text">Create function templates (max, min, swap)</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="13" data-task="2">
+                                <div class="task-text">Implement class template (Array, Stack)</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="13" data-task="3">
+                                <div class="task-text">Practice template specialization</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="13" data-task="4">
+                                <div class="task-text">Challenge: Create generic Pair class template</div>
+                            </div>
+                        </div>
+                        <div class="resources">
+                            <h4>📚 Resources</h4>
+                            <ul>
+                                <li>Template metaprogramming basics</li>
+                                <li>SFINAE technique</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Day 14 -->
+                    <div class="day-card" data-day="14">
+                        <div class="day-header">
+                            <div>
+                                <div class="day-number">Day 14</div>
+                                <div class="day-title">Exception Handling & Move Semantics</div>
+                            </div>
+                            <span class="day-status status-pending">Pending</span>
+                        </div>
+                        <div class="day-topics">
+                            <span class="topic-tag">try/catch</span>
+                            <span class="topic-tag">Move</span>
+                            <span class="topic-tag">rvalue</span>
+                        </div>
+                        <span class="difficulty hard">Hard</span>
+                        <div class="day-tasks">
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="14" data-task="1">
+                                <div class="task-text">Practice try, catch, throw with custom exceptions</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="14" data-task="2">
+                                <div class="task-text">Understand lvalue vs rvalue references</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="14" data-task="3">
+                                <div class="task-text">Implement move constructor and move assignment</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="14" data-task="4">
+                                <div class="task-text">Challenge: Create resource-owning class with Rule of 5</div>
+                            </div>
+                        </div>
+                        <div class="resources">
+                            <h4>📚 Resources</h4>
+                            <ul>
+                                <li>Exception safety guarantees</li>
+                                <li>Perfect forwarding with std::forward</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Day 15 -->
+                    <div class="day-card" data-day="15">
+                        <div class="day-header">
+                            <div>
+                                <div class="day-number">Day 15</div>
+                                <div class="day-title">Final Project & Review</div>
+                            </div>
+                            <span class="day-status status-pending">Pending</span>
+                        </div>
+                        <div class="day-topics">
+                            <span class="topic-tag">Project</span>
+                            <span class="topic-tag">Integration</span>
+                            <span class="topic-tag">Review</span>
+                        </div>
+                        <span class="difficulty hard">Hard</span>
+                        <div class="day-tasks">
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="15" data-task="1">
+                                <div class="task-text">Build a mini project combining all concepts</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="15" data-task="2">
+                                <div class="task-text">Project ideas: Contact manager, File processor, Data analyzer</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="15" data-task="3">
+                                <div class="task-text">Review all 14 days, revisit difficult topics</div>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" class="task-checkbox" data-day="15" data-task="4">
+                                <div class="task-text">Challenge: Solve 5 LeetCode medium problems</div>
+                            </div>
+                        </div>
+                        <div class="resources">
+                            <h4>📚 Resources</h4>
+                            <ul>
+                                <li><a href="c-interview.html">Review all C Q&A</a></li>
+                                <li>LeetCode C/C++ problem sets</li>
+                                <li>GitHub - Showcase your project!</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div><!-- End content-area -->
+        </div><!-- End main-content -->
+    </div><!-- End page-wrapper -->
+
+    <script>
+        // Load progress from localStorage
+        const STORAGE_KEY = 'cpp_challenge_progress';
+        
+        function loadProgress() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const progress = JSON.parse(saved);
+                
+                // Restore checkbox states
+                progress.tasks.forEach(task => {
+                    const checkbox = document.querySelector(`input[data-day="${task.day}"][data-task="${task.task}"]`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                        checkbox.parentElement.classList.add('completed');
+                    }
+                });
+                
+                updateAllProgress();
+            }
+        }
+        
+        function saveProgress() {
+            const tasks = [];
+            document.querySelectorAll('.task-checkbox:checked').forEach(cb => {
+                tasks.push({
+                    day: parseInt(cb.dataset.day),
+                    task: parseInt(cb.dataset.task)
+                });
+            });
+            
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ tasks, lastUpdate: new Date().toISOString() }));
+        }
+        
+        function updateDayStatus(dayCard) {
+            const dayNum = parseInt(dayCard.dataset.day);
+            const checkboxes = dayCard.querySelectorAll('.task-checkbox');
+            const completed = dayCard.querySelectorAll('.task-checkbox:checked').length;
+            const total = checkboxes.length;
+            
+            const statusElement = dayCard.querySelector('.day-status');
+            
+            if (completed === 0) {
+                statusElement.className = 'day-status status-pending';
+                statusElement.textContent = 'Pending';
+                dayCard.classList.remove('completed');
+            } else if (completed === total) {
+                statusElement.className = 'day-status status-completed';
+                statusElement.textContent = '✓ Completed';
+                dayCard.classList.add('completed');
+            } else {
+                statusElement.className = 'day-status status-in-progress';
+                statusElement.textContent = `${completed}/${total} Tasks`;
+                dayCard.classList.remove('completed');
+            }
+        }
+        
+        function updateAllProgress() {
+            const totalDays = 15;
+            let completedDays = 0;
+            let totalTasks = 0;
+            let completedTasks = 0;
+            
+            document.querySelectorAll('.day-card').forEach(card => {
+                updateDayStatus(card);
+                const checkboxes = card.querySelectorAll('.task-checkbox');
+                const completed = card.querySelectorAll('.task-checkbox:checked').length;
+                
+                totalTasks += checkboxes.length;
+                completedTasks += completed;
+                
+                if (completed === checkboxes.length) {
+                    completedDays++;
+                }
+            });
+            
+            const percentage = Math.round((completedDays / totalDays) * 100);
+            
+            document.getElementById('overallProgress').style.width = percentage + '%';
+            document.getElementById('overallProgress').textContent = percentage + '%';
+            document.getElementById('daysCompleted').textContent = completedDays;
+            document.getElementById('tasksCompleted').textContent = completedTasks;
+            document.getElementById('currentStreak').textContent = completedDays;
+        }
+        
+        // Event listeners
+        document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    this.parentElement.classList.add('completed');
+                } else {
+                    this.parentElement.classList.remove('completed');
+                }
+                
+                const dayCard = this.closest('.day-card');
+                updateDayStatus(dayCard);
+                updateAllProgress();
+                saveProgress();
+            });
+        });
+        
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                localStorage.removeItem(STORAGE_KEY);
+                document.querySelectorAll('.task-checkbox').forEach(cb => {
+                    cb.checked = false;
+                    cb.parentElement.classList.remove('completed');
+                });
+                updateAllProgress();
+            }
+        }
+        
+        function exportProgress() {
+            const progress = localStorage.getItem(STORAGE_KEY);
+            if (progress) {
+                const blob = new Blob([progress], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'cpp_challenge_progress.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            } else {
+                alert('No progress to export yet!');
+            }
+        }
+        
+        // Initialize
+        loadProgress();
+    </script>
+
+    <!-- Enhanced Features -->
+    <script src="features.js"></script>
+
+</body>
+</html>
