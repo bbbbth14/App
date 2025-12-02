@@ -359,6 +359,29 @@
             font-size: 0.9rem;
         }
 
+        .sync-status {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        .sync-status .status-icon {
+            font-size: 1.2rem;
+        }
+
+        .sync-status .last-saved {
+            margin-left: auto;
+            color: #718096;
+            font-size: 0.85rem;
+        }
+
         @media (max-width: 768px) {
             .challenge-header h1 {
                 font-size: 2rem;
@@ -426,6 +449,11 @@
                     <!-- Progress Overview -->
                     <div class="progress-overview">
                         <h3>📊 Your Progress</h3>
+                        <div class="sync-status">
+                            <span class="status-icon">💾</span>
+                            <span>Progress auto-saved locally</span>
+                            <span class="last-saved" id="lastSaved">Never</span>
+                        </div>
                         <div class="progress-bar-container">
                             <div class="progress-bar-fill" id="overallProgress" style="width: 0%">0%</div>
                         </div>
@@ -449,8 +477,10 @@
                     <div class="quick-actions">
                         <button class="action-btn btn-primary" onclick="resetProgress()">🔄 Reset Progress</button>
                         <button class="action-btn btn-secondary" onclick="exportProgress()">💾 Export Progress</button>
+                        <button class="action-btn btn-secondary" onclick="document.getElementById('importFile').click()">📥 Import Progress</button>
                         <button class="action-btn btn-secondary" onclick="window.print()">🖨️ Print Schedule</button>
                     </div>
+                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importProgress(event)">
 
                     <!-- Day 1 -->
                     <div class="day-card" data-day="1">
@@ -1299,6 +1329,35 @@
         // Load progress from localStorage
         const STORAGE_KEY = 'cpp_challenge_progress';
         
+        function updateLastSaved() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const progress = JSON.parse(saved);
+                if (progress.lastUpdate) {
+                    const lastUpdate = new Date(progress.lastUpdate);
+                    const now = new Date();
+                    const diffMinutes = Math.floor((now - lastUpdate) / (1000 * 60));
+                    
+                    let timeText;
+                    if (diffMinutes < 1) {
+                        timeText = 'Just now';
+                    } else if (diffMinutes < 60) {
+                        timeText = `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+                    } else if (diffMinutes < 1440) {
+                        const hours = Math.floor(diffMinutes / 60);
+                        timeText = `${hours} hour${hours > 1 ? 's' : ''} ago`;
+                    } else {
+                        const days = Math.floor(diffMinutes / 1440);
+                        timeText = `${days} day${days > 1 ? 's' : ''} ago`;
+                    }
+                    
+                    document.getElementById('lastSaved').textContent = `Last saved: ${timeText}`;
+                } else {
+                    document.getElementById('lastSaved').textContent = 'Last saved: Unknown';
+                }
+            }
+        }
+        
         function loadProgress() {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
@@ -1314,6 +1373,7 @@
                 });
                 
                 updateAllProgress();
+                updateLastSaved();
             }
         }
         
@@ -1326,7 +1386,14 @@
                 });
             });
             
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({ tasks, lastUpdate: new Date().toISOString() }));
+            const progressData = {
+                tasks: tasks,
+                lastUpdate: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(progressData));
+            updateLastSaved();
         }
         
         function updateDayStatus(dayCard) {
@@ -1414,16 +1481,56 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'cpp_challenge_progress.json';
+                a.download = `cpp_challenge_progress_${new Date().toISOString().split('T')[0]}.json`;
                 a.click();
                 URL.revokeObjectURL(url);
+                alert('✅ Progress exported successfully! You can import this file on any device.');
             } else {
                 alert('No progress to export yet!');
             }
         }
         
+        function importProgress(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const content = e.target.result;
+                    const progress = JSON.parse(content);
+                    
+                    // Validate the progress data
+                    if (progress.tasks && Array.isArray(progress.tasks)) {
+                        // Clear current state
+                        document.querySelectorAll('.task-checkbox').forEach(cb => {
+                            cb.checked = false;
+                            cb.parentElement.classList.remove('completed');
+                        });
+                        
+                        // Apply imported progress
+                        localStorage.setItem(STORAGE_KEY, content);
+                        loadProgress();
+                        
+                        alert('✅ Progress imported successfully!');
+                    } else {
+                        alert('❌ Invalid progress file format!');
+                    }
+                } catch (error) {
+                    alert('❌ Error reading file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+            
+            // Reset file input
+            event.target.value = '';
+        }
+        
         // Initialize
         loadProgress();
+        
+        // Update "last saved" time every minute
+        setInterval(updateLastSaved, 60000);
     </script>
 
     <!-- Enhanced Features -->
