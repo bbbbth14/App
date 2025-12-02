@@ -101,17 +101,8 @@
 
         <div class="qa-container">
 
-            <!-- Search Container -->
-            <div class="search-container">
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="🔍 Search questions... (Press Ctrl+K or Cmd+K)">
-                    <span class="search-icon">🔍</span>
-                </div>
-                <div class="search-stats" id="searchStats"></div>
-            </div>
-
             <!-- Topic Filter Chips -->
-            <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
+            <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
                 <h3 style="margin: 0 0 15px 0; font-size: 1.1rem; color: #2d3748;">Filter by Topic:</h3>
                 <div style="display: flex; flex-wrap: wrap; gap: 10px;">
                     <button class="topic-filter-btn active" data-category="all" onclick="filterByTopic('all')">🌐 All Topics</button>
@@ -128,6 +119,15 @@
                     <button class="topic-filter-btn" data-category="expert-level" onclick="filterByTopic('expert-level')">🔥 Expert Level Questions</button>
                     <button class="topic-filter-btn" data-category="mcq" onclick="filterByTopic('mcq')">📝 Multiple Choice Questions</button>
                 </div>
+            </div>
+
+            <!-- Search Container -->
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="🔍 Search questions... (Press Ctrl+K or Cmd+K)">
+                    <span class="search-icon">🔍</span>
+                </div>
+                <div class="search-stats" id="searchStats"></div>
             </div>
 
             <!-- Progress Tracking -->
