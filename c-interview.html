@@ -110,23 +110,24 @@
                 <div class="search-stats" id="searchStats"></div>
             </div>
 
-            <!-- Category Filter -->
-            <div class="difficulty-filter" style="margin-bottom: 20px;">
-                <label for="category-filter">📂 Filter by Category:</label>
-                <select id="category-filter" onchange="filterByCategory()" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e0; font-size: 1rem;">
-                    <option value="all">All Categories</option>
-                    <option value="custom">My Custom Questions</option>
-                    <option value="basic-concepts">Basic Concepts</option>
-                    <option value="data-types">Data Types & Variables</option>
-                    <option value="pointers">Pointers</option>
-                    <option value="memory-management">Memory Management</option>
-                    <option value="arrays-strings">Arrays & Strings</option>
-                    <option value="functions">Functions</option>
-                    <option value="structures-unions">Structures & Unions</option>
-                    <option value="file-handling">File Handling</option>
-                    <option value="advanced-topics">Advanced Topics</option>
-                    <option value="expert-level">Expert Level</option>
-                </select>
+            <!-- Topic Filter Chips -->
+            <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
+                <h3 style="margin: 0 0 15px 0; font-size: 1.1rem; color: #2d3748;">Filter by Topic:</h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <button class="topic-filter-btn active" data-category="all" onclick="filterByTopic('all')">🌐 All Topics</button>
+                    <button class="topic-filter-btn" data-category="custom" onclick="filterByTopic('custom')">🎯 My Custom Questions</button>
+                    <button class="topic-filter-btn" data-category="basic-concepts" onclick="filterByTopic('basic-concepts')">📚 Basic Concepts</button>
+                    <button class="topic-filter-btn" data-category="data-types" onclick="filterByTopic('data-types')">🔢 Data Types & Variables</button>
+                    <button class="topic-filter-btn" data-category="pointers" onclick="filterByTopic('pointers')">🎯 Pointers</button>
+                    <button class="topic-filter-btn" data-category="memory-management" onclick="filterByTopic('memory-management')">💾 Memory Management</button>
+                    <button class="topic-filter-btn" data-category="arrays-strings" onclick="filterByTopic('arrays-strings')">📊 Arrays & Strings</button>
+                    <button class="topic-filter-btn" data-category="functions" onclick="filterByTopic('functions')">⚙️ Functions</button>
+                    <button class="topic-filter-btn" data-category="structures-unions" onclick="filterByTopic('structures-unions')">🏗️ Structures & Unions</button>
+                    <button class="topic-filter-btn" data-category="file-handling" onclick="filterByTopic('file-handling')">📁 File Handling</button>
+                    <button class="topic-filter-btn" data-category="advanced-topics" onclick="filterByTopic('advanced-topics')">🚀 Advanced Topics</button>
+                    <button class="topic-filter-btn" data-category="expert-level" onclick="filterByTopic('expert-level')">🔥 Expert Level Questions</button>
+                    <button class="topic-filter-btn" data-category="mcq" onclick="filterByTopic('mcq')">📝 Multiple Choice Questions</button>
+                </div>
             </div>
 
             <!-- Progress Tracking -->
@@ -2459,11 +2460,20 @@ void read_binary_file(const char *filename) {
         });
 
         // Category Filter Function
-        function filterByCategory() {
-            const selectedCategory = document.getElementById('category-filter').value;
+        function filterByTopic(selectedCategory) {
             const categoryHeaders = document.querySelectorAll('.category-header');
             const customSection = document.getElementById('custom-questions-section');
             const allQAItems = document.querySelectorAll('.qa-item:not(.custom-qa-item)');
+            const filterButtons = document.querySelectorAll('.topic-filter-btn');
+            
+            // Update active button state
+            filterButtons.forEach(btn => {
+                if (btn.dataset.category === selectedCategory) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
             
             if (selectedCategory === 'all') {
                 // Show all categories

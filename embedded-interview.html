@@ -107,6 +107,23 @@
                 <div class="search-stats" id="searchStats"></div>
             </div>
 
+            <!-- Topic Filter Chips -->
+            <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
+                <h3 style="margin: 0 0 15px 0; font-size: 1.1rem; color: #2d3748;">Filter by Topic:</h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <button class="topic-filter-btn active" data-category="all" onclick="filterByTopic('all')">🌐 All Topics</button>
+                    <button class="topic-filter-btn" data-category="custom" onclick="filterByTopic('custom')">🎯 My Custom Questions</button>
+                    <button class="topic-filter-btn" data-category="basics" onclick="filterByTopic('basics')">🔧 Embedded Systems Basics</button>
+                    <button class="topic-filter-btn" data-category="interrupts" onclick="filterByTopic('interrupts')">⚡ Interrupts</button>
+                    <button class="topic-filter-btn" data-category="memory" onclick="filterByTopic('memory')">💾 Memory & Storage</button>
+                    <button class="topic-filter-btn" data-category="communication" onclick="filterByTopic('communication')">📡 Communication Protocols</button>
+                    <button class="topic-filter-btn" data-category="gpio" onclick="filterByTopic('gpio')">🔌 GPIO & Peripherals</button>
+                    <button class="topic-filter-btn" data-category="firmware" onclick="filterByTopic('firmware')">💻 Firmware & Programming</button>
+                    <button class="topic-filter-btn" data-category="advanced" onclick="filterByTopic('advanced')">🔥 Advanced Topics</button>
+                    <button class="topic-filter-btn" data-category="mcq" onclick="filterByTopic('mcq')">📝 Multiple Choice Questions</button>
+                </div>
+            </div>
+
             <!-- Progress Tracking -->
             <div class="progress-container">
                 <h3>📊 Your Learning Progress</h3>
@@ -945,6 +962,84 @@ Example: IoT Sensor Node
         }
 
         renderBookmarks();
+
+        // Topic Filter Function
+        function filterByTopic(selectedCategory) {
+            const categoryHeaders = document.querySelectorAll('.category-header');
+            const customSection = document.getElementById('custom-questions-section');
+            const allQAItems = document.querySelectorAll('.qa-item:not(.custom-qa-item)');
+            const filterButtons = document.querySelectorAll('.topic-filter-btn');
+            
+            // Update active button state
+            filterButtons.forEach(btn => {
+                if (btn.dataset.category === selectedCategory) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            if (selectedCategory === 'all') {
+                // Show all categories
+                categoryHeaders.forEach(header => {
+                    header.style.display = 'block';
+                });
+                allQAItems.forEach(item => {
+                    item.style.display = 'block';
+                });
+                if (customSection) {
+                    customSection.style.display = customQuestions.length > 0 ? 'block' : 'none';
+                }
+            } else if (selectedCategory === 'custom') {
+                // Hide all standard categories
+                categoryHeaders.forEach(header => {
+                    if (header.id !== 'custom') {
+                        header.style.display = 'none';
+                    }
+                });
+                allQAItems.forEach(item => {
+                    item.style.display = 'none';
+                });
+                // Show only custom questions
+                if (customSection) {
+                    customSection.style.display = customQuestions.length > 0 ? 'block' : 'none';
+                    if (customQuestions.length > 0) {
+                        customSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            } else {
+                // Hide custom section
+                if (customSection) {
+                    customSection.style.display = 'none';
+                }
+                
+                // Hide all categories first
+                categoryHeaders.forEach(header => {
+                    header.style.display = 'none';
+                });
+                allQAItems.forEach(item => {
+                    item.style.display = 'none';
+                });
+                
+                // Show only selected category
+                const targetHeader = document.getElementById(selectedCategory);
+                if (targetHeader) {
+                    targetHeader.style.display = 'block';
+                    
+                    // Show all qa-items after this header until the next category-header
+                    let nextElement = targetHeader.nextElementSibling;
+                    while (nextElement && !nextElement.classList.contains('category-header')) {
+                        if (nextElement.classList.contains('qa-item')) {
+                            nextElement.style.display = 'block';
+                        }
+                        nextElement = nextElement.nextElementSibling;
+                    }
+                    
+                    // Scroll to category
+                    targetHeader.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        }
 
         // Highlight active TOC item on scroll
         window.addEventListener('scroll', () => {
