@@ -79,6 +79,15 @@
                         <textarea id="custom-answer" rows="6" placeholder="Enter the answer (supports HTML tags like <code>, <pre>, <ul>, etc.)" required></textarea>
                     </div>
                     
+                    <div class="form-group">
+                        <label for="custom-difficulty">Difficulty:</label>
+                        <select id="custom-difficulty" required>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                    
                     <div class="form-actions">
                         <button type="submit" class="btn-submit">Add Question</button>
                         <button type="button" class="btn-cancel" onclick="toggleAddQuestionForm()">Cancel</button>
@@ -1264,12 +1273,14 @@ module_i2c_driver(my_driver);</pre>
             const category = document.getElementById('custom-category').value;
             const question = document.getElementById('custom-question').value;
             const answer = document.getElementById('custom-answer').value;
+            const difficulty = document.getElementById('custom-difficulty').value;
             
             const newQuestion = {
                 id: Date.now(),
                 category: category,
                 question: question,
                 answer: answer,
+                difficulty: difficulty,
                 timestamp: new Date().toLocaleString()
             };
             
@@ -1280,6 +1291,7 @@ module_i2c_driver(my_driver);</pre>
             document.getElementById('custom-question').value = '';
             document.getElementById('custom-answer').value = '';
             document.getElementById('custom-category').value = 'custom';
+            document.getElementById('custom-difficulty').value = 'easy';
             
             // Hide form
             toggleAddQuestionForm();
@@ -1303,20 +1315,67 @@ module_i2c_driver(my_driver);</pre>
             section.style.display = 'block';
             
             const questionsHTML = customQuestions.map((q, index) => `
-                <div class="qa-item custom-qa-item">
-                    <button class="delete-question-btn" onclick="deleteCustomQuestion(${q.id})">🗑️ Delete</button>
+                <div class="qa-item custom-qa-item" data-category="${q.category}">
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
+                        <span class="difficulty-badge ${q.difficulty || 'easy'}">${(q.difficulty || 'easy').toUpperCase()}</span>
+                        <button class="delete-question-btn" onclick="editCustomQuestion(${q.id})" style="background: #3b82f6;">✏️ Edit</button>
+                        <button class="delete-question-btn" onclick="deleteCustomQuestion(${q.id})">🗑️ Delete</button>
+                    </div>
                     <h3>${q.question}</h3>
                     <button class="view-answer-btn" onclick="showAnswer('custom-answer-${q.id}')">View Answer</button>
                     <div id="custom-answer-${q.id}" class="answer">
                         ${q.answer}
                         <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 0.85rem; color: #64748b;">
-                            <em>Added on: ${q.timestamp}</em>
+                            <em>Category: ${q.category} | Added on: ${q.timestamp}</em>
                         </div>
                     </div>
                 </div>
             `).join('');
             
             list.innerHTML = questionsHTML;
+        }
+
+        function editCustomQuestion(id) {
+            const question = customQuestions.find(q => q.id === id);
+            if (!question) return;
+            
+            // Populate form with existing data
+            document.getElementById('custom-category').value = question.category;
+            document.getElementById('custom-question').value = question.question;
+            document.getElementById('custom-answer').value = question.answer;
+            document.getElementById('custom-difficulty').value = question.difficulty || 'easy';
+            
+            // Show form
+            document.getElementById('add-question-form').style.display = 'block';
+            
+            // Change form submit to update instead of add
+            const form = document.querySelector('#add-question-form form');
+            form.onsubmit = function(event) {
+                event.preventDefault();
+                
+                // Update the question
+                question.category = document.getElementById('custom-category').value;
+                question.question = document.getElementById('custom-question').value;
+                question.answer = document.getElementById('custom-answer').value;
+                question.difficulty = document.getElementById('custom-difficulty').value;
+                question.timestamp = new Date().toLocaleString() + ' (edited)';
+                
+                localStorage.setItem('linux-custom-questions', JSON.stringify(customQuestions));
+                
+                // Clear form and reset submit handler
+                document.getElementById('custom-question').value = '';
+                document.getElementById('custom-answer').value = '';
+                document.getElementById('custom-category').value = 'custom';
+                document.getElementById('custom-difficulty').value = 'easy';
+                toggleAddQuestionForm();
+                form.onsubmit = addCustomQuestion;
+                
+                renderCustomQuestions();
+                alert('✅ Question updated successfully!');
+            };
+            
+            // Scroll to form
+            document.getElementById('add-question-form').scrollIntoView({ behavior: 'smooth' });
         }
 
         function deleteCustomQuestion(id) {
