@@ -2463,45 +2463,66 @@ void read_binary_file(const char *filename) {
             const selectedCategory = document.getElementById('category-filter').value;
             const categoryHeaders = document.querySelectorAll('.category-header');
             const customSection = document.getElementById('custom-questions-section');
+            const allQAItems = document.querySelectorAll('.qa-item:not(.custom-qa-item)');
             
             if (selectedCategory === 'all') {
                 // Show all categories
                 categoryHeaders.forEach(header => {
                     header.style.display = 'block';
-                    let nextElement = header.nextElementSibling;
-                    while (nextElement && !nextElement.classList.contains('category-header')) {
-                        nextElement.style.display = 'block';
-                        nextElement = nextElement.nextElementSibling;
+                });
+                allQAItems.forEach(item => {
+                    item.style.display = 'block';
+                });
+                if (customSection) {
+                    customSection.style.display = customQuestions.length > 0 ? 'block' : 'none';
+                }
+            } else if (selectedCategory === 'custom') {
+                // Hide all standard categories
+                categoryHeaders.forEach(header => {
+                    if (header.id !== 'custom') {
+                        header.style.display = 'none';
                     }
                 });
-                if (customSection) customSection.style.display = customQuestions.length > 0 ? 'block' : 'none';
+                allQAItems.forEach(item => {
+                    item.style.display = 'none';
+                });
+                // Show only custom questions
+                if (customSection) {
+                    customSection.style.display = customQuestions.length > 0 ? 'block' : 'none';
+                    if (customQuestions.length > 0) {
+                        customSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
             } else {
-                // Hide all first
+                // Hide custom section
+                if (customSection) {
+                    customSection.style.display = 'none';
+                }
+                
+                // Hide all categories first
                 categoryHeaders.forEach(header => {
                     header.style.display = 'none';
-                    let nextElement = header.nextElementSibling;
-                    while (nextElement && !nextElement.classList.contains('category-header')) {
-                        nextElement.style.display = 'none';
-                        nextElement = nextElement.nextElementSibling;
-                    }
                 });
-                if (customSection) customSection.style.display = 'none';
+                allQAItems.forEach(item => {
+                    item.style.display = 'none';
+                });
                 
                 // Show only selected category
-                if (selectedCategory === 'custom') {
-                    if (customSection) customSection.style.display = customQuestions.length > 0 ? 'block' : 'none';
-                } else {
-                    const targetHeader = document.getElementById(selectedCategory);
-                    if (targetHeader) {
-                        targetHeader.style.display = 'block';
-                        let nextElement = targetHeader.nextElementSibling;
-                        while (nextElement && !nextElement.classList.contains('category-header')) {
+                const targetHeader = document.getElementById(selectedCategory);
+                if (targetHeader) {
+                    targetHeader.style.display = 'block';
+                    
+                    // Show all qa-items after this header until the next category-header
+                    let nextElement = targetHeader.nextElementSibling;
+                    while (nextElement && !nextElement.classList.contains('category-header')) {
+                        if (nextElement.classList.contains('qa-item')) {
                             nextElement.style.display = 'block';
-                            nextElement = nextElement.nextElementSibling;
                         }
-                        // Scroll to category
-                        targetHeader.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        nextElement = nextElement.nextElementSibling;
                     }
+                    
+                    // Scroll to category
+                    targetHeader.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             }
         }
