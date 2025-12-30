@@ -784,37 +784,41 @@
 </div>
 
 <script>
-    // Firebase configuration - REPLACE WITH YOUR OWN CREDENTIALS
-    // To get your Firebase config:
-    // 1. Go to https://console.firebase.google.com/
-    // 2. Create a new project or select existing one
-    // 3. Go to Project Settings > General
-    // 4. Scroll to "Your apps" and add a web app
-    // 5. Copy the firebaseConfig object here
+    // Firebase configuration
+    // Project: https://console.firebase.google.com/project/split-money-bs15
+    // Get your complete config from: Project Settings > General > Your apps > Web app
     
-    const firebaseConfig = null; // Set to null to use localStorage only
+    const firebaseConfig = {
+        apiKey: "YOUR-API-KEY-HERE",  // Get from Firebase Console
+        authDomain: "split-money-bs15.firebaseapp.com",
+        databaseURL: "https://split-money-bs15-default-rtdb.firebaseio.com",  // Verify in Realtime Database section
+        projectId: "split-money-bs15",
+        storageBucket: "split-money-bs15.appspot.com",
+        messagingSenderId: "YOUR-SENDER-ID",  // Get from Firebase Console
+        appId: "YOUR-APP-ID"  // Get from Firebase Console
+    };
     
-    // EXAMPLE (uncomment and replace with your credentials):
-    // const firebaseConfig = {
-    //     apiKey: "YOUR-API-KEY",
-    //     authDomain: "your-project.firebaseapp.com",
-    //     databaseURL: "https://your-project-default-rtdb.firebaseio.com",
-    //     projectId: "your-project",
-    //     storageBucket: "your-project.appspot.com",
-    //     messagingSenderId: "123456789",
-    //     appId: "1:123456789:web:abcdef123456"
-    // };
+    // IMPORTANT: Replace YOUR-API-KEY-HERE, YOUR-SENDER-ID, and YOUR-APP-ID
+    // with actual values from Firebase Console > Project Settings > Your apps
 
     // Initialize Firebase
     let database;
     let useFirebase = false;
     
     try {
-        if (firebaseConfig && typeof firebase !== 'undefined' && !firebase.apps.length) {
+        // Check if Firebase config has placeholder values
+        const hasPlaceholders = firebaseConfig.apiKey.includes('YOUR-') || 
+                               firebaseConfig.appId.includes('YOUR-');
+        
+        if (hasPlaceholders) {
+            throw new Error('Please update Firebase config with real credentials from Firebase Console');
+        }
+        
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
             database = firebase.database();
             useFirebase = true;
-            console.log('Firebase initialized successfully');
+            console.log('✅ Firebase initialized successfully');
             
             // Show status
             setTimeout(() => {
@@ -837,10 +841,10 @@
                 }
             }, 100);
         } else {
-            throw new Error('Firebase config not set');
+            throw new Error('Firebase SDK not loaded');
         }
     } catch (error) {
-        console.log('Using localStorage mode:', error.message);
+        console.log('⚠️ Using localStorage mode:', error.message);
         useFirebase = false;
         
         // Show status
