@@ -5,35 +5,567 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Split Money – 4 People</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .container { max-width:900px; margin:0 auto; padding:20px; }
-        .people-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; margin:20px 0; }
-        .person-input { display:flex; align-items:center; gap:10px; }
-        .person-input input { flex:1; padding:10px; border:1.5px solid #cbd5e0; border-radius:8px; font-size:1rem; }
-        .form-group { margin:20px 0; padding:15px; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0; }
-        .form-group label { display:block; margin-bottom:8px; font-weight:600; color:#2d3748; }
-        select, input[type=number], input[type=date] { width:100%; padding:12px; border:1.5px solid #cbd5e0; border-radius:8px; font-size:1rem; }
-        button { background:#3b82f6; color:white; padding:12px 24px; border:none; border-radius:8px; font-weight:600; cursor:pointer; margin-top:15px; width:100%; }
-        button:hover { background:#2563eb; }
-        .select-all-btn, .clear-all-btn { background:#4c1d95; width:auto; display:inline-block; margin-right:10px; }
-        .select-all-btn:hover, .clear-all-btn:hover { background:#3b1580; }
-        .clear-all-btn { background:#e53e3e; }
-        .clear-all-btn:hover { background:#c53030; }
-        #results-table, #summary-table, #history-table { width:100%; border-collapse:collapse; margin-bottom:15px; font-size:1rem; background:white; border-radius:10px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,.05); }
-        #results-table th, #summary-table th, #history-table th { background:#3b82f6; color:white; padding:12px; text-align:left; font-weight:600; text-transform:uppercase; font-size:.9rem; }
-        #results-table td, #summary-table td, #history-table td { padding:12px; border-bottom:1px solid #e2e8f0; }
-        #results-table tr:hover td, #history-table tr:hover td { background:#f7fafc; }
-        .delete-btn { background:#e53e3e; color:white; border:none; padding:6px 10px; border-radius:6px; font-size:.8rem; cursor:pointer; }
-        .delete-btn:hover { background:#c53030; }
-        .summary-box { display:flex; justify-content:space-between; gap:15px; margin:15px 0; }
-        .total-paid, .total-split, .remaining { flex:1; padding:12px; background:#f8fafc; border-radius:8px; border:1px solid #e2e8f0; font-weight:600; font-size:1.1rem; }
-        .remaining { color:#d69e2e; }
-        .final-summary, .history-section { margin-top:30px; padding:20px; background:#f0f4f8; border-radius:12px; border:1px solid #cbd5e0; }
-        .final-summary h3, .history-section h3 { margin:0 0 15px; color:#2d3748; font-size:1.3rem; }
-        .owes-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:10px; }
-        .owes-grid label { display:flex; align-items:center; gap:8px; font-weight:500; cursor:pointer; }
-        .timestamp { font-size:0.8rem; color:#718096; }
-        .net-positive { color:#16a34a; font-weight:600; }
+        * { transition: all 0.3s ease; }
+        
+        .container { 
+            max-width: 1100px; 
+            margin: 0 auto; 
+            padding: 30px;
+        }
+        
+        h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+        
+        .people-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 20px; 
+            margin: 25px 0;
+        }
+        
+        .person-input { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 8px 12px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .person-input span {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 6px rgba(102, 126, 234, 0.4);
+        }
+        
+        .person-input input { 
+            flex: 1; 
+            padding: 12px 16px; 
+            border: 2px solid transparent;
+            border-radius: 10px; 
+            font-size: 1rem;
+            background: white;
+            font-weight: 500;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .person-input input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .form-group { 
+            margin: 25px 0; 
+            padding: 24px; 
+            background: white;
+            border-radius: 16px; 
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+        
+        .form-group:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .form-group label { 
+            display: block; 
+            margin-bottom: 12px; 
+            font-weight: 700; 
+            color: #1a202c;
+            font-size: 1.05rem;
+            letter-spacing: -0.2px;
+        }
+        
+        select, input[type=number], input[type=date] { 
+            width: 100%; 
+            padding: 14px 16px; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 10px; 
+            font-size: 1rem;
+            background: #f8fafc;
+            font-weight: 500;
+        }
+        
+        select:focus, input[type=number]:focus, input[type=date]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        button { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            padding: 14px 28px; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            width: 100%;
+            font-size: 1.05rem;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            text-transform: uppercase;
+        }
+        
+        button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .select-all-btn, .clear-all-btn { 
+            background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 100%);
+            width: auto; 
+            display: inline-block; 
+            margin-right: 10px;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+        
+        .select-all-btn:hover, .clear-all-btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(76, 29, 149, 0.4);
+        }
+        
+        .clear-all-btn { 
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+        }
+        
+        .clear-all-btn:hover { 
+            box-shadow: 0 4px 16px rgba(220, 38, 38, 0.4);
+        }
+        
+        #results-table, #summary-table, #history-table { 
+            width: 100%; 
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 20px; 
+            font-size: 1rem; 
+            background: white; 
+            border-radius: 16px; 
+            overflow: hidden; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+        
+        #results-table th, #summary-table th, #history-table th { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; 
+            padding: 16px; 
+            text-align: left; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        
+        #results-table td, #summary-table td, #history-table td { 
+            padding: 16px; 
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        #results-table tbody tr, #history-table tbody tr {
+            background: white;
+        }
+        
+        #results-table tr:hover td, #history-table tr:hover td { 
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            cursor: pointer;
+        }
+        
+        .delete-btn { 
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white; 
+            border: none; 
+            padding: 8px 14px; 
+            border-radius: 8px; 
+            font-size: 0.85rem; 
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+        
+        .delete-btn:hover { 
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+        
+        .summary-box { 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px; 
+            margin: 25px 0;
+        }
+        
+        .total-paid, .total-split, .remaining { 
+            padding: 20px; 
+            background: white;
+            border-radius: 16px; 
+            border: 2px solid #e2e8f0;
+            font-weight: 700; 
+            font-size: 1.15rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        
+        .total-paid {
+            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+            border-color: #10b981;
+            color: #065f46;
+        }
+        
+        .total-split {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+        
+        .remaining { 
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+        
+        .final-summary, .history-section, .dashboard-section, #charts-section { 
+            margin-top: 35px; 
+            padding: 28px; 
+            background: white;
+            border-radius: 20px; 
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+        }
+        
+        .final-summary h3, .history-section h3, .dashboard-section h3, #charts-section h3 { 
+            margin: 0 0 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+        
+        .owes-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 12px; 
+            margin-top: 15px;
+        }
+        
+        .owes-grid label { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            font-weight: 600; 
+            cursor: pointer;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            border-radius: 10px;
+            border: 2px solid transparent;
+        }
+        
+        .owes-grid label:hover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+        }
+        
+        .owes-grid input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+        
+        .timestamp { 
+            font-size: 0.85rem; 
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        .net-positive { 
+            color: #059669; 
+            font-weight: 700;
+        }
+        
+        .category-badge { 
+            display: inline-block; 
+            padding: 6px 14px; 
+            border-radius: 20px; 
+            font-size: 0.8rem; 
+            font-weight: 700; 
+            margin-left: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            letter-spacing: 0.3px;
+        }
+        
+        .cat-food { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: #78350f; }
+        .cat-transport { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #1e3a8a; }
+        .cat-shopping { background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%); color: #831843; }
+        .cat-entertainment { background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); color: #3730a3; }
+        .cat-utilities { background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%); color: #115e59; }
+        .cat-other { background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%); color: #374151; }
+        
+        .dashboard-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; 
+            margin: 25px 0;
+        }
+        
+        .person-card { 
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid #e2e8f0; 
+            border-radius: 16px; 
+            padding: 24px; 
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        
+        .person-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+        }
+        
+        .person-card h4 { 
+            margin: 0 0 16px; 
+            color: #1a202c; 
+            font-size: 1.25rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .person-card .stat { 
+            display: flex; 
+            justify-content: space-between; 
+            margin: 12px 0; 
+            font-size: 0.95rem;
+            padding: 8px 0;
+        }
+        
+        .person-card .stat.paid { 
+            color: #059669; 
+            font-weight: 700;
+        }
+        
+        .person-card .stat.owes { 
+            color: #dc2626; 
+            font-weight: 700;
+        }
+        
+        .person-card .stat.net { 
+            color: #2563eb; 
+            font-weight: 800; 
+            font-size: 1.1rem; 
+            border-top: 2px solid #e2e8f0; 
+            padding-top: 12px; 
+            margin-top: 12px;
+        }
+        
+        .chart-container { 
+            max-width: 600px; 
+            margin: 25px auto; 
+            padding: 28px; 
+            background: white;
+            border-radius: 20px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            border: 2px solid #e2e8f0;
+        }
+        
+        .chart-container h3 {
+            margin-top: 0;
+        }
+        
+        .currency-selector { 
+            display: flex; 
+            gap: 12px; 
+            align-items: center; 
+            margin-top: 12px;
+            padding: 12px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            border-radius: 10px;
+        }
+        
+        .currency-selector label {
+            font-weight: 700;
+            color: #1a202c;
+        }
+        
+        .currency-selector select { 
+            width: auto; 
+            padding: 10px 14px;
+            font-weight: 600;
+        }
+        
+        .converted-amount { 
+            margin-top: 12px; 
+            padding: 14px; 
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-radius: 10px; 
+            font-weight: 700; 
+            color: #1e40af;
+            text-align: center;
+            font-size: 1.05rem;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+        }
+        
+        .split-mode-toggle { 
+            display: flex; 
+            gap: 12px; 
+            margin: 15px 0;
+            background: #f1f5f9;
+            padding: 6px;
+            border-radius: 12px;
+        }
+        
+        .split-mode-toggle button { 
+            flex: 1; 
+            padding: 12px; 
+            border: 2px solid transparent;
+            background: white;
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-weight: 700;
+            margin: 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        
+        .split-mode-toggle button.active { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; 
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .split-mode-toggle button:not(.active):hover {
+            border-color: #667eea;
+            background: #f8fafc;
+        }
+        
+        .custom-amounts { 
+            display: none; 
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            border-radius: 12px;
+        }
+        
+        .custom-amounts.active { 
+            display: block;
+        }
+        
+        .custom-amount-input { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            margin: 10px 0;
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        
+        .custom-amount-input label { 
+            flex: 1; 
+            font-weight: 700;
+            color: #1a202c;
+        }
+        
+        .custom-amount-input input { 
+            flex: 2; 
+            padding: 10px 14px; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        .receipt-upload { 
+            margin-top: 12px;
+        }
+        
+        .receipt-preview { 
+            display: flex; 
+            gap: 12px; 
+            flex-wrap: wrap; 
+            margin-top: 12px;
+        }
+        
+        .receipt-thumbnail { 
+            width: 90px; 
+            height: 90px; 
+            object-fit: cover; 
+            border-radius: 10px; 
+            border: 3px solid #e2e8f0; 
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .receipt-thumbnail:hover {
+            transform: scale(1.05);
+            border-color: #667eea;
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+        }
+        
+        .receipt-modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.9); 
+            z-index: 1000; 
+            justify-content: center; 
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        
+        .receipt-modal img { 
+            max-width: 90%; 
+            max-height: 90%; 
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 20px 15px; }
+            h1 { font-size: 2rem; }
+            .people-grid { grid-template-columns: 1fr; }
+            .owes-grid { grid-template-columns: 1fr; }
+            .summary-box { grid-template-columns: 1fr; }
+            .form-row-2 { grid-template-columns: 1fr; }
+            .form-group { padding: 20px; }
+            button { font-size: 1rem; padding: 16px 24px; }
+        }
     </style>
 </head>
 <body>
@@ -75,6 +607,17 @@
 </div>
 <div class="container">
     <h1>Split Money – Who Pays Whom (VND)</h1>
+    
+    <!-- Firebase Status Indicator -->
+    <div id="firebase-status" style="text-align:center; padding:12px; margin-bottom:20px; border-radius:10px; font-weight:600; display:none;">
+        <span id="status-icon"></span>
+        <span id="status-text"></span>
+        <div id="firebase-links" style="margin-top:10px; display:none;">
+            <a href="https://console.firebase.google.com" target="_blank" style="color:#065f46; text-decoration:underline; font-size:0.9rem; margin-right:15px;">🔗 Firebase Console</a>
+            <a id="view-db-link" href="#" target="_blank" style="color:#065f46; text-decoration:underline; font-size:0.9rem;">📄 View Database</a>
+        </div>
+    </div>
+    
     <form id="split-form">
         <div class="form-group">
             <label>Enter Names (4 people):</label>
@@ -92,11 +635,50 @@
         </div>
 
         <div class="form-group">
-            <label for="total-amount">Total Amount Paid:</label>
-            <input type="number" id="total-amount" placeholder="e.g. 4000000" step="1000" min="0" required>
+            <label for="category">Category:</label>
+            <select id="category" required>
+                <option value="food">🍔 Food & Dining</option>
+                <option value="transport">🚗 Transport</option>
+                <option value="shopping">🛍️ Shopping</option>
+                <option value="entertainment">🎬 Entertainment</option>
+                <option value="utilities">💡 Utilities</option>
+                <option value="other">📦 Other</option>
+            </select>
         </div>
 
         <div class="form-group">
+            <label for="total-amount">Total Amount Paid (in thousands):</label>
+            <input type="number" id="total-amount" placeholder="e.g. 4000 = 4,000,000 VND" step="1" min="0" required>
+            <div class="currency-selector">
+                <label>Currency:</label>
+                <select id="currency">
+                    <option value="VND" selected>VND (₫)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="JPY">JPY (¥)</option>
+                </select>
+            </div>
+            <div id="converted-display" class="converted-amount" style="display:none;"></div>
+        </div>
+
+        <!-- Receipt and Notes Row -->
+        <div class="form-row-2">
+            <div class="form-group compact">
+                <label>📷 Receipt Photo (Optional):</label>
+                <div class="receipt-upload">
+                    <input type="file" id="receipt-file" accept="image/*" multiple>
+                    <div id="receipt-preview" class="receipt-preview"></div>
+                </div>
+            </div>
+
+            <div class="form-group compact">
+                <label for="bill-notes">📝 Notes (Optional):</label>
+                <textarea id="bill-notes" placeholder="e.g., Lunch at restaurant, Taxi to airport, etc." rows="4" style="width:100%; padding:14px; border:2px solid #e2e8f0; border-radius:10px; font-size:1rem; font-family:inherit; resize:vertical; background:#f8fafc;"></textarea>
+            </div>
+        </div>
+
+        <!-- Payer -->
+        <div class="form-group compact">
             <label for="payer">Who Paid the Bill?</label>
             <select id="payer" required></select>
         </div>
@@ -105,10 +687,26 @@
             <label>Who Should Pay Back? (Check all that apply)</label>
             <button type="button" class="select-all-btn" id="select-all">Select All</button>
             <div class="owes-grid" id="owes-container"></div>
+            
+            <div class="split-mode-toggle">
+                <button type="button" id="equal-split-btn" class="active">Equal Split</button>
+                <button type="button" id="custom-split-btn">Custom Amounts</button>
+            </div>
+            
+            <div id="custom-amounts" class="custom-amounts">
+                <label style="font-size:0.9rem; color:#64748b; margin-bottom:10px; display:block;">Enter custom amount for each person:</label>
+                <div id="custom-amounts-container"></div>
+            </div>
         </div>
 
-        <button type="submit">Split Now</button>
+        <button type="submit">💸 Split Now</button>
     </form>
+
+    <!-- === PER-PERSON DASHBOARD === -->
+    <div id="dashboard" class="dashboard-section" style="display:none;">
+        <h3>👥 Per-Person Summary</h3>
+        <div id="dashboard-grid" class="dashboard-grid"></div>
+    </div>
 
     <!-- === RESULTS === -->
     <div id="results" class="result-container" style="display:none;">
@@ -116,9 +714,12 @@
             <thead>
                 <tr>
                     <th>Date</th>
+                    <th>Category</th>
                     <th>Payer</th>
                     <th>Owed By</th>
                     <th>Amount</th>
+                    <th>Notes</th>
+                    <th>Receipt</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -155,18 +756,93 @@
                     <tr>
                         <th>Date</th>
                         <th>Time</th>
+                        <th>Category</th>
                         <th>Payer</th>
                         <th>Debtor(s)</th>
                         <th>Amount</th>
+                        <th>Notes</th>
+                        <th>Receipt</th>
                     </tr>
                 </thead>
                 <tbody id="history-body"></tbody>
             </table>
         </div>
     </div>
+
+    <!-- === CHARTS === -->
+    <div id="charts-section" style="display:none;">
+        <div class="chart-container">
+            <h3>📊 Expenses by Category</h3>
+            <canvas id="category-chart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h3>💰 Who Paid Most</h3>
+            <canvas id="payer-chart"></canvas>
+        </div>
+    </div>
 </div>
 
 <script>
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyBvoorbeeld-your-api-key-here",
+        authDomain: "split-money-app.firebaseapp.com",
+        databaseURL: "https://split-money-app-default-rtdb.firebaseio.com",
+        projectId: "split-money-app",
+        storageBucket: "split-money-app.appspot.com",
+        messagingSenderId: "123456789",
+        appId: "1:123456789:web:abcdef123456"
+    };
+
+    // Initialize Firebase
+    let database;
+    let useFirebase = false;
+    
+    try {
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        database = firebase.database();
+        useFirebase = true;
+        console.log('Firebase initialized successfully');
+        
+        // Show status
+        setTimeout(() => {
+            const statusDiv = document.getElementById('firebase-status');
+            const statusIcon = document.getElementById('status-icon');
+            const statusText = document.getElementById('status-text');
+            const firebaseLinks = document.getElementById('firebase-links');
+            const viewDbLink = document.getElementById('view-db-link');
+            
+            statusDiv.style.display = 'block';
+            statusDiv.style.background = 'linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)';
+            statusDiv.style.color = '#065f46';
+            statusIcon.textContent = '✅ ';
+            statusText.textContent = 'Connected - Data synced across all users in real-time';
+            
+            // Show Firebase links
+            firebaseLinks.style.display = 'block';
+            if (firebaseConfig.databaseURL) {
+                viewDbLink.href = firebaseConfig.databaseURL;
+            }
+        }, 100);
+    } catch (error) {
+        console.warn('Firebase not available, using localStorage fallback:', error);
+        useFirebase = false;
+        
+        // Show status
+        setTimeout(() => {
+            const statusDiv = document.getElementById('firebase-status');
+            const statusIcon = document.getElementById('status-icon');
+            const statusText = document.getElementById('status-text');
+            statusDiv.style.display = 'block';
+            statusDiv.style.background = 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)';
+            statusDiv.style.color = '#92400e';
+            statusIcon.textContent = '⚠️ ';
+            statusText.textContent = 'Local mode - Data saved on this device only';
+        }, 100);
+    }
+
     function formatVND(a){return a.toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");}
     function formatDate(d){return d.toLocaleString('vi-VN', {dateStyle: 'short', timeStyle: 'short'});}
 
@@ -186,10 +862,89 @@
     const historySection = document.getElementById('history-section');
     const nameInputs = document.querySelectorAll('.person-name');
     const billDateInput = document.getElementById('bill-date');
+    const categorySelect = document.getElementById('category');
+    const currencySelect = document.getElementById('currency');
+    const convertedDisplay = document.getElementById('converted-display');
+    const totalAmountInput = document.getElementById('total-amount');
+    const billNotesInput = document.getElementById('bill-notes');
+    const receiptFileInput = document.getElementById('receipt-file');
+    const receiptPreview = document.getElementById('receipt-preview');
+    const equalSplitBtn = document.getElementById('equal-split-btn');
+    const customSplitBtn = document.getElementById('custom-split-btn');
+    const customAmountsDiv = document.getElementById('custom-amounts');
+    const customAmountsContainer = document.getElementById('custom-amounts-container');
+    const dashboardDiv = document.getElementById('dashboard');
+    const dashboardGrid = document.getElementById('dashboard-grid');
+    const chartsSection = document.getElementById('charts-section');
 
     let people = [];
-    let allEntries = JSON.parse(localStorage.getItem('allSplitEntries')) || [];
+    let allEntries = [];
     let isFirstLoad = true;
+    let splitMode = 'equal';
+    let receiptImages = [];
+    let categoryChart = null;
+    let payerChart = null;
+
+    // Currency conversion rates (VND as base)
+    const exchangeRates = {
+        VND: 1,
+        USD: 0.00004,
+        EUR: 0.000037,
+        JPY: 0.0061
+    };
+
+    function convertCurrency(amount, from, to) {
+        const vndAmount = amount / exchangeRates[from];
+        return vndAmount * exchangeRates[to];
+    }
+
+    // Load data from Firebase or localStorage
+    function loadData() {
+        if (useFirebase) {
+            database.ref('splitEntries').on('value', (snapshot) => {
+                const data = snapshot.val();
+                allEntries = data ? Object.values(data) : [];
+                renderAll();
+            });
+        } else {
+            allEntries = JSON.parse(localStorage.getItem('allSplitEntries')) || [];
+            renderAll();
+        }
+    }
+
+    // Save data to Firebase or localStorage
+    function saveAll() {
+        if (useFirebase) {
+            database.ref('splitEntries').set(
+                allEntries.reduce((acc, entry, i) => {
+                    acc[`entry_${Date.now()}_${i}`] = entry;
+                    return acc;
+                }, {})
+            );
+        } else {
+            localStorage.setItem('allSplitEntries', JSON.stringify(allEntries));
+        }
+    }
+
+    // Delete entry
+    function deleteEntry(idx) {
+        allEntries.splice(idx, 1);
+        saveAll();
+        renderAll();
+    }
+
+    function getCategoryEmoji(cat) {
+        const emojis = {food:'🍔', transport:'🚗', shopping:'🛍️', entertainment:'🎬', utilities:'💡', other:'📦'};
+        return emojis[cat] || '📦';
+    }
+
+    function getCategoryLabel(cat) {
+        const labels = {
+            food:'Food', transport:'Transport', shopping:'Shopping',
+            entertainment:'Entertainment', utilities:'Utilities', other:'Other'
+        };
+        return labels[cat] || 'Other';
+    }
 
     function updatePeople(){
         const prevPayer = payerSelect.value;
@@ -210,10 +965,18 @@
                 ${p.name}
             </label>
         `).join('');
+
+        updateCustomAmountsInputs();
     }
 
-    function saveAll(){
-        localStorage.setItem('allSplitEntries', JSON.stringify(allEntries));
+    function updateCustomAmountsInputs() {
+        customAmountsContainer.innerHTML = people.map((p, i) => `
+            <div class="custom-amount-input">
+                <label>${p.name}:</label>
+                <input type="number" class="custom-amount" data-index="${i}" 
+                       placeholder="0" step="1000" min="0">
+            </div>
+        `).join('');
     }
 
     function renderAll(){
@@ -221,12 +984,20 @@
         let total = 0;
         allEntries.forEach((e, idx) => {
             total += e.amount;
+            const categoryBadge = `<span class="category-badge cat-${e.category}">${getCategoryEmoji(e.category)} ${getCategoryLabel(e.category)}</span>`;
+            const notesCell = e.notes ? `<span style="font-size:0.9rem; color:#64748b;">${e.notes}</span>` : '-';
+            const receiptBtn = e.receipts && e.receipts.length > 0 
+                ? `<button class="delete-btn" onclick="showReceipts(${idx})" style="background:#3b82f6;">📷 ${e.receipts.length}</button>`
+                : '-';
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${e.date}</td>
+                <td>${categoryBadge}</td>
                 <td>${e.payer}</td>
                 <td>${e.owedBy}</td>
-                <td>${formatVND(e.amount)} VND</td>
+                <td>${formatVND(e.amount)} ${e.currency || 'VND'}</td>
+                <td>${notesCell}</td>
+                <td>${receiptBtn}</td>
                 <td><button class="delete-btn" data-index="${idx}">Delete</button></td>
             `;
             tableBody.appendChild(tr);
@@ -237,7 +1008,132 @@
         resultsDiv.style.display = allEntries.length ? 'block' : 'none';
         renderNetSummary();
         renderHistory();
+        renderDashboard();
+        renderCharts();
     }
+
+    function renderDashboard() {
+        if (allEntries.length === 0) {
+            dashboardDiv.style.display = 'none';
+            return;
+        }
+
+        const stats = {};
+        people.forEach(p => {
+            stats[p.name] = { paid: 0, owes: 0 };
+        });
+
+        allEntries.forEach(e => {
+            if (stats[e.payer]) stats[e.payer].paid += e.amount;
+            if (stats[e.owedBy]) stats[e.owedBy].owes += e.amount;
+        });
+
+        dashboardGrid.innerHTML = Object.keys(stats).map(name => {
+            const net = stats[name].paid - stats[name].owes;
+            const netClass = net >= 0 ? 'net-positive' : 'owes';
+            const netLabel = net >= 0 ? 'Net Balance (Owed to you)' : 'Net Balance (You owe)';
+            return `
+                <div class="person-card">
+                    <h4>👤 ${name}</h4>
+                    <div class="stat paid">
+                        <span>Total Paid:</span>
+                        <span>${formatVND(stats[name].paid)} VND</span>
+                    </div>
+                    <div class="stat owes">
+                        <span>Total Owes:</span>
+                        <span>${formatVND(stats[name].owes)} VND</span>
+                    </div>
+                    <div class="stat net ${netClass}">
+                        <span>${netLabel}:</span>
+                        <span>${formatVND(Math.abs(net))} VND</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        dashboardDiv.style.display = 'block';
+    }
+
+    function renderCharts() {
+        if (allEntries.length === 0) {
+            chartsSection.style.display = 'none';
+            return;
+        }
+
+        // Category breakdown
+        const categoryData = {};
+        allEntries.forEach(e => {
+            categoryData[e.category] = (categoryData[e.category] || 0) + e.amount;
+        });
+
+        const categoryLabels = Object.keys(categoryData).map(c => getCategoryLabel(c));
+        const categoryValues = Object.values(categoryData);
+        const categoryColors = Object.keys(categoryData).map(c => {
+            const colors = {food:'#fbbf24', transport:'#3b82f6', shopping:'#ec4899', 
+                           entertainment:'#6366f1', utilities:'#14b8a6', other:'#6b7280'};
+            return colors[c] || '#6b7280';
+        });
+
+        if (categoryChart) categoryChart.destroy();
+        categoryChart = new Chart(document.getElementById('category-chart'), {
+            type: 'pie',
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    data: categoryValues,
+                    backgroundColor: categoryColors
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Who paid most
+        const payerData = {};
+        allEntries.forEach(e => {
+            payerData[e.payer] = (payerData[e.payer] || 0) + e.amount;
+        });
+
+        if (payerChart) payerChart.destroy();
+        payerChart = new Chart(document.getElementById('payer-chart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(payerData),
+                datasets: [{
+                    label: 'Total Paid (VND)',
+                    data: Object.values(payerData),
+                    backgroundColor: '#3b82f6'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        chartsSection.style.display = 'block';
+    }
+
+    window.showReceipts = function(idx) {
+        const receipts = allEntries[idx].receipts || [];
+        if (receipts.length === 0) return;
+        
+        const modal = document.createElement('div');
+        modal.className = 'receipt-modal';
+        modal.style.display = 'flex';
+        modal.innerHTML = `<img src="${receipts[0]}" alt="Receipt">`;
+        modal.onclick = () => modal.remove();
+        document.body.appendChild(modal);
+    };
 
     function renderNetSummary(){
         const balance = {};
@@ -275,22 +1171,34 @@
 
         const groups = {};
         allEntries.forEach(e => {
-            const key = `${e.date}_${e.time}_${e.payer}`;
+            const key = `${e.date}_${e.time}_${e.payer}_${e.category}_${e.notes || ''}`;
             if (!groups[key]) {
-                groups[key] = { date: e.date, time: e.time, payer: e.payer, debtors: [], total: 0 };
+                groups[key] = { 
+                    date: e.date, time: e.time, payer: e.payer, 
+                    category: e.category, debtors: [], total: 0,
+                    receipts: e.receipts || [],
+                    notes: e.notes || ''
+                };
             }
             groups[key].debtors.push(e.owedBy);
             groups[key].total += e.amount;
         });
 
         Object.values(groups).forEach(g => {
+            const categoryBadge = `<span class="category-badge cat-${g.category}">${getCategoryEmoji(g.category)} ${getCategoryLabel(g.category)}</span>`;
+            const notesCell = g.notes ? `<span style="font-size:0.9rem; color:#64748b;">${g.notes}</span>` : '-';
+            const receiptBtn = g.receipts.length > 0 
+                ? `📷 ${g.receipts.length}` : '-';
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${g.date}</td>
                 <td class="timestamp">${new Date(g.time).toLocaleTimeString('vi-VN')}</td>
+                <td>${categoryBadge}</td>
                 <td><strong>${g.payer}</strong></td>
                 <td>${g.debtors.join(', ')}</td>
                 <td class="net-positive">${formatVND(g.total)} VND</td>
+                <td>${notesCell}</td>
+                <td>${receiptBtn}</td>
             `;
             historyBody.appendChild(tr);
         });
@@ -301,7 +1209,7 @@
     // Init
     updatePeople();
     nameInputs.forEach(inp => inp.addEventListener('input', updatePeople));
-    renderAll();
+    loadData();
 
     // Default today
     billDateInput.value = new Date().toISOString().split('T')[0];
@@ -312,36 +1220,106 @@
 
     clearAllBtn.addEventListener('click', () => {
         if (confirm('Delete ALL splits and history?')) {
-            allEntries = [];
-            saveAll();
+            if (useFirebase) {
+                database.ref('splitEntries').remove();
+                allEntries = [];
+            } else {
+                allEntries = [];
+                saveAll();
+            }
             renderAll();
         }
     });
 
     tableBody.addEventListener('click', e => {
-        if (e.target.classList.contains('delete-btn')) {
+        if (e.target.classList.contains('delete-btn') && e.target.dataset.index) {
             const idx = parseInt(e.target.dataset.index);
-            allEntries.splice(idx, 1);
-            saveAll();
-            renderAll();
+            if (confirm('Delete this entry?')) {
+                deleteEntry(idx);
+            }
         }
+    });
+
+    // Currency conversion display
+    totalAmountInput.addEventListener('input', updateCurrencyDisplay);
+    currencySelect.addEventListener('change', updateCurrencyDisplay);
+
+    function updateCurrencyDisplay() {
+        let amount = parseFloat(totalAmountInput.value);
+        const currency = currencySelect.value;
+        
+        if (!amount) {
+            convertedDisplay.style.display = 'none';
+            return;
+        }
+        
+        if (currency === 'VND') {
+            // Show VND conversion (multiply by 1000)
+            const vndAmount = amount * 1000;
+            convertedDisplay.textContent = `= ${formatVND(Math.round(vndAmount))} VND`;
+            convertedDisplay.style.display = 'block';
+            return;
+        }
+
+        const vndAmount = convertCurrency(amount, currency, 'VND');
+        convertedDisplay.textContent = `≈ ${formatVND(Math.round(vndAmount))} VND`;
+        convertedDisplay.style.display = 'block';
+    }
+
+    // Receipt upload
+    receiptFileInput.addEventListener('change', e => {
+        receiptImages = [];
+        receiptPreview.innerHTML = '';
+        
+        Array.from(e.target.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = evt => {
+                receiptImages.push(evt.target.result);
+                const img = document.createElement('img');
+                img.src = evt.target.result;
+                img.className = 'receipt-thumbnail';
+                receiptPreview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+
+    // Split mode toggle
+    equalSplitBtn.addEventListener('click', () => {
+        splitMode = 'equal';
+        equalSplitBtn.classList.add('active');
+        customSplitBtn.classList.remove('active');
+        customAmountsDiv.classList.remove('active');
+    });
+
+    customSplitBtn.addEventListener('click', () => {
+        splitMode = 'custom';
+        customSplitBtn.classList.add('active');
+        equalSplitBtn.classList.remove('active');
+        customAmountsDiv.classList.add('active');
     });
 
     form.addEventListener('submit', e => {
         e.preventDefault();
 
-        // CONFIRMATION
-        if (!confirm('Are you sure you want to split this bill?')) {
-            return;
-        }
+        if (!confirm('Are you sure you want to split this bill?')) return;
 
         if (people.length !== 4) return alert('Please enter all 4 names.');
 
         const billDate = billDateInput.value;
         if (!billDate) return alert('Please select the bill date.');
 
-        const total = parseFloat(document.getElementById('total-amount').value);
-        if (isNaN(total) || total <= 0 || total % 1000 !== 0) return alert('Enter valid amount (multiple of 1,000 VND)');
+        let total = parseFloat(totalAmountInput.value);
+        const currency = currencySelect.value;
+        const category = categorySelect.value;
+        const notes = billNotesInput.value.trim();
+        
+        if (isNaN(total) || total <= 0) return alert('Enter valid amount');
+
+        // For VND, multiply by 1000 (user enters in thousands)
+        if (currency === 'VND') {
+            total = total * 1000;
+        }
 
         const payerName = payerSelect.value;
         if (!payerName) return alert('Select who paid.');
@@ -350,24 +1328,76 @@
         if (checkedBoxes.length === 0) return alert('Select at least one person.');
 
         const owes = Array.from(checkedBoxes).map(cb => people[parseInt(cb.dataset.index)]);
-
-        const share = total / owes.length;
         const now = new Date().toISOString();
 
-        owes.forEach(p => {
-            allEntries.push({
-                date: billDate,
-                payer: payerName,
-                owedBy: p.name,
-                amount: Math.round(share),
-                time: now
+        // Convert to VND for storage
+        const totalVND = currency !== 'VND' ? convertCurrency(total, currency, 'VND') : total;
+
+        if (splitMode === 'equal') {
+            const share = totalVND / owes.length;
+            owes.forEach(p => {
+                // Skip if person owes themselves
+                if (p.name === payerName) return;
+                
+                allEntries.push({
+                    date: billDate,
+                    payer: payerName,
+                    owedBy: p.name,
+                    amount: Math.round(share),
+                    category: category,
+                    currency: currency,
+                    notes: notes,
+                    receipts: [...receiptImages],
+                    time: now
+                });
             });
-        });
+        } else {
+            // Custom split mode
+            const customInputs = document.querySelectorAll('.custom-amount');
+            let totalCustom = 0;
+            const customAmounts = [];
+            
+            customInputs.forEach((input, i) => {
+                const amount = parseFloat(input.value) || 0;
+                if (owes.some(p => p.name === people[i].name)) {
+                    customAmounts.push({ person: people[i], amount });
+                    totalCustom += amount;
+                }
+            });
+
+            if (Math.abs(totalCustom - totalVND) > 1) {
+                return alert(`Custom amounts (${formatVND(totalCustom)}) don't match total (${formatVND(totalVND)})!`);
+            }
+
+            customAmounts.forEach(ca => {
+                // Skip if person owes themselves
+                if (ca.person.name === payerName) return;
+                
+                allEntries.push({
+                    date: billDate,
+                    payer: payerName,
+                    owedBy: ca.person.name,
+                    amount: Math.round(ca.amount),
+                    category: category,
+                    currency: currency,
+                    notes: notes,
+                    receipts: [...receiptImages],
+                    time: now
+                });
+            });
+        }
 
         saveAll();
         renderAll();
-        document.getElementById('total-amount').value = '';
-        billDateInput.value = new Date().toISOString().split('T')[0]; // reset to today
+        
+        // Reset form
+        totalAmountInput.value = '';
+        billDateInput.value = new Date().toISOString().split('T')[0];
+        billNotesInput.value = '';
+        receiptFileInput.value = '';
+        receiptPreview.innerHTML = '';
+        receiptImages = [];
+        convertedDisplay.style.display = 'none';
     });
 </script>
 

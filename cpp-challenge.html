@@ -492,6 +492,8 @@
                                 <li>Implement <code>findMax(int *arr, int n)</code> to find largest element using pointer arithmetic</li>
                                 <li>Create <code>swap(int *a, int *b)</code> function to swap two integers</li>
                                 <li>Write <code>rotateArray(int *arr, int n, int k)</code> to rotate array left by k positions</li>
+                                <li>Implement <code>int sumArray(const int *arr, int n)</code> using pointer traversal (no indexing)</li>
+                                <li>Write <code>int* findFirstNegative(int *arr, int n)</code> that returns a pointer to the first negative element (or NULL)</li>
                             </ol>
                             <div class="practice-links">
                                 <a href="https://www.hackerrank.com/domains/c" target="_blank" class="practice-link">🎯 HackerRank C</a>
@@ -548,6 +550,8 @@
                                 <li>Write <code>char* removeSpaces(char *str)</code> to remove all spaces from string</li>
                                 <li>Create <code>char* reverseWords(char *sentence)</code> - reverse word order, remove extra spaces</li>
                                 <li>Implement <code>int* createDynamicArray(int n)</code> - allocate, fill with 1 to n, return pointer</li>
+                                <li>Implement <code>char* myStrdup(const char *s)</code> using <code>malloc</code> (like <code>strdup</code>)</li>
+                                <li>Write <code>int countVowels(const char *s)</code> and handle both upper/lowercase</li>
                             </ol>
                             <div class="practice-links">
                                 <a href="https://www.programiz.com/c-programming/online-compiler" target="_blank" class="practice-link">▶️ Online C Compiler</a>
@@ -604,6 +608,8 @@
                                 <li>Implement <code>int isPowerOfTwo(int n)</code> using bitwise operations</li>
                                 <li>Create <code>int findSingleNumber(int arr[], int n)</code> - find number appearing once (others twice)</li>
                                 <li>Write <code>int swapBits(int n, int i, int j)</code> - swap bits at positions i and j</li>
+                                <li>Write <code>int getBit(int n, int k)</code> and <code>int setBit(int n, int k)</code> (0-based bit index)</li>
+                                <li>Implement <code>unsigned int reverseBits(unsigned int x)</code> for 32-bit integers</li>
                             </ol>
                             <div class="practice-links">
                                 <a href="https://www.hackerrank.com/domains/algorithms?filters%5Bsubdomains%5D%5B%5D=bit-manipulation" target="_blank" class="practice-link">🎯 HackerRank Bits</a>
@@ -660,6 +666,8 @@
                                 <li>Implement <code>struct Date</code> with day/month/year - write <code>compareDates()</code> function</li>
                                 <li>Write a program to demonstrate struct padding - print sizeof different arrangements</li>
                                 <li>Create <code>union Data</code> for int/float/char - demonstrate shared memory</li>
+                                <li>Implement a singly linked list using <code>struct Node</code>: push_front, push_back, print, free</li>
+                                <li>Write <code>int countStudentsByMajor(struct Student *arr, int n, const char *major)</code> (string compare)</li>
                             </ol>
                             <div class="practice-links">
                                 <a href="https://www.hackerrank.com/domains/c?filters%5Bsubdomains%5D%5B%5D=structs-and-enums" target="_blank" class="practice-link">🎯 HackerRank Structs</a>
@@ -715,6 +723,8 @@
                                 <li>Implement <code>int countLines(char *filename)</code> - count lines in text file</li>
                                 <li>Create <code>int countWords(char *filename)</code> - count total words in file</li>
                                 <li>Write CSV parser: read student data (name,age,grade) from file, calculate average grade</li>
+                                <li>Write <code>appendLine(const char *filename, const char *line)</code> to append a line safely</li>
+                                <li>Parse a log file and count how many lines contain the word <code>ERROR</code> (case-sensitive)</li>
                             </ol>
                             <div class="practice-links">
                                 <a href="https://www.w3resource.com/c-programming-exercises/file-handling/" target="_blank" class="practice-link">📝 W3Resource Files</a>
@@ -770,6 +780,8 @@
                                 <li>Implement <code>void map(int arr[], int n, int (*fn)(int))</code> - apply function to each element</li>
                                 <li>Write <code>qsort</code> example - sort array of structs by different fields using comparators</li>
                                 <li>Create callback system: <code>registerCallback()</code> and <code>triggerCallbacks()</code></li>
+                                <li>Implement <code>filter</code>: <code>int filter(int in[], int n, int out[], int (*pred)(int))</code> returning out size</li>
+                                <li>Write a generic <code>compareIntAsc</code> and <code>compareIntDesc</code> to reuse with <code>qsort</code></li>
                             </ol>
                             <div class="practice-links">
                                 <a href="https://www.learn-c.org/en/Function_Pointers" target="_blank" class="practice-link">🎓 Learn-C.org</a>
@@ -825,6 +837,8 @@
                                 <li>Write <code>SWAP(a,b)</code> macro using temp variable - works for any type</li>
                                 <li>Implement debug logging system: <code>DEBUG_LOG(level, msg)</code> - only compile if DEBUG defined</li>
                                 <li>Create <code>ARRAY_SIZE(arr)</code> macro to get array length at compile time</li>
+                                <li>Create <code>CLAMP(x, lo, hi)</code> macro and test with different types</li>
+                                <li>Create <code>TRACE()</code> macro that prints file, line, function (using <code>__FILE__</code>, <code>__LINE__</code>, <code>__func__</code>)</li>
                             </ol>
                             <div class="practice-links">
                                 <a href="https://www.programiz.com/c-programming/c-preprocessor-macros" target="_blank" class="practice-link">📘 Programiz Macros</a>
@@ -880,6 +894,8 @@
                                 <li>Implement <code>class BankAccount</code> with balance, deposit(), withdraw(), getBalance()</li>
                                 <li>Write <code>class Student</code> with name, grades vector, addGrade(), getAverage()</li>
                                 <li>Create <code>class Circle</code> with radius, static PI constant, area(), circumference()</li>
+                                <li>Implement <code>class Fraction</code> with normalize() and overloaded <code>operator+</code> and <code>operator==</code></li>
+                                <li>Create <code>class Temperature</code> storing Celsius with converters to Fahrenheit/Kelvin and input validation</li>
                             </ol>
                             <div class="practice-links">
                                 <a href="https://www.learncpp.com/" target="_blank" class="practice-link">📖 LearnCpp.com</a>
@@ -936,6 +952,8 @@
                                 <li>Implement <code>class Animal</code> hierarchy with Dog, Cat - override makeSound()</li>
                                 <li>Write <code>class Employee</code> base, derive Manager, Developer - calculateSalary() polymorphism</li>
                                 <li>Create abstract <code>class Vehicle</code> with pure virtual drive() - implement Car, Bike</li>
+                                <li>Store multiple derived objects in <code>vector&lt;unique_ptr&lt;Shape&gt;&gt;</code> and compute total area</li>
+                                <li>Use <code>dynamic_cast</code> to detect a derived type at runtime and print extra info safely</li>
                             </ol>
                             <div class="practice-links">
                                 <a href="https://www.hackerrank.com/domains/cpp?filters%5Bsubdomains%5D%5B%5D=inheritance" target="_blank" class="practice-link">🎯 HackerRank OOP</a>
@@ -992,6 +1010,8 @@
                                 <li>Implement word frequency counter using <code>map&lt;string, int&gt;</code> from text input</li>
                                 <li>Use <code>set</code> to find unique elements - input two arrays, find common elements</li>
                                 <li>Create phone book: <code>unordered_map&lt;string, string&gt;</code> - add, search, delete contacts</li>
+                                <li>Implement a simple <code>stack</code>-based parentheses checker: "(a+b) * (c-d)" is valid</li>
+                                <li>Implement <code>twoSum</code> using <code>unordered_map</code> and return indices (for a vector of ints)</li>
                             </ol>
                             <div class="practice-links">
                                 <a href="https://www.hackerrank.com/domains/cpp?filters%5Bsubdomains%5D%5B%5D=stl" target="_blank" class="practice-link">🎯 HackerRank STL</a>
@@ -1048,6 +1068,8 @@
                                 <li>Use <code>transform</code> to convert vector of strings to uppercase</li>
                                 <li>Find sum of even numbers in vector using <code>accumulate</code> with lambda</li>
                                 <li>Use <code>count_if</code> to count strings longer than 5 characters in vector</li>
+                                <li>Use erase-remove idiom to delete all odd numbers from a vector</li>
+                                <li>Partition a vector into even then odd using <code>stable_partition</code>, preserving relative order</li>
                             </ol>
                             <div class="practice-links">
                                 <a href="https://www.hackerrank.com/domains/cpp?filters%5Bsubdomains%5D%5B%5D=stl" target="_blank" class="practice-link">🎯 HackerRank Algorithms</a>
@@ -1104,6 +1126,8 @@
                                 <li>Create <code>shared_ptr&lt;Node&gt;</code> linked list - demonstrate reference counting</li>
                                 <li>Implement RAII file wrapper class - auto close file in destructor</li>
                                 <li>Build resource manager using smart pointers - prevent memory leaks</li>
+                                <li>Create a factory function returning <code>unique_ptr&lt;Base&gt;</code> (polymorphic object creation)</li>
+                                <li>Demonstrate <code>weak_ptr</code> to break cycles in a graph-like structure (Parent ↔ Child)</li>
                             </ol>
                             <div class="practice-links">
                                 <a href="https://www.learncpp.com/cpp-tutorial/intro-to-smart-pointers-move-semantics/" target="_blank" class="practice-link">📖 LearnCpp Smart Ptrs</a>
@@ -1159,6 +1183,8 @@
                                 <li>Implement class template <code>Array&lt;T&gt;</code> with size, add(), get(), print() methods</li>
                                 <li>Write template <code>Stack&lt;T&gt;</code> class - push, pop, top, isEmpty operations</li>
                                 <li>Create <code>Pair&lt;T1, T2&gt;</code> template class with first, second members and swap()</li>
+                                <li>Write <code>printContainer(const Container& c)</code> template that prints elements using range-based for</li>
+                                <li>Add a template specialization for <code>Array&lt;bool&gt;</code> storing bits compactly (simple version)</li>
                             </ol>
                             <div class="practice-links">
                                 <a href="https://www.hackerrank.com/domains/cpp?filters%5Bsubdomains%5D%5B%5D=cpp-templates" target="_blank" class="practice-link">🎯 HackerRank Templates</a>
@@ -1215,6 +1241,8 @@
                                 <li>Implement safe division function with try/catch - handle divide by zero</li>
                                 <li>Write <code>String</code> class with move constructor and move assignment operator</li>
                                 <li>Create <code>DynamicArray</code> class implementing Rule of 5 (destructor, copy/move constructors, copy/move assignments)</li>
+                                <li>Implement exception-safe copy assignment using copy-and-swap idiom</li>
+                                <li>Write a small benchmark showing move vs copy when pushing objects into a <code>vector</code></li>
                             </ol>
                             <div class="practice-links">
                                 <a href="https://www.learncpp.com/cpp-tutorial/introduction-to-exception-handling/" target="_blank" class="practice-link">📖 LearnCpp Exceptions</a>
@@ -1271,6 +1299,8 @@
                                 <li><strong>Student Grade System:</strong> Classes, file I/O, calculate GPA, sort by grade, statistics</li>
                                 <li><strong>Simple Text Editor:</strong> Dynamic memory, undo/redo (stack), find/replace, file operations</li>
                                 <li><strong>Mini Library System:</strong> Books/Members classes, borrow/return, overdue fines, inheritance</li>
+                                <li><strong>Expense Tracker:</strong> Add expenses, categories, monthly summary, export CSV, charts (text-based)</li>
+                                <li><strong>Mini Game (Console):</strong> Tic-Tac-Toe or Snake with OOP design and input handling</li>
                             </ol>
                             <div class="practice-links">
                                 <a href="https://www.hackerrank.com/domains/cpp" target="_blank" class="practice-link">🎯 HackerRank All C++</a>
