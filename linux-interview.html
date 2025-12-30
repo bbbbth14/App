@@ -24,6 +24,7 @@
                 <li><a href="embedded-interview.html"><span class="sidebar-icon">🔧</span> Embedded</a></li>
                 <li><a href="linux-interview.html" class="active"><span class="sidebar-icon">🐧</span> Linux/Driver</a></li>
                 <li><a href="olympia-quiz.html"><span class="sidebar-icon">🏆</span> Olympia Quiz</a></li>
+                <li><a href="cpp-challenge.html"><span class="sidebar-icon">🚀</span> C/C++ Challenge</a></li>
             </ul>
         </aside>
 
@@ -78,6 +79,15 @@
                         <textarea id="custom-answer" rows="6" placeholder="Enter the answer (supports HTML tags like <code>, <pre>, <ul>, etc.)" required></textarea>
                     </div>
                     
+                    <div class="form-group">
+                        <label for="custom-difficulty">Difficulty:</label>
+                        <select id="custom-difficulty" required>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                    
                     <div class="form-actions">
                         <button type="submit" class="btn-submit">Add Question</button>
                         <button type="button" class="btn-cancel" onclick="toggleAddQuestionForm()">Cancel</button>
@@ -87,6 +97,23 @@
         </div>
 
         <div class="qa-container">
+
+            <!-- Topic Filter Chips -->
+            <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);">
+                <h3 style="margin: 0 0 15px 0; font-size: 1.1rem; color: #2d3748;">Filter by Topic:</h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <button class="topic-filter-btn active" data-category="all" onclick="filterByTopic('all')">🌐 All Topics</button>
+                    <button class="topic-filter-btn" data-category="custom" onclick="filterByTopic('custom')">🎯 My Custom Questions</button>
+                    <button class="topic-filter-btn" data-category="linux-basics" onclick="filterByTopic('linux-basics')">🐧 Linux Basics</button>
+                    <button class="topic-filter-btn" data-category="commands" onclick="filterByTopic('commands')">💻 Essential Linux Commands</button>
+                    <button class="topic-filter-btn" data-category="drivers" onclick="filterByTopic('drivers')">🔧 Linux Device Drivers</button>
+                    <button class="topic-filter-btn" data-category="interrupts" onclick="filterByTopic('interrupts')">⚡ Interrupts & Concurrency</button>
+                    <button class="topic-filter-btn" data-category="memory" onclick="filterByTopic('memory')">💾 Kernel Memory Management</button>
+                    <button class="topic-filter-btn" data-category="platform" onclick="filterByTopic('platform')">🔌 Platform & Device Tree</button>
+                    <button class="topic-filter-btn" data-category="advanced" onclick="filterByTopic('advanced')">🔥 Advanced Topics</button>
+                    <button class="topic-filter-btn" data-category="mcq" onclick="filterByTopic('mcq')">📝 Multiple Choice Questions</button>
+                </div>
+            </div>
 
             <!-- Search Container -->
             <div class="search-container">
@@ -1187,6 +1214,84 @@ module_i2c_driver(my_driver);</pre>
 
         renderBookmarks();
 
+        // Topic Filter Function
+        function filterByTopic(selectedCategory) {
+            const categoryHeaders = document.querySelectorAll('.category-header');
+            const customSection = document.getElementById('custom-questions-section');
+            const allQAItems = document.querySelectorAll('.qa-item:not(.custom-qa-item)');
+            const filterButtons = document.querySelectorAll('.topic-filter-btn');
+            
+            // Update active button state
+            filterButtons.forEach(btn => {
+                if (btn.dataset.category === selectedCategory) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            if (selectedCategory === 'all') {
+                // Show all categories
+                categoryHeaders.forEach(header => {
+                    header.style.display = 'block';
+                });
+                allQAItems.forEach(item => {
+                    item.style.display = 'block';
+                });
+                if (customSection) {
+                    customSection.style.display = customQuestions.length > 0 ? 'block' : 'none';
+                }
+            } else if (selectedCategory === 'custom') {
+                // Hide all standard categories
+                categoryHeaders.forEach(header => {
+                    if (header.id !== 'custom') {
+                        header.style.display = 'none';
+                    }
+                });
+                allQAItems.forEach(item => {
+                    item.style.display = 'none';
+                });
+                // Show only custom questions
+                if (customSection) {
+                    customSection.style.display = customQuestions.length > 0 ? 'block' : 'none';
+                    if (customQuestions.length > 0) {
+                        customSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            } else {
+                // Hide custom section
+                if (customSection) {
+                    customSection.style.display = 'none';
+                }
+                
+                // Hide all categories first
+                categoryHeaders.forEach(header => {
+                    header.style.display = 'none';
+                });
+                allQAItems.forEach(item => {
+                    item.style.display = 'none';
+                });
+                
+                // Show only selected category
+                const targetHeader = document.getElementById(selectedCategory);
+                if (targetHeader) {
+                    targetHeader.style.display = 'block';
+                    
+                    // Show all qa-items after this header until the next category-header
+                    let nextElement = targetHeader.nextElementSibling;
+                    while (nextElement && !nextElement.classList.contains('category-header')) {
+                        if (nextElement.classList.contains('qa-item')) {
+                            nextElement.style.display = 'block';
+                        }
+                        nextElement = nextElement.nextElementSibling;
+                    }
+                    
+                    // Scroll to category
+                    targetHeader.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        }
+
         // Highlight active TOC item on scroll
         window.addEventListener('scroll', () => {
             const sections = document.querySelectorAll('.category-header');
@@ -1263,12 +1368,14 @@ module_i2c_driver(my_driver);</pre>
             const category = document.getElementById('custom-category').value;
             const question = document.getElementById('custom-question').value;
             const answer = document.getElementById('custom-answer').value;
+            const difficulty = document.getElementById('custom-difficulty').value;
             
             const newQuestion = {
                 id: Date.now(),
                 category: category,
                 question: question,
                 answer: answer,
+                difficulty: difficulty,
                 timestamp: new Date().toLocaleString()
             };
             
@@ -1279,6 +1386,7 @@ module_i2c_driver(my_driver);</pre>
             document.getElementById('custom-question').value = '';
             document.getElementById('custom-answer').value = '';
             document.getElementById('custom-category').value = 'custom';
+            document.getElementById('custom-difficulty').value = 'easy';
             
             // Hide form
             toggleAddQuestionForm();
@@ -1302,20 +1410,67 @@ module_i2c_driver(my_driver);</pre>
             section.style.display = 'block';
             
             const questionsHTML = customQuestions.map((q, index) => `
-                <div class="qa-item custom-qa-item">
-                    <button class="delete-question-btn" onclick="deleteCustomQuestion(${q.id})">🗑️ Delete</button>
+                <div class="qa-item custom-qa-item" data-category="${q.category}">
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
+                        <span class="difficulty-badge ${q.difficulty || 'easy'}">${(q.difficulty || 'easy').toUpperCase()}</span>
+                        <button class="delete-question-btn" onclick="editCustomQuestion(${q.id})" style="background: #3b82f6;">✏️ Edit</button>
+                        <button class="delete-question-btn" onclick="deleteCustomQuestion(${q.id})">🗑️ Delete</button>
+                    </div>
                     <h3>${q.question}</h3>
                     <button class="view-answer-btn" onclick="showAnswer('custom-answer-${q.id}')">View Answer</button>
                     <div id="custom-answer-${q.id}" class="answer">
                         ${q.answer}
                         <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 0.85rem; color: #64748b;">
-                            <em>Added on: ${q.timestamp}</em>
+                            <em>Category: ${q.category} | Added on: ${q.timestamp}</em>
                         </div>
                     </div>
                 </div>
             `).join('');
             
             list.innerHTML = questionsHTML;
+        }
+
+        function editCustomQuestion(id) {
+            const question = customQuestions.find(q => q.id === id);
+            if (!question) return;
+            
+            // Populate form with existing data
+            document.getElementById('custom-category').value = question.category;
+            document.getElementById('custom-question').value = question.question;
+            document.getElementById('custom-answer').value = question.answer;
+            document.getElementById('custom-difficulty').value = question.difficulty || 'easy';
+            
+            // Show form
+            document.getElementById('add-question-form').style.display = 'block';
+            
+            // Change form submit to update instead of add
+            const form = document.querySelector('#add-question-form form');
+            form.onsubmit = function(event) {
+                event.preventDefault();
+                
+                // Update the question
+                question.category = document.getElementById('custom-category').value;
+                question.question = document.getElementById('custom-question').value;
+                question.answer = document.getElementById('custom-answer').value;
+                question.difficulty = document.getElementById('custom-difficulty').value;
+                question.timestamp = new Date().toLocaleString() + ' (edited)';
+                
+                localStorage.setItem('linux-custom-questions', JSON.stringify(customQuestions));
+                
+                // Clear form and reset submit handler
+                document.getElementById('custom-question').value = '';
+                document.getElementById('custom-answer').value = '';
+                document.getElementById('custom-category').value = 'custom';
+                document.getElementById('custom-difficulty').value = 'easy';
+                toggleAddQuestionForm();
+                form.onsubmit = addCustomQuestion;
+                
+                renderCustomQuestions();
+                alert('✅ Question updated successfully!');
+            };
+            
+            // Scroll to form
+            document.getElementById('add-question-form').scrollIntoView({ behavior: 'smooth' });
         }
 
         function deleteCustomQuestion(id) {

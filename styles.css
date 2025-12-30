@@ -819,6 +819,32 @@ tr:hover td {
     box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
 }
 
+/* Topic Filter Buttons */
+.topic-filter-btn {
+    background: #f1f5f9;
+    border: 2px solid #e2e8f0;
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: #475569;
+}
+
+.topic-filter-btn:hover {
+    background: #e2e8f0;
+    border-color: #cbd5e0;
+    transform: translateY(-2px);
+}
+
+.topic-filter-btn.active {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-color: #3b82f6;
+    color: white;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
 .add-question-form {
     background: white;
     padding: 25px;
