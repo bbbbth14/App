@@ -784,51 +784,63 @@
 </div>
 
 <script>
-    // Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyBvoorbeeld-your-api-key-here",
-        authDomain: "split-money-app.firebaseapp.com",
-        databaseURL: "https://split-money-app-default-rtdb.firebaseio.com",
-        projectId: "split-money-app",
-        storageBucket: "split-money-app.appspot.com",
-        messagingSenderId: "123456789",
-        appId: "1:123456789:web:abcdef123456"
-    };
+    // Firebase configuration - REPLACE WITH YOUR OWN CREDENTIALS
+    // To get your Firebase config:
+    // 1. Go to https://console.firebase.google.com/
+    // 2. Create a new project or select existing one
+    // 3. Go to Project Settings > General
+    // 4. Scroll to "Your apps" and add a web app
+    // 5. Copy the firebaseConfig object here
+    
+    const firebaseConfig = null; // Set to null to use localStorage only
+    
+    // EXAMPLE (uncomment and replace with your credentials):
+    // const firebaseConfig = {
+    //     apiKey: "YOUR-API-KEY",
+    //     authDomain: "your-project.firebaseapp.com",
+    //     databaseURL: "https://your-project-default-rtdb.firebaseio.com",
+    //     projectId: "your-project",
+    //     storageBucket: "your-project.appspot.com",
+    //     messagingSenderId: "123456789",
+    //     appId: "1:123456789:web:abcdef123456"
+    // };
 
     // Initialize Firebase
     let database;
     let useFirebase = false;
     
     try {
-        if (!firebase.apps.length) {
+        if (firebaseConfig && typeof firebase !== 'undefined' && !firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            useFirebase = true;
+            console.log('Firebase initialized successfully');
+            
+            // Show status
+            setTimeout(() => {
+                const statusDiv = document.getElementById('firebase-status');
+                const statusIcon = document.getElementById('status-icon');
+                const statusText = document.getElementById('status-text');
+                const firebaseLinks = document.getElementById('firebase-links');
+                const viewDbLink = document.getElementById('view-db-link');
+                
+                statusDiv.style.display = 'block';
+                statusDiv.style.background = 'linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)';
+                statusDiv.style.color = '#065f46';
+                statusIcon.textContent = '✅ ';
+                statusText.textContent = 'Connected - Data synced across all users in real-time';
+                
+                // Show Firebase links
+                firebaseLinks.style.display = 'block';
+                if (firebaseConfig.databaseURL) {
+                    viewDbLink.href = firebaseConfig.databaseURL;
+                }
+            }, 100);
+        } else {
+            throw new Error('Firebase config not set');
         }
-        database = firebase.database();
-        useFirebase = true;
-        console.log('Firebase initialized successfully');
-        
-        // Show status
-        setTimeout(() => {
-            const statusDiv = document.getElementById('firebase-status');
-            const statusIcon = document.getElementById('status-icon');
-            const statusText = document.getElementById('status-text');
-            const firebaseLinks = document.getElementById('firebase-links');
-            const viewDbLink = document.getElementById('view-db-link');
-            
-            statusDiv.style.display = 'block';
-            statusDiv.style.background = 'linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)';
-            statusDiv.style.color = '#065f46';
-            statusIcon.textContent = '✅ ';
-            statusText.textContent = 'Connected - Data synced across all users in real-time';
-            
-            // Show Firebase links
-            firebaseLinks.style.display = 'block';
-            if (firebaseConfig.databaseURL) {
-                viewDbLink.href = firebaseConfig.databaseURL;
-            }
-        }, 100);
     } catch (error) {
-        console.warn('Firebase not available, using localStorage fallback:', error);
+        console.log('Using localStorage mode:', error.message);
         useFirebase = false;
         
         // Show status
