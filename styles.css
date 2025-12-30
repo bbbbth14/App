@@ -608,6 +608,7 @@ tr:hover td {
     align-items: center;
     gap: 10px;
     font-weight: 500;
+    flex-wrap: wrap;
 }
 
 .qa-item h3::before {
@@ -620,6 +621,7 @@ tr:hover td {
     font-weight: 600;
     min-width: 30px;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .view-answer-btn {
@@ -725,6 +727,10 @@ tr:hover td {
     color: #1e293b;
     font-size: 1.2rem;
     margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .mcq-item h3::before {
@@ -734,7 +740,8 @@ tr:hover td {
     padding: 4px 10px;
     border-radius: 6px;
     font-size: 0.9rem;
-    margin-right: 10px;
+    margin-right: 0;
+    flex-shrink: 0;
 }
 
 .mcq-options {
@@ -1357,17 +1364,18 @@ body.dark-mode .toc-list a.active {
 
 /* Question Actions Container */
 .question-actions {
-    float: right;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-left: 15px;
+    margin-left: auto;
+    vertical-align: middle;
 }
 
 .learned-checkbox {
     cursor: pointer;
     transform: scale(1.3);
     margin: 0;
+    flex-shrink: 0;
 }
 
 .qa-item.learned h3,
@@ -1875,6 +1883,8 @@ body.flashcard-mode .answer-box {
     display: inline-flex;
     align-items: center;
     gap: 4px;
+    flex-shrink: 0;
+    vertical-align: middle;
 }
 
 .note-btn:hover {
