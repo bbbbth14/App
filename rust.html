@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rust Learning – Basics to Ownership</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">📚 Learning Hub</div>
+                <div class="sidebar-subtitle">Navigation Menu</div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="home.html"><span class="sidebar-icon">🏠</span> Home</a></li>
+                <li><a href="index.html"><span class="sidebar-icon">💰</span> Finance</a></li>
+                <li><a href="gold-price.html"><span class="sidebar-icon">🥇</span> Gold Price</a></li>
+                <li><a href="split.html"><span class="sidebar-icon">🧾</span> Split Money</a></li>
+                <li><a href="c-interview.html"><span class="sidebar-icon">💻</span> C Q&A</a></li>
+                <li><a href="embedded-interview.html"><span class="sidebar-icon">🔧</span> Embedded</a></li>
+                <li><a href="linux-interview.html"><span class="sidebar-icon">🐧</span> Linux/Driver</a></li>
+                <li><a href="olympia-quiz.html"><span class="sidebar-icon">🏆</span> Olympia Quiz</a></li>
+                <li><a href="cpp-challenge.html"><span class="sidebar-icon">🚀</span> C/C++ Challenge</a></li>
+                <li><a href="rust.html" class="active"><span class="sidebar-icon">🦀</span> Rust</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="content-area">
+                <div class="navbar">
+                    <a href="home.html">🏠 Home</a>
+                    <a href="index.html">💰 Finance</a>
+                    <a href="gold-price.html">🥇 Gold Price</a>
+                    <a href="split.html">🧾 Split Money</a>
+                    <a href="c-interview.html">💻 C Q&A</a>
+                    <a href="embedded-interview.html">🔧 Embedded</a>
+                    <a href="linux-interview.html">🐧 Linux/Driver</a>
+                    <a href="olympia-quiz.html">🏆 Olympia</a>
+                    <a href="cpp-challenge.html">🚀 C/C++ Challenge</a>
+                    <a href="rust.html" class="active">🦀 Rust</a>
+                </div>
+
+                <div class="container">
+                    <h1>Rust Learning</h1>
+
+                    <div class="qa-container">
+                        <div class="category-header" id="getting-started">
+                            <h2>Getting Started</h2>
+                            <p>Install Rust, learn Cargo, and build your first program.</p>
+                        </div>
+
+                        <div class="qa-item" data-topic="basics">
+                            <h3>How do I install Rust and verify it works?</h3>
+                            <button class="view-answer-btn" type="button">View Answer</button>
+                            <div class="answer">
+                                <p>Use <code>rustup</code> (recommended):</p>
+                                <pre><code># Windows (PowerShell)
+winget install --id Rustlang.Rustup
+
+# Verify
+rustc --version
+cargo --version</code></pre>
+                                <p>Create and run a project:</p>
+                                <pre><code>cargo new hello_rust
+cd hello_rust
+cargo run</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="qa-item" data-topic="basics">
+                            <h3>What are the most useful Cargo commands?</h3>
+                            <button class="view-answer-btn" type="button">View Answer</button>
+                            <div class="answer">
+                                <ul>
+                                    <li><code>cargo new</code> / <code>cargo init</code> — create project</li>
+                                    <li><code>cargo build</code> — compile</li>
+                                    <li><code>cargo run</code> — build + run</li>
+                                    <li><code>cargo test</code> — run tests</li>
+                                    <li><code>cargo fmt</code> — format code (needs <code>rustfmt</code>)</li>
+                                    <li><code>cargo clippy</code> — linting suggestions (needs <code>clippy</code>)</li>
+                                </ul>
+                                <pre><code>rustup component add rustfmt clippy</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="category-header" id="basics">
+                            <h2>Rust Basics</h2>
+                            <p>Variables, mutability, functions, and control flow.</p>
+                        </div>
+
+                        <div class="qa-item" data-topic="basics">
+                            <h3>What’s the difference between <code>let</code> and <code>let mut</code>?</h3>
+                            <button class="view-answer-btn" type="button">View Answer</button>
+                            <div class="answer">
+                                <p>Bindings are immutable by default. Use <code>mut</code> when you need to change the value:</p>
+                                <pre><code>let x = 10;
+// x = 11; // error
+
+let mut y = 10;
+y = 11; // ok</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="qa-item" data-topic="basics">
+                            <h3>How do I handle errors without crashing?</h3>
+                            <button class="view-answer-btn" type="button">View Answer</button>
+                            <div class="answer">
+                                <p>Prefer <code>Result</code> and propagate errors with <code>?</code>:</p>
+                                <pre><code>use std::fs;
+
+fn read_config() -&gt; Result&lt;String, std::io::Error&gt; {
+    let text = fs::read_to_string("config.toml")?;
+    Ok(text)
+}</code></pre>
+                                <p>At the top-level, you can return <code>Result</code> from <code>main</code>:</p>
+                                <pre><code>fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    println!("Hello");
+    Ok(())
+}</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="category-header" id="ownership">
+                            <h2>Ownership & Borrowing</h2>
+                            <p>The key Rust concept for memory safety without a GC.</p>
+                        </div>
+
+                        <div class="qa-item" data-topic="ownership">
+                            <h3>What is ownership (in one minute)?</h3>
+                            <button class="view-answer-btn" type="button">View Answer</button>
+                            <div class="answer">
+                                <ul>
+                                    <li>Every value has exactly one <strong>owner</strong>.</li>
+                                    <li>When the owner goes out of scope, the value is <strong>dropped</strong>.</li>
+                                    <li>Assigning/passing a value can <strong>move</strong> ownership (for types like <code>String</code>).</li>
+                                </ul>
+                                <pre><code>let a = String::from("hi");
+let b = a; // move
+// println!("{}", a); // error: a was moved</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="qa-item" data-topic="ownership">
+                            <h3>What are references and borrowing rules?</h3>
+                            <button class="view-answer-btn" type="button">View Answer</button>
+                            <div class="answer">
+                                <p>Borrow with references so you don’t move ownership:</p>
+                                <pre><code>fn len(s: &amp;String) -&gt; usize { s.len() }
+
+let s = String::from("hello");
+println!("{}", len(&amp;s)); // s still usable</code></pre>
+                                <p>Rules (simplified):</p>
+                                <ul>
+                                    <li>Any number of immutable borrows: <code>&amp;T</code></li>
+                                    <li>At most one mutable borrow: <code>&amp;mut T</code></li>
+                                    <li>Cannot mix mutable and immutable borrows at the same time</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="category-header" id="types">
+                            <h2>Types & Data Modeling</h2>
+                            <p>Structs, enums, pattern matching, and traits.</p>
+                        </div>
+
+                        <div class="qa-item" data-topic="types">
+                            <h3>When should I use <code>struct</code> vs <code>enum</code>?</h3>
+                            <button class="view-answer-btn" type="button">View Answer</button>
+                            <div class="answer">
+                                <p>Use <code>struct</code> for “all fields exist together”; use <code>enum</code> for “one of many variants”.</p>
+                                <pre><code>struct User {
+    name: String,
+    active: bool,
+}
+
+enum Payment {
+    Cash,
+    Card { last4: u16 },
+    BankTransfer(String),
+}</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="qa-item" data-topic="types">
+                            <h3>How does <code>match</code> help avoid bugs?</h3>
+                            <button class="view-answer-btn" type="button">View Answer</button>
+                            <div class="answer">
+                                <p><code>match</code> is exhaustive: you must handle every possible case.</p>
+                                <pre><code>fn describe(p: Payment) -&gt; String {
+    match p {
+        Payment::Cash =&gt; "cash".into(),
+        Payment::Card { last4 } =&gt; format!("card ****{}", last4),
+        Payment::BankTransfer(iban) =&gt; format!("bank {}", iban),
+    }
+}</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="category-header" id="collections">
+                            <h2>Collections</h2>
+                            <p>The most common standard collections you’ll use daily.</p>
+                        </div>
+
+                        <div class="qa-item" data-topic="collections">
+                            <h3>What are the go-to collections in Rust?</h3>
+                            <button class="view-answer-btn" type="button">View Answer</button>
+                            <div class="answer">
+                                <ul>
+                                    <li><code>Vec&lt;T&gt;</code> — growable array</li>
+                                    <li><code>HashMap&lt;K, V&gt;</code> — key/value map</li>
+                                    <li><code>HashSet&lt;T&gt;</code> — unique items set</li>
+                                </ul>
+                                <pre><code>use std::collections::HashMap;
+
+let mut counts = HashMap::new();
+counts.insert("apples", 3);
+counts.entry("apples").and_modify(|v| *v += 1);</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="category-header" id="practice">
+                            <h2>Practice</h2>
+                            <p>Small exercises to build real skill.</p>
+                        </div>
+
+                        <div class="qa-item" data-topic="practice">
+                            <h3>What should I build to practice Rust?</h3>
+                            <button class="view-answer-btn" type="button">View Answer</button>
+                            <div class="answer">
+                                <ul>
+                                    <li>CLI todo app (read/write JSON file)</li>
+                                    <li>HTTP client to call a public API (use <code>reqwest</code>)</li>
+                                    <li>Mini web server (use <code>axum</code> or <code>actix-web</code>)</li>
+                                    <li>Parser for a small format (CSV/INI)</li>
+                                </ul>
+                                <p>Good learning resources:</p>
+                                <ul>
+                                    <li><a href="https://doc.rust-lang.org/book/" target="_blank" rel="noopener">The Rust Book</a></li>
+                                    <li><a href="https://doc.rust-lang.org/rust-by-example/" target="_blank" rel="noopener">Rust by Example</a></li>
+                                    <li><a href="https://exercism.org/tracks/rust" target="_blank" rel="noopener">Exercism (Rust)</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Minimal Q&A toggles (used by features.js keyboard shortcuts too)
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('.view-answer-btn');
+            if (!btn) return;
+
+            const item = btn.closest('.qa-item, .mcq-item');
+            const answer = item ? item.querySelector('.answer') : null;
+            if (!answer) return;
+
+            const isOpen = answer.classList.contains('show');
+            answer.classList.toggle('show', !isOpen);
+            btn.classList.toggle('expanded', !isOpen);
+        });
+
+        // Also allow clicking the question title to toggle
+        document.addEventListener('click', (e) => {
+            const title = e.target.closest('.qa-item h3, .mcq-item h3');
+            if (!title) return;
+            if (e.target.closest('.question-actions')) return;
+
+            const item = title.closest('.qa-item, .mcq-item');
+            const btn = item ? item.querySelector('.view-answer-btn') : null;
+            if (btn) btn.click();
+        });
+    </script>
+
+    <script src="features.js"></script>
+</body>
+</html>

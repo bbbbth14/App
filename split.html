@@ -9,7 +9,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * { transition: all 0.3s ease; }
+        * { transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
         
         .container { 
             max-width: 1100px; 
@@ -18,10 +18,7 @@
         }
         
         h1 {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #0f172a;
             font-size: 2.5rem;
             font-weight: 800;
             margin-bottom: 30px;
@@ -40,14 +37,14 @@
             display: flex; 
             align-items: center; 
             gap: 12px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: #f8fafc;
             padding: 8px 12px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
         
         .person-input span {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #3b82f6;
             color: white;
             width: 32px;
             height: 32px;
@@ -57,7 +54,7 @@
             justify-content: center;
             font-weight: 700;
             font-size: 0.9rem;
-            box-shadow: 0 2px 6px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.35);
         }
         
         .person-input input { 
@@ -73,8 +70,8 @@
         
         .person-input input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), inset 0 2px 4px rgba(0,0,0,0.05);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12), inset 0 2px 4px rgba(0,0,0,0.05);
         }
         
         .form-group { 
@@ -112,13 +109,13 @@
         
         select:focus, input[type=number]:focus, input[type=date]:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #3b82f6;
             background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
         }
         
         button { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            background: #3b82f6; 
             color: white; 
             padding: 14px 28px; 
             border: none; 
@@ -129,13 +126,14 @@
             width: 100%;
             font-size: 1.05rem;
             letter-spacing: 0.3px;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.28);
             text-transform: uppercase;
         }
         
         button:hover { 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            background: #2563eb;
+            transform: none;
+            box-shadow: none;
         }
         
         button:active {
@@ -143,7 +141,7 @@
         }
         
         .select-all-btn, .clear-all-btn { 
-            background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 100%);
+            background: #334155;
             width: auto; 
             display: inline-block; 
             margin-right: 10px;
@@ -152,16 +150,17 @@
         }
         
         .select-all-btn:hover, .clear-all-btn:hover { 
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(76, 29, 149, 0.4);
+            background: #1f2937;
+            transform: none;
+            box-shadow: none;
         }
         
         .clear-all-btn { 
-            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            background: #ef4444;
         }
         
         .clear-all-btn:hover { 
-            box-shadow: 0 4px 16px rgba(220, 38, 38, 0.4);
+            background: #dc2626;
         }
         
         #results-table, #summary-table, #history-table { 
@@ -177,7 +176,7 @@
         }
         
         #results-table th, #summary-table th, #history-table th { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1e293b;
             color: white; 
             padding: 16px; 
             text-align: left; 
@@ -197,12 +196,12 @@
         }
         
         #results-table tr:hover td, #history-table tr:hover td { 
-            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            background: #f8fafc;
             cursor: pointer;
         }
         
         .delete-btn { 
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            background: #ef4444;
             color: white; 
             border: none; 
             padding: 8px 14px; 
@@ -214,8 +213,9 @@
         }
         
         .delete-btn:hover { 
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+            background: #dc2626;
+            transform: none;
+            box-shadow: none;
         }
         
         .summary-box { 
@@ -237,19 +237,19 @@
         }
         
         .total-paid {
-            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+            background: #ecfdf5;
             border-color: #10b981;
             color: #065f46;
         }
         
         .total-split {
-            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            background: #eff6ff;
             border-color: #3b82f6;
             color: #1e40af;
         }
         
         .remaining { 
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            background: #fff7ed;
             border-color: #f59e0b;
             color: #92400e;
         }
@@ -265,10 +265,7 @@
         
         .final-summary h3, .history-section h3, .dashboard-section h3, #charts-section h3 { 
             margin: 0 0 20px; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #0f172a;
             font-size: 1.5rem;
             font-weight: 800;
             letter-spacing: -0.3px;
@@ -288,21 +285,21 @@
             font-weight: 600; 
             cursor: pointer;
             padding: 10px 14px;
-            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            background: #f8fafc;
             border-radius: 10px;
             border: 2px solid transparent;
         }
         
         .owes-grid label:hover {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+            border-color: #3b82f6;
+            background: white;
         }
         
         .owes-grid input[type="checkbox"] {
             width: 20px;
             height: 20px;
             cursor: pointer;
-            accent-color: #667eea;
+            accent-color: #3b82f6;
         }
         
         .timestamp { 
@@ -327,12 +324,12 @@
             letter-spacing: 0.3px;
         }
         
-        .cat-food { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: #78350f; }
-        .cat-transport { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #1e3a8a; }
-        .cat-shopping { background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%); color: #831843; }
-        .cat-entertainment { background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); color: #3730a3; }
-        .cat-utilities { background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%); color: #115e59; }
-        .cat-other { background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%); color: #374151; }
+        .cat-food { background: #fef3c7; color: #78350f; }
+        .cat-transport { background: #dbeafe; color: #1e3a8a; }
+        .cat-shopping { background: #fce7f3; color: #831843; }
+        .cat-entertainment { background: #e0e7ff; color: #3730a3; }
+        .cat-utilities { background: #ccfbf1; color: #115e59; }
+        .cat-other { background: #e5e7eb; color: #374151; }
         
         .dashboard-grid { 
             display: grid; 
@@ -342,7 +339,7 @@
         }
         
         .person-card { 
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            background: white;
             border: 2px solid #e2e8f0; 
             border-radius: 16px; 
             padding: 24px; 
@@ -350,9 +347,9 @@
         }
         
         .person-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.15);
-            border-color: #667eea;
+            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+            border-color: #cbd5e1;
+            transform: none;
         }
         
         .person-card h4 { 
@@ -412,7 +409,7 @@
             align-items: center; 
             margin-top: 12px;
             padding: 12px;
-            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            background: #f8fafc;
             border-radius: 10px;
         }
         
@@ -430,7 +427,7 @@
         .converted-amount { 
             margin-top: 12px; 
             padding: 14px; 
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            background: #eff6ff;
             border-radius: 10px; 
             font-weight: 700; 
             color: #1e40af;
@@ -461,13 +458,13 @@
         }
         
         .split-mode-toggle button.active { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #3b82f6;
             color: white; 
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
         
         .split-mode-toggle button:not(.active):hover {
-            border-color: #667eea;
+            border-color: #3b82f6;
             background: #f8fafc;
         }
         
@@ -475,7 +472,7 @@
             display: none; 
             margin-top: 20px;
             padding: 20px;
-            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            background: #f8fafc;
             border-radius: 12px;
         }
         
@@ -587,6 +584,7 @@
             <li><a href="linux-interview.html"><span class="sidebar-icon">🐧</span> Linux/Driver</a></li>
             <li><a href="olympia-quiz.html"><span class="sidebar-icon">🏆</span> Olympia Quiz</a></li>
             <li><a href="cpp-challenge.html"><span class="sidebar-icon">🚀</span> C/C++ Challenge</a></li>
+            <li><a href="rust.html"><span class="sidebar-icon">🦀</span> Rust</a></li>
         </ul>
     </aside>
 
@@ -605,6 +603,7 @@
     <a href="linux-interview.html">🐧 Linux/Driver</a>
     <a href="olympia-quiz.html">🏆 Olympia</a>
     <a href="cpp-challenge.html">🚀 C/C++ Challenge</a>
+    <a href="rust.html">🦀 Rust</a>
 </div>
 <div class="container">
     <h1>Split Money – Who Pays Whom (VND)</h1>
@@ -829,7 +828,7 @@
                 const viewDbLink = document.getElementById('view-db-link');
                 
                 statusDiv.style.display = 'block';
-                statusDiv.style.background = 'linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)';
+                statusDiv.style.background = '#ecfdf5';
                 statusDiv.style.color = '#065f46';
                 statusIcon.textContent = '✅ ';
                 statusText.textContent = 'Connected - Data synced across all users in real-time';
@@ -853,7 +852,7 @@
             const statusIcon = document.getElementById('status-icon');
             const statusText = document.getElementById('status-text');
             statusDiv.style.display = 'block';
-            statusDiv.style.background = 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)';
+            statusDiv.style.background = '#fff7ed';
             statusDiv.style.color = '#92400e';
             statusIcon.textContent = '⚠️ ';
             statusText.textContent = 'Local mode - Data saved on this device only';

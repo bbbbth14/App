@@ -12,7 +12,7 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: #f8fafc;
     min-height: 100vh;
     color: #2d3748;
     line-height: 1.6;
@@ -30,15 +30,14 @@ body {
 
 .sidebar {
     width: 260px;
-    background: linear-gradient(180deg, #1e293b 0%, #334155 100%);
+    background: #1e293b;
     color: white;
     position: fixed;
     height: 100vh;
     overflow-y: auto;
     padding: 20px 0;
-    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.12);
     z-index: 1000;
-    backdrop-filter: blur(10px);
 }
 
 .sidebar-header {
@@ -81,18 +80,16 @@ body {
 }
 
 .sidebar-menu a:hover {
-    background: linear-gradient(90deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+    background: rgba(255, 255, 255, 0.08);
     color: white;
-    border-left-color: #60a5fa;
-    transform: translateX(5px);
+    border-left-color: #3b82f6;
 }
 
 .sidebar-menu a.active {
-    background: linear-gradient(90deg, rgba(59, 130, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 100%);
+    background: rgba(59, 130, 246, 0.18);
     color: white;
-    border-left-color: #60a5fa;
+    border-left-color: #3b82f6;
     font-weight: 600;
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
 .sidebar-icon {
@@ -138,9 +135,8 @@ body {
     font-weight: 700;
     color: #1e293b;
     margin-bottom: 15px;
-    padding-bottom: 12px;
-    border-bottom: 3px solid transparent;
-    border-image: linear-gradient(90deg, #667eea 0%, #764ba2 100%) 1;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3b82f6;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -168,17 +164,16 @@ body {
 }
 
 .toc-list a:hover {
-    background: linear-gradient(90deg, #f1f5f9 0%, #e0e7ff 100%);
-    color: #667eea;
-    border-left-color: #667eea;
-    transform: translateX(5px);
+    background: #f1f5f9;
+    color: #3b82f6;
+    border-left-color: #3b82f6;
 }
 
 .toc-list a.active {
-    background: linear-gradient(90deg, #dbeafe 0%, #e0e7ff 100%);
-    color: #667eea;
+    background: #dbeafe;
+    color: #3b82f6;
     font-weight: 600;
-    border-left-color: #667eea;
+    border-left-color: #3b82f6;
 }
 
 .bookmark-section {
@@ -265,28 +260,20 @@ body {
 /* ============================================================= */
 h1 {
     text-align: center;
-    font-size: 2.5rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 35px;
-    letter-spacing: -0.5px;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 30px;
 }
 
 h2 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 25px;
+    color: #2d3748;
+    margin-bottom: 20px;
     text-align: center;
     position: relative;
-    padding-bottom: 15px;
-    letter-spacing: -0.3px;
+    padding-bottom: 10px;
 }
 
 h2::after {
@@ -295,17 +282,17 @@ h2::after {
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-    border-radius: 3px;
+    width: 60px;
+    height: 3px;
+    background: #3b82f6;
+    border-radius: 2px;
 }
 
 /* ============================================================= */
 /*  NAVIGATION BAR (ON BOTH PAGES)                              */
 /* ============================================================= */
 .navbar {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     padding: 18px 25px;
     text-align: center;
     margin-bottom: 30px;
@@ -313,8 +300,7 @@ h2::after {
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.18);
 }
 
 .navbar a {
@@ -332,13 +318,11 @@ h2::after {
 
 .navbar a:hover {
     background: rgba(255, 255, 255, 0.25);
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
 }
 
 .navbar a.active {
     background: rgba(255, 255, 255, 0.95);
-    color: #667eea;
+    color: #2563eb;
     font-weight: 700;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
@@ -367,25 +351,22 @@ input, select, button {
 
 input:focus, select:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
-    transform: translateY(-2px);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
 
 button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #3b82f6;
     color: white;
     font-weight: 600;
     cursor: pointer;
     min-width: 140px;
     border: none;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
 }
 
 button:hover {
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+    background: #2563eb;
 }
 
 /* Delete & Chart Buttons */
@@ -397,21 +378,19 @@ button:hover {
 }
 
 .delete-btn {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: #e53e3e;
 }
 
 .delete-btn:hover {
-    background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
-    box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4);
+    background: #c53030;
 }
 
 .view-chart {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: #3182ce;
 }
 
 .view-chart:hover {
-    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-    box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
+    background: #2c5282;
 }
 
 /* ============================================================= */
@@ -430,7 +409,7 @@ table {
 }
 
 th {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #3b82f6;
     color: white;
     padding: 16px;
     text-align: left;
@@ -446,8 +425,7 @@ td {
 }
 
 tr:hover td {
-    background: linear-gradient(90deg, #f8f9ff 0%, #fff 100%);
-    transform: scale(1.01);
+    background: #f8fafc;
 }
 
 /* ============================================================= */
@@ -455,15 +433,15 @@ tr:hover td {
 /* ============================================================= */
 .summary {
     text-align: right;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    padding: 20px;
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-    border-radius: 12px;
-    border: 2px solid rgba(252, 182, 159, 0.5);
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
     margin-top: 15px;
     color: #2d3748;
-    box-shadow: 0 6px 16px rgba(252, 182, 159, 0.3);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
 }
 
 .summary p {
@@ -1263,7 +1241,7 @@ body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
 }
 
 body.dark-mode .category-header {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    background: #1e293b;
 }
 
 body.dark-mode .view-answer-btn {
@@ -1635,7 +1613,7 @@ body.dark-mode .toc-list a.active {
     width: 100%;
     padding: 15px;
     margin: 10px 0;
-    background: linear-gradient(135deg, #8b5cf6, #ec4899);
+    background: #3b82f6;
     color: white;
     border: none;
     border-radius: 12px;
@@ -1648,12 +1626,13 @@ body.dark-mode .toc-list a.active {
 .quiz-mode-btn:hover,
 .flashcard-toggle-btn:hover,
 .random-question-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+    background: #2563eb;
+    transform: none;
+    box-shadow: none;
 }
 
 .random-question-btn {
-    background: linear-gradient(135deg, #f59e0b, #f97316);
+    background: #3b82f6;
 }
 
 .quiz-modal,
@@ -1872,7 +1851,7 @@ body.flashcard-mode .answer-box {
 /* Study Notes */
 .note-btn {
     padding: 6px 12px;
-    background: #8b5cf6;
+    background: #3b82f6;
     color: white;
     border: none;
     border-radius: 6px;
@@ -1888,9 +1867,9 @@ body.flashcard-mode .answer-box {
 }
 
 .note-btn:hover {
-    background: #7c3aed;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+    background: #2563eb;
+    transform: none;
+    box-shadow: none;
 }
 
 .study-note {
@@ -1974,7 +1953,7 @@ body.flashcard-mode .answer-box {
 }
 
 .stat-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     color: white;
     padding: 25px;
     border-radius: 12px;
@@ -2157,5 +2136,5 @@ body.dark-mode .study-note {
 }
 
 body.dark-mode .stat-card {
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    background: #1e293b;
 }
