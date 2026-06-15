@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ai Là Triệu Phú 🎰</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ── PAGE ──────────────────────────────────────────────────── */
+        body { background: #0a0a1a; }
+        .main-content { background: #0a0a1a; }
+        .content-area { padding: 20px; max-width: 900px; margin: 0 auto; }
+
+        /* ── WELCOME SCREEN ─────────────────────────────────────────── */
+        #screen-welcome {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 80vh; text-align: center;
+        }
+        .welcome-logo {
+            font-size: 5rem; margin-bottom: 16px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+        .welcome-title {
+            font-size: 2.8rem; font-weight: 900;
+            background: linear-gradient(135deg, #ffd700, #ff8c00, #ffd700);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; margin-bottom: 8px;
+            text-shadow: none; letter-spacing: 1px;
+        }
+        .welcome-sub { color: #94a3b8; font-size: 1.1rem; margin-bottom: 40px; }
+        .welcome-rules {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px; padding: 24px 32px; max-width: 520px;
+            margin-bottom: 36px; text-align: left;
+        }
+        .welcome-rules h3 { color: #ffd700; font-size: 1rem; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .welcome-rules li { color: #cbd5e1; font-size: 0.92rem; margin-bottom: 8px; line-height: 1.5; }
+        .btn-start-game {
+            padding: 18px 60px; font-size: 1.2rem; font-weight: 800;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            color: #1a0a00; border: none; border-radius: 50px;
+            cursor: pointer; font-family: inherit;
+            box-shadow: 0 0 30px rgba(255,215,0,0.4);
+            transition: all 0.2s; letter-spacing: 0.5px;
+        }
+        .btn-start-game:hover { transform: scale(1.05); box-shadow: 0 0 50px rgba(255,215,0,0.6); }
+
+        /* ── GAME SCREEN ────────────────────────────────────────────── */
+        #screen-game { display: none; }
+
+        /* Prize ladder */
+        .game-layout { display: flex; gap: 20px; align-items: flex-start; }
+        .prize-ladder {
+            width: 200px; flex-shrink: 0;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px; overflow: hidden;
+        }
+        .prize-ladder-title {
+            text-align: center; padding: 12px;
+            background: rgba(255,215,0,0.1);
+            color: #ffd700; font-size: 0.78rem;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .prize-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 7px 14px; font-size: 0.82rem; color: #64748b;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            transition: all 0.3s;
+        }
+        .prize-item .p-num { font-weight: 600; }
+        .prize-item .p-val { font-weight: 700; }
+        .prize-item.active {
+            background: linear-gradient(90deg, rgba(255,215,0,0.15), rgba(255,140,0,0.1));
+            color: #ffd700; border-left: 3px solid #ffd700;
+        }
+        .prize-item.milestone { color: #22c55e; }
+        .prize-item.milestone.active { background: linear-gradient(90deg, rgba(34,197,94,0.15), transparent); color: #22c55e; border-left-color: #22c55e; }
+        .prize-item.passed { color: #475569; }
+        .prize-item.passed.milestone { color: #22c55e; opacity: 0.7; }
+
+        /* Main game area */
+        .game-main { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+
+        /* Lifelines */
+        .lifelines {
+            display: flex; gap: 12px; justify-content: center;
+            background: rgba(255,255,255,0.04); border-radius: 14px;
+            padding: 14px; flex-wrap: wrap;
+        }
+        .lifeline-btn {
+            padding: 10px 20px; border-radius: 50px;
+            border: 2px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.06); color: #e2e8f0;
+            font-size: 0.88rem; font-weight: 700; cursor: pointer;
+            font-family: inherit; transition: all 0.2s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .lifeline-btn:hover:not(:disabled) { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.1); }
+        .lifeline-btn:disabled { opacity: 0.3; cursor: default; border-color: rgba(255,255,255,0.05); }
+        .lifeline-btn.used { opacity: 0.25; cursor: default; text-decoration: line-through; }
+
+        /* Question card */
+        .question-card {
+            background: linear-gradient(135deg, #0f1729 0%, #1a1040 100%);
+            border: 2px solid rgba(255,215,0,0.2);
+            border-radius: 20px; padding: 28px 30px;
+            box-shadow: 0 0 40px rgba(255,215,0,0.05);
+            text-align: center; position: relative;
+        }
+        .q-level-badge {
+            font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.5px; color: #ffd700; margin-bottom: 10px;
+        }
+        .q-prize-display {
+            font-size: 1.5rem; font-weight: 900;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; margin-bottom: 16px;
+        }
+        .q-text {
+            font-size: 1.12rem; font-weight: 600; color: #f1f5f9;
+            line-height: 1.55; margin-bottom: 6px; min-height: 60px;
+        }
+
+        /* Options */
+        .options-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .opt-btn {
+            padding: 14px 20px;
+            background: linear-gradient(135deg, rgba(15,23,41,0.9), rgba(26,16,64,0.9));
+            border: 2px solid rgba(255,215,0,0.25);
+            border-radius: 14px; color: #e2e8f0;
+            font-size: 0.92rem; font-weight: 600; cursor: pointer;
+            font-family: inherit; text-align: left;
+            display: flex; align-items: center; gap: 12px;
+            transition: all 0.2s; line-height: 1.4;
+        }
+        .opt-btn:hover:not(:disabled):not(.hidden-opt) {
+            border-color: #ffd700; background: linear-gradient(135deg, rgba(255,215,0,0.12), rgba(255,140,0,0.08));
+            color: #ffd700;
+        }
+        .opt-btn .opt-letter {
+            width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+            background: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.78rem; font-weight: 800; color: #ffd700;
+        }
+        .opt-btn.selected {
+            border-color: #fb923c; background: linear-gradient(135deg, rgba(251,146,60,0.2), rgba(255,140,0,0.12));
+            color: #fb923c;
+        }
+        .opt-btn.selected .opt-letter { background: rgba(251,146,60,0.3); border-color: #fb923c; color: #fb923c; }
+        .opt-btn.correct {
+            border-color: #22c55e; background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(16,185,129,0.12));
+            color: #22c55e;
+        }
+        .opt-btn.correct .opt-letter { background: rgba(34,197,94,0.3); border-color: #22c55e; color: #22c55e; }
+        .opt-btn.wrong {
+            border-color: #ef4444; background: linear-gradient(135deg, rgba(239,68,68,0.2), rgba(220,38,38,0.12));
+            color: #ef4444;
+        }
+        .opt-btn.wrong .opt-letter { background: rgba(239,68,68,0.3); border-color: #ef4444; color: #ef4444; }
+        .opt-btn:disabled { cursor: default; }
+        .opt-btn.hidden-opt { opacity: 0; pointer-events: none; }
+
+        /* Confirm / Walk away bar */
+        .action-bar {
+            display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+        }
+        .btn-confirm {
+            padding: 13px 36px; border-radius: 50px; border: none;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            color: #1a0a00; font-size: 0.95rem; font-weight: 800;
+            cursor: pointer; font-family: inherit; transition: all 0.2s;
+            display: none;
+        }
+        .btn-confirm:hover { transform: scale(1.04); }
+        .btn-walkaway {
+            padding: 13px 28px; border-radius: 50px;
+            border: 2px solid rgba(239,68,68,0.4);
+            background: transparent; color: #ef4444;
+            font-size: 0.9rem; font-weight: 700;
+            cursor: pointer; font-family: inherit; transition: all 0.2s;
+        }
+        .btn-walkaway:hover { background: rgba(239,68,68,0.1); border-color: #ef4444; }
+
+        /* Audience poll bar */
+        #audience-result {
+            background: rgba(255,255,255,0.04); border-radius: 14px;
+            padding: 16px 20px; display: none;
+        }
+        #audience-result h4 { color: #ffd700; font-size: 0.85rem; margin-bottom: 14px; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
+        .poll-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .poll-letter { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: #ffd700; flex-shrink: 0; }
+        .poll-bar-wrap { flex: 1; background: rgba(255,255,255,0.06); border-radius: 6px; height: 22px; overflow: hidden; }
+        .poll-bar { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #3b82f6, #6366f1); transition: width 0.8s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; }
+        .poll-bar .pct { font-size: 0.72rem; font-weight: 700; color: white; }
+        .poll-bar.highlight { background: linear-gradient(90deg, #22c55e, #16a34a); }
+
+        /* Phone call */
+        #phone-result {
+            background: rgba(255,255,255,0.04); border-radius: 14px;
+            padding: 16px 20px; display: none;
+        }
+        #phone-result h4 { color: #ffd700; font-size: 0.85rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        #phone-result p { color: #cbd5e1; font-size: 0.92rem; line-height: 1.6; font-style: italic; }
+
+        /* Status message */
+        #status-msg {
+            text-align: center; font-size: 1rem; font-weight: 700;
+            min-height: 28px; color: #94a3b8; padding: 4px 0;
+        }
+
+        /* Explanation box */
+        #explanation-box {
+            display: none;
+            background: rgba(255,215,0,0.06);
+            border: 1px solid rgba(255,215,0,0.28);
+            border-radius: 14px;
+            padding: 14px 20px;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            text-align: center;
+        }
+        #explanation-box strong { color: #ffd700; }
+
+        /* Next / finish button */
+        .btn-next {
+            padding: 12px 32px; border-radius: 50px; border: none;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff; font-size: 0.9rem; font-weight: 800;
+            cursor: pointer; font-family: inherit; transition: all 0.2s;
+            display: none;
+        }
+        .btn-next:hover { transform: scale(1.04); }
+
+        /* ── RESULT SCREEN ──────────────────────────────────────────── */
+        #screen-result {
+            display: none; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 80vh; text-align: center;
+        }
+        .result-icon { font-size: 5rem; margin-bottom: 16px; }
+        .result-title { font-size: 2rem; font-weight: 900; color: #ffd700; margin-bottom: 8px; }
+        .result-prize {
+            font-size: 3rem; font-weight: 900;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; margin-bottom: 10px;
+        }
+        .result-sub { color: #94a3b8; font-size: 1rem; margin-bottom: 36px; }
+        .btn-play-again {
+            padding: 15px 50px; border-radius: 50px; border: none;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            color: #1a0a00; font-size: 1rem; font-weight: 800;
+            cursor: pointer; font-family: inherit; transition: all 0.2s;
+        }
+        .btn-play-again:hover { transform: scale(1.05); }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .game-layout { flex-direction: column-reverse; }
+            .prize-ladder { width: 100%; }
+            .prize-ladder ul { display: flex; flex-wrap: wrap; }
+            .prize-item { flex: 1; min-width: 130px; border-bottom: none; border-right: 1px solid rgba(255,255,255,0.04); }
+            .options-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">📚 Learning Hub</div>
+            <div class="sidebar-subtitle">Navigation Menu</div>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="home.html"><span class="sidebar-icon">🏠</span> Home</a></li>
+            <li><a href="index.html"><span class="sidebar-icon">💰</span> Finance</a></li>
+            <li><a href="gold-price.html"><span class="sidebar-icon">🥇</span> Gold Price</a></li>
+            <li><a href="split.html"><span class="sidebar-icon">🧾</span> Split Money</a></li>
+            <li><a href="c-interview.html"><span class="sidebar-icon">💻</span> C Q&A</a></li>
+            <li><a href="embedded-interview.html"><span class="sidebar-icon">🔧</span> Embedded</a></li>
+            <li class="has-submenu">
+                <a href="linux-interview.html#knowledge"><span class="sidebar-icon">🐧</span> Linux/Driver <span class="submenu-arrow">▾</span></a>
+                <ul class="sidebar-submenu">
+                    <li><a href="linux-interview.html#knowledge">📖 Knowledge</a></li>
+                    <li><a href="linux-interview.html#quiz">🎯 Quiz</a></li>
+                </ul>
+            </li>
+            <li><a href="olympia-quiz.html"><span class="sidebar-icon">🏆</span> Olympia Quiz</a></li>
+            <li><a href="cpp-challenge.html"><span class="sidebar-icon">🚀</span> C/C++ Challenge</a></li>
+            <li><a href="rust.html"><span class="sidebar-icon">🦀</span> Rust</a></li>
+            <li class="has-submenu">
+                <a href="countries.html"><span class="sidebar-icon">🌍</span> World Countries <span class="submenu-arrow">▾</span></a>
+                <ul class="sidebar-submenu">
+                    <li><a href="countries.html#info">📋 Thông tin</a></li>
+                    <li><a href="countries.html#quiz">🎯 Quiz</a></li>
+                </ul>
+            </li>
+            <li><a href="millionaire.html" class="active"><span class="sidebar-icon">💰</span> Ai Là Triệu Phú</a></li>
+            <li class="has-submenu">
+                <a href="vietnam-unesco.html"><span class="sidebar-icon">🇻🇳</span> VN &amp; UNESCO <span class="submenu-arrow">▾</span></a>
+                <ul class="sidebar-submenu">
+                    <li><a href="vietnam-unesco.html#info">📋 Thông tin</a></li>
+                    <li><a href="vietnam-unesco.html#quiz">🎯 Quiz</a></li>
+                </ul>
+            </li>
+        </ul>
+    </aside>
+
+    <div class="main-content">
+        <div class="content-area">
+
+            <!-- WELCOME SCREEN -->
+            <div id="screen-welcome">
+                <div class="welcome-logo">💰</div>
+                <div class="welcome-title">Ai Là Triệu Phú</div>
+                <div class="welcome-sub">Kiến thức địa lý thế giới · 15 câu hỏi · 3 phao cứu trợ</div>
+                <div class="welcome-rules">
+                    <h3>📜 Luật chơi</h3>
+                    <ul>
+                        <li>💡 <b>50:50</b> — Loại bỏ 2 đáp án sai</li>
+                        <li>📞 <b>Gọi điện cho người thân</b> — Gợi ý câu trả lời</li>
+                        <li>👥 <b>Hỏi khán giả</b> — Xem tỷ lệ bình chọn của khán giả</li>
+                        <li>🚶 <b>Bỏ cuộc</b> — Nhận số tiền hiện tại an toàn</li>
+                        <li>🏆 Mốc <b>1 Triệu</b> và <b>32 Triệu</b> là mốc an toàn</li>
+                    </ul>
+                </div>
+                <button class="btn-start-game" id="btn-start">▶ BẮT ĐẦU CHƠI</button>
+            </div>
+
+            <!-- GAME SCREEN -->
+            <div id="screen-game">
+                <div class="game-layout">
+                    <!-- Main area -->
+                    <div class="game-main">
+                        <!-- Lifelines -->
+                        <div class="lifelines">
+                            <button class="lifeline-btn" id="ll-5050" title="Loại bỏ 2 đáp án sai">
+                                <span>50:50</span>
+                            </button>
+                            <button class="lifeline-btn" id="ll-phone" title="Gọi điện cho người thân">
+                                <span>📞 Gọi điện</span>
+                            </button>
+                            <button class="lifeline-btn" id="ll-audience" title="Hỏi ý kiến khán giả">
+                                <span>👥 Khán giả</span>
+                            </button>
+                        </div>
+
+                        <!-- Question card -->
+                        <div class="question-card">
+                            <div class="q-level-badge" id="q-level-badge">Câu 1 / 15</div>
+                            <div class="q-prize-display" id="q-prize-display">1.000 đ</div>
+                            <div class="q-text" id="q-text">...</div>
+                        </div>
+
+                        <!-- Options -->
+                        <div class="options-grid" id="options-grid">
+                            <button class="opt-btn" id="opt-A"><span class="opt-letter">A</span><span class="opt-text"></span></button>
+                            <button class="opt-btn" id="opt-B"><span class="opt-letter">B</span><span class="opt-text"></span></button>
+                            <button class="opt-btn" id="opt-C"><span class="opt-letter">C</span><span class="opt-text"></span></button>
+                            <button class="opt-btn" id="opt-D"><span class="opt-letter">D</span><span class="opt-text"></span></button>
+                        </div>
+
+                        <!-- Audience poll -->
+                        <div id="audience-result">
+                            <h4>👥 Ý kiến khán giả</h4>
+                            <div id="poll-rows"></div>
+                        </div>
+
+                        <!-- Phone call -->
+                        <div id="phone-result">
+                            <h4>📞 Người thân nói:</h4>
+                            <p id="phone-text"></p>
+                        </div>
+
+                        <!-- Status -->
+                        <div id="status-msg"></div>
+
+                        <!-- Explanation -->
+                        <div id="explanation-box"></div>
+
+                        <!-- Actions -->
+                        <div class="action-bar">
+                            <button class="btn-confirm" id="btn-confirm">✔ Xác nhận đáp án</button>
+                            <button class="btn-next" id="btn-next">➡ Câu tiếp theo</button>
+                            <button class="btn-walkaway" id="btn-walkaway">🚶 Bỏ cuộc · nhận tiền</button>
+                        </div>
+                    </div>
+
+                    <!-- Prize ladder -->
+                    <div class="prize-ladder">
+                        <div class="prize-ladder-title">💰 Bảng giải thưởng</div>
+                        <div id="prize-ladder-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESULT SCREEN -->
+            <div id="screen-result">
+                <div class="result-icon" id="result-icon">🏆</div>
+                <div class="result-title" id="result-title">Chúc mừng!</div>
+                <div class="result-prize" id="result-prize">0 đ</div>
+                <div class="result-sub" id="result-sub">Bạn đã trả lời đúng 0 câu hỏi.</div>
+                <button class="btn-play-again" id="btn-play-again">🔁 Chơi lại</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<button class="dark-mode-fab" id="darkToggle" title="Chế độ tối">🌙</button>
+
+<script src="quiz-data.js"></script>
+<script>
+// ── PRIZE LADDER ─────────────────────────────────────────────────────────────
+const PRIZES = [
+    { val: '1.000 đ',      milestone: false },
+    { val: '2.000 đ',      milestone: false },
+    { val: '3.000 đ',      milestone: false },
+    { val: '5.000 đ',      milestone: false },
+    { val: '10.000 đ',     milestone: false },
+    { val: '20.000 đ',     milestone: false },
+    { val: '40.000 đ',     milestone: false },
+    { val: '80.000 đ',     milestone: false },
+    { val: '150.000 đ',    milestone: false },
+    { val: '250.000 đ',    milestone: false },
+    { val: '500.000 đ',    milestone: false },
+    { val: '1.000.000 đ',  milestone: true  },
+    { val: '2.000.000 đ',  milestone: false },
+    { val: '4.000.000 đ',  milestone: false },
+    { val: '32.000.000 đ', milestone: true  },
+];
+
+// ── QUESTION BANK ────────────────────────────────────────────────────────────
+// Format: { q, options:[A,B,C,D], ans: 0-3 (index of correct), diff: 1-3 }
+// ── CÂU HỎI ĐỊA LÝ VIỆT NAM SAU SÁP NHẬP 2025 ────────────────────────────
+// Không trùng với QUIZ_DATA; tập trung vào sắp xếp hành chính mới (63 → 34)
+const QB = [
+    // DỄ (diff 1) ─ kiến thức cơ bản + sáp nhập rõ ràng nhất
+    {q:'Sau sáp nhập 2025, Việt Nam có bao nhiêu đơn vị hành chính cấp tỉnh?', options:['50','63','34','28'], ans:2, diff:1, e:'Nghị quyết 202/2025/QH15 (hiệu lực 1/7/2025) sắp xếp 63 tỉnh thành còn 34 đơn vị: 27 tỉnh + 7 thành phố trực thuộc TW.'},
+    {q:'Thành phố nào trở thành thành phố trực thuộc Trung ương mới nhất từ năm 2025?', options:['Nha Trang','Cần Thơ','Huế','Vinh'], ans:2, diff:1, e:'Thừa Thiên Huế nâng cấp thành Thành phố Huế trực thuộc TW từ 1/1/2025 — trước cả đợt sáp nhập lớn tháng 7/2025.'},
+    {q:'Tỉnh Hải Dương năm 2025 sáp nhập vào thành phố trực thuộc TW nào?', options:['Hà Nội','Hải Phòng','Đà Nẵng','TP.HCM'], ans:1, diff:1, e:'Hải Dương sáp nhập vào Hải Phòng theo Nghị quyết 202/2025/QH15, tạo thành Hải Phòng mở rộng.'},
+    {q:'Tỉnh Quảng Nam năm 2025 sáp nhập vào đơn vị hành chính nào?', options:['Quảng Ngãi','Khánh Hòa','Huế','Đà Nẵng'], ans:3, diff:1, e:'Quảng Nam và Đà Nẵng hợp nhất thành thành phố Đà Nẵng mở rộng từ 1/7/2025.'},
+    {q:'Sau sáp nhập 2025, Việt Nam có bao nhiêu thành phố trực thuộc Trung ương?', options:['5','6','7','8'], ans:2, diff:1, e:'7 thành phố: Hà Nội, Hải Phòng, TP.HCM, Đà Nẵng, Cần Thơ, Đồng Nai (mới từ 7/2025) và Huế (từ 1/2025).'},
+    {q:'Điểm cực Nam trên đất liền của Việt Nam là mũi nào?', options:['Mũi Né','Mũi Đôi','Mũi Cà Mau','Mũi Kê Gà'], ans:2, diff:1, e:'Mũi Cà Mau (Đất Mũi) ở huyện Ngọc Hiển, tỉnh Cà Mau, là điểm cực Nam trên đất liền Việt Nam.'},
+    {q:'Tỉnh Bình Dương năm 2025 sáp nhập vào đơn vị hành chính nào?', options:['Đồng Nai','Bình Phước','TP.HCM','Tây Ninh'], ans:2, diff:1, e:'Bình Dương, Bình Phước và Bà Rịa-Vũng Tàu đều sáp nhập vào TP.HCM theo Nghị quyết 202/2025/QH15.'},
+    {q:'Việt Nam có đường bờ biển dài khoảng bao nhiêu km?', options:['1.800 km','2.500 km','3.260 km','4.100 km'], ans:2, diff:1, e:'Việt Nam có đường bờ biển dài 3.260 km chạy từ Móng Cái (Quảng Ninh) đến Hà Tiên (An Giang).'},
+    {q:'Quần đảo Hoàng Sa do thành phố nào quản lý?', options:['Hải Phòng','Đà Nẵng','Huế','Quảng Ngãi'], ans:1, diff:1, e:'Quần đảo Hoàng Sa thuộc huyện Hoàng Sa, thành phố Đà Nẵng — Việt Nam khẳng định chủ quyền tại đây.'},
+    {q:'Tỉnh Yên Bái sau sáp nhập 2025 thuộc tỉnh nào?', options:['Phú Thọ','Tuyên Quang','Lào Cai','Sơn La'], ans:2, diff:1, e:'Yên Bái sáp nhập vào Lào Cai, tạo thành tỉnh Lào Cai mới có Sa Pa, đỉnh Fansipan và ruộng bậc thang Mù Cang Chải.'},
+    {q:'Tỉnh Bắc Giang sau sáp nhập 2025 thuộc tỉnh nào?', options:['Hà Nội','Thái Nguyên','Bắc Ninh','Lạng Sơn'], ans:2, diff:1, e:'Bắc Giang sáp nhập vào Bắc Ninh, tạo thành tỉnh Bắc Ninh mới ở vùng Đông Bắc đồng bằng sông Hồng.'},
+    {q:'Điểm cực Tây trên đất liền Việt Nam (Mốc A Pa Chải) thuộc tỉnh nào?', options:['Sơn La','Lai Châu','Điện Biên','Lào Cai'], ans:2, diff:1, e:'Mốc A Pa Chải (ngã ba biên giới Việt-Lào-Trung Quốc) tại huyện Mường Nhé, tỉnh Điện Biên.'},
+    {q:'Thủ đô Hà Nội nằm bên bờ sông nào?', options:['Sông Đáy','Sông Đà','Sông Đuống','Sông Hồng'], ans:3, diff:1, e:'Hà Nội nằm bên bờ sông Hồng — dòng sông lớn nhất miền Bắc, bồi đắp nên đồng bằng sông Hồng phì nhiêu.'},
+    {q:'Tỉnh Hà Giang sau sáp nhập 2025 thuộc tỉnh nào?', options:['Lào Cai','Tuyên Quang','Cao Bằng','Phú Thọ'], ans:1, diff:1, e:'Hà Giang sáp nhập vào Tuyên Quang. Tuyên Quang mới giáp Trung Quốc và có Cao nguyên đá Đồng Văn.'},
+    {q:'Tỉnh Hòa Bình sau sáp nhập 2025 thuộc tỉnh nào?', options:['Hà Nội','Ninh Bình','Phú Thọ','Thanh Hóa'], ans:2, diff:1, e:'Hòa Bình và Vĩnh Phúc cùng sáp nhập vào Phú Thọ, tạo thành tỉnh Phú Thọ lớn ở vùng Trung du Bắc Bộ.'},
+
+    // TRUNG BÌNH (diff 2) ─ sáp nhập tổng hợp và địa lý mới
+    {q:'Sau sáp nhập 2025, tỉnh nào có diện tích lớn nhất Việt Nam (~24.233 km²)?', options:['Nghệ An','Gia Lai','Quảng Ngãi','Lâm Đồng'], ans:3, diff:2, e:'Lâm Đồng mới (= Lâm Đồng + Đắk Nông + Bình Thuận) đạt ~24.233 km², vượt Nghệ An (16.490 km²) để trở thành tỉnh lớn nhất.'},
+    {q:'Đồng bằng sông Cửu Long sau sáp nhập 2025 gồm bao nhiêu đơn vị hành chính?', options:['3','4','5','6'], ans:2, diff:2, e:'ĐBSCL còn 5 đơn vị: An Giang (+Kiên Giang), Cà Mau (+Bạc Liêu), Cần Thơ (+Hậu Giang+Sóc Trăng), Đồng Tháp (+Tiền Giang), Vĩnh Long (+Bến Tre+Trà Vinh).'},
+    {q:'Tây Nguyên sau sáp nhập 2025 còn lại bao nhiêu tỉnh?', options:['2','3','4','5'], ans:1, diff:2, e:'Còn 3 tỉnh: Gia Lai (+Bình Định), Đắk Lắk (+Phú Yên), Lâm Đồng (+Đắk Nông+Bình Thuận). Kon Tum nhập vào Quảng Ngãi.'},
+    {q:'Sau sáp nhập, Ninh Bình mở rộng bao gồm thêm những tỉnh nào?', options:['Hà Nam và Nam Định','Thanh Hóa và Hà Tĩnh','Thái Bình và Ninh Bình','Hà Nội và Vĩnh Phúc'], ans:0, diff:2, e:'Ninh Bình hấp thụ thêm Hà Nam và Nam Định, trở thành tỉnh đông dân ở vùng nam đồng bằng sông Hồng.'},
+    {q:'Tỉnh Kon Tum sau sáp nhập 2025 thuộc tỉnh nào?', options:['Gia Lai','Đắk Lắk','Quảng Ngãi','Lâm Đồng'], ans:2, diff:2, e:'Kon Tum sáp nhập vào Quảng Ngãi (không phải Gia Lai như nhiều người lầm tưởng).'},
+    {q:'Tỉnh Long An sau sáp nhập 2025 thuộc tỉnh nào?', options:['TP.HCM','Đồng Tháp','Tiền Giang','Tây Ninh'], ans:3, diff:2, e:'Long An sáp nhập vào Tây Ninh, tạo thành tỉnh Tây Ninh mở rộng giáp TP.HCM và Campuchia.'},
+    {q:'Cần Thơ sau sáp nhập 2025 mở rộng thêm những tỉnh nào?', options:['An Giang và Kiên Giang','Hậu Giang và Sóc Trăng','Vĩnh Long và Bến Tre','Trà Vinh và Đồng Tháp'], ans:1, diff:2, e:'Cần Thơ hấp thụ Hậu Giang và Sóc Trăng, trở thành thành phố trực thuộc TW lớn nhất ĐBSCL.'},
+    {q:'Thành phố Đồng Nai (trực thuộc TW) sau sáp nhập 2025 mở rộng thêm tỉnh nào?', options:['Bình Dương','Bình Thuận','Bình Phước','Lâm Đồng'], ans:2, diff:2, e:'Đồng Nai hấp thụ Bình Phước và trở thành thành phố trực thuộc TW. Bình Dương, Bà Rịa-Vũng Tàu nhập TP.HCM.'},
+    {q:'Vĩnh Long sau sáp nhập 2025 mở rộng thêm những tỉnh nào?', options:['Tiền Giang và Bến Tre','Bến Tre và Trà Vinh','Trà Vinh và Đồng Tháp','Hậu Giang và Sóc Trăng'], ans:1, diff:2, e:'Vĩnh Long hấp thụ Bến Tre và Trà Vinh, nằm ở trung tâm ĐBSCL bao quanh bởi sông Cửu Long.'},
+    {q:'Tỉnh nào hấp thụ Kiên Giang sau sáp nhập 2025?', options:['Cần Thơ','An Giang','Vĩnh Long','Đồng Tháp'], ans:1, diff:2, e:'An Giang hấp thụ Kiên Giang (bao gồm đảo Phú Quốc), trở thành tỉnh giáp biển Tây và biên giới Campuchia.'},
+    {q:'Đèo Hải Vân sau sáp nhập 2025 nằm giữa hai đơn vị hành chính nào?', options:['Quảng Trị và Huế','Huế và Đà Nẵng','Đà Nẵng và Quảng Ngãi','Nghệ An và Quảng Trị'], ans:1, diff:2, e:'Đèo Hải Vân (21 km) vẫn nằm trên ranh giới Thành phố Huế và Đà Nẵng sau sáp nhập 2025 — ranh giới không đổi.'},
+    {q:'Quảng Trị sau sáp nhập 2025 mở rộng thêm tỉnh nào?', options:['Quảng Bình','Quảng Nam','Hà Tĩnh','Thừa Thiên Huế'], ans:0, diff:2, e:'Quảng Trị hấp thụ Quảng Bình, tạo thành tỉnh kéo dài từ bờ biển đến biên giới Lào.'},
+    {q:'Hưng Yên sau sáp nhập 2025 mở rộng thêm tỉnh nào?', options:['Hải Dương','Thái Bình','Nam Định','Hà Nam'], ans:1, diff:2, e:'Hưng Yên hấp thụ Thái Bình, tạo thành tỉnh Hưng Yên mới ở vùng đồng bằng sông Hồng.'},
+    {q:'Phú Thọ sau sáp nhập 2025 mở rộng bao gồm những tỉnh nào?', options:['Sơn La và Điện Biên','Hòa Bình và Vĩnh Phúc','Hà Giang và Tuyên Quang','Yên Bái và Lào Cai'], ans:1, diff:2, e:'Phú Thọ hấp thụ Hòa Bình và Vĩnh Phúc, trở thành tỉnh lớn ở vùng Trung du Bắc Bộ với Đền Hùng.'},
+    {q:'Lâm Đồng sau sáp nhập 2025 mở rộng thêm những tỉnh nào?', options:['Bình Dương và Bình Phước','Đắk Nông và Bình Thuận','Ninh Thuận và Phú Yên','Bình Định và Đắk Lắk'], ans:1, diff:2, e:'Lâm Đồng hấp thụ Đắk Nông và Bình Thuận, mở rộng từ Tây Nguyên (Đà Lạt) xuống dải ven biển Phan Thiết.'},
+
+    // KHÓ (diff 3) ─ sáp nhập ít biết hơn
+    {q:'Tuyên Quang sau sáp nhập 2025 bao gồm những tỉnh nào?', options:['Phú Thọ và Vĩnh Phúc','Hà Giang và Tuyên Quang','Bắc Kạn và Thái Nguyên','Yên Bái và Lào Cai'], ans:1, diff:3, e:'Tuyên Quang mới = Hà Giang + Tuyên Quang cũ. Tiếp giáp Trung Quốc với Cao nguyên đá Đồng Văn di sản UNESCO.'},
+    {q:'Lào Cai sau sáp nhập 2025 mở rộng bao gồm những tỉnh nào?', options:['Hà Giang và Tuyên Quang','Yên Bái và Lào Cai','Sơn La và Điện Biên','Lai Châu và Điện Biên'], ans:1, diff:3, e:'Lào Cai mới = Yên Bái + Lào Cai cũ. Có Fansipan (3.143m), Sa Pa và ruộng bậc thang Mù Cang Chải.'},
+    {q:'Gia Lai sau sáp nhập 2025 mở rộng thêm tỉnh nào?', options:['Kon Tum','Đắk Lắk','Bình Định','Quảng Ngãi'], ans:2, diff:3, e:'Gia Lai hấp thụ Bình Định, kết nối Tây Nguyên với dải ven biển qua đèo An Khê và quốc lộ 19.'},
+    {q:'Đắk Lắk sau sáp nhập 2025 mở rộng thêm tỉnh nào?', options:['Đắk Nông','Phú Yên','Khánh Hòa','Gia Lai'], ans:1, diff:3, e:'Đắk Lắk hấp thụ Phú Yên, mở rộng ra biển Đông với bãi biển Phú Yên nổi tiếng "gành đá dĩa".'},
+    {q:'Thái Nguyên sau sáp nhập 2025 hấp thụ thêm tỉnh nào?', options:['Bắc Giang','Bắc Kạn','Lạng Sơn','Cao Bằng'], ans:1, diff:3, e:'Thái Nguyên hấp thụ Bắc Kạn. Bắc Giang lại nhập vào Bắc Ninh — đây là điểm dễ nhầm lẫn nhất trong đợt sáp nhập.'},
+    {q:'Khánh Hòa sau sáp nhập 2025 mở rộng thêm tỉnh nào?', options:['Phú Yên','Đắk Lắk','Ninh Thuận','Bình Thuận'], ans:2, diff:3, e:'Khánh Hòa hấp thụ Ninh Thuận, tạo thành tỉnh ven biển từ vịnh Vân Phong đến Mũi Dinh.'},
+    {q:'Tỉnh Bạc Liêu sau sáp nhập 2025 thuộc tỉnh nào?', options:['Cần Thơ','Cà Mau','Vĩnh Long','An Giang'], ans:1, diff:3, e:'Bạc Liêu sáp nhập vào Cà Mau, cùng nhau tạo thành tỉnh Cà Mau mới ở cực Nam Tổ quốc.'},
+    {q:'Tiền Giang sau sáp nhập 2025 thuộc tỉnh nào?', options:['Vĩnh Long','An Giang','Đồng Tháp','Cần Thơ'], ans:2, diff:3, e:'Tiền Giang sáp nhập vào Đồng Tháp (không phải Vĩnh Long hay Cần Thơ — điểm hay nhầm).'},
+    {q:'Số thành phố trực thuộc TW của Việt Nam tăng từ bao nhiêu lên bao nhiêu sau sáp nhập 2025?', options:['4 lên 5','5 lên 6','5 lên 7','6 lên 8'], ans:2, diff:3, e:'Từ 5 (Hà Nội, TP.HCM, Hải Phòng, Đà Nẵng, Cần Thơ) lên 7 bằng cách thêm Huế (1/1/2025) và Đồng Nai (1/7/2025).'},
+    {q:'Bà Rịa-Vũng Tàu sau sáp nhập 2025 thuộc đơn vị hành chính nào?', options:['Đồng Nai','Bình Dương','TP.HCM','Bình Phước'], ans:2, diff:3, e:'Bà Rịa-Vũng Tàu, Bình Dương và Bình Phước đều nhập vào TP.HCM — đây là cụm sáp nhập lớn nhất phía Nam.'},
+    {q:'Sau sáp nhập, thành phố Đà Nẵng (trực thuộc TW) có diện tích xấp xỉ bao nhiêu km²?', options:['~5.000 km²','~8.000 km²','~11.860 km²','~15.000 km²'], ans:2, diff:3, e:'Đà Nẵng + Quảng Nam ≈ 11.860 km², trở thành một trong các thành phố trực thuộc TW có diện tích lớn nhất.'},
+    {q:'Tỉnh Hà Nam sau sáp nhập 2025 thuộc tỉnh nào?', options:['Hà Nội','Hưng Yên','Ninh Bình','Thanh Hóa'], ans:2, diff:3, e:'Hà Nam cùng Nam Định nhập vào Ninh Bình — tạo thành tỉnh Ninh Bình rất đông dân ở nam đồng bằng sông Hồng.'},
+    {q:'Bình Thuận sau sáp nhập 2025 thuộc tỉnh nào?', options:['Khánh Hòa','Ninh Thuận','Đắk Lắk','Lâm Đồng'], ans:3, diff:3, e:'Bình Thuận nhập vào Lâm Đồng (không phải Khánh Hòa hay Ninh Thuận) — đây là điểm rất dễ nhầm.'},
+    {q:'Nam Định sau sáp nhập 2025 thuộc tỉnh nào?', options:['Hà Nội','Hưng Yên','Ninh Bình','Thanh Hóa'], ans:2, diff:3, e:'Nam Định và Hà Nam cùng nhập vào Ninh Bình. Còn Thái Bình lại nhập vào Hưng Yên — cặp dễ nhầm nhất.'},
+    {q:'Thái Bình sau sáp nhập 2025 thuộc tỉnh nào?', options:['Hưng Yên','Hà Nội','Ninh Bình','Nam Định'], ans:0, diff:3, e:'Thái Bình nhập vào Hưng Yên. Nam Định lại nhập vào Ninh Bình — hai tỉnh láng giềng nhưng đi về hai hướng khác nhau.'},
+];
+
+// ── GAME STATE ───────────────────────────────────────────────────────────────
+let questions = [];
+let current = 0;
+let selectedOpt = null;   // 'A','B','C','D'
+let lifelines = { '5050': true, phone: true, audience: true };
+let walkAway = false;
+const LETTERS = ['A','B','C','D'];
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+function shuffle(a) { return [...a].sort(() => Math.random() - 0.5); }
+
+function safeAmt(i) {
+    // Return the guaranteed prize for the highest milestone passed
+    if (i < 0) return '0 đ';
+    for (let j = i; j >= 0; j--) {
+        if (PRIZES[j].milestone) return PRIZES[j].val;
+    }
+    return '0 đ';
+}
+
+// ── BUILD LADDER ─────────────────────────────────────────────────────────────
+function buildLadder() {
+    const el = document.getElementById('prize-ladder-list');
+    el.innerHTML = '';
+    [...PRIZES].reverse().forEach((p, ri) => {
+        const i = PRIZES.length - 1 - ri;
+        const div = document.createElement('div');
+        div.className = 'prize-item' + (p.milestone ? ' milestone' : '');
+        div.id = `prize-${i}`;
+        div.innerHTML = `<span class="p-num">${i + 1}</span><span class="p-val">${p.val}</span>`;
+        el.appendChild(div);
+    });
+}
+
+function updateLadder(i) {
+    document.querySelectorAll('.prize-item').forEach(el => el.classList.remove('active'));
+    for (let j = 0; j < i; j++) {
+        const el = document.getElementById(`prize-${j}`);
+        if (el) el.classList.add('passed');
+    }
+    const cur = document.getElementById(`prize-${i}`);
+    if (cur) { cur.classList.remove('passed'); cur.classList.add('active'); }
+}
+
+// ── START ─────────────────────────────────────────────────────────────────────
+function startGame() {
+    // Build merged pool from QB (geography) + QUIZ_DATA (olympia)
+    const diffMap = { easy: 1, medium: 2, hard: 3 };
+    const converted = (typeof QUIZ_DATA !== 'undefined' ? QUIZ_DATA : []).map(q => ({
+        q: q.q, options: q.o, ans: q.a, diff: diffMap[q.d] || 1, e: q.e || ''
+    }));
+    const pool = [...QB, ...converted];
+
+    // Graduated difficulty — tăng dần đều qua 15 câu:
+    // Q1-3: Dễ · Q4-6: Trung bình · Q7-9: Trung bình→Khó · Q10-12: Khó · Q13-15: Cực khó
+    const easyPool   = shuffle(pool.filter(q => q.diff === 1));
+    const medPool    = shuffle(pool.filter(q => q.diff === 2));
+    const hardPool   = shuffle(pool.filter(q => q.diff === 3));
+    questions = [
+        easyPool[0], easyPool[1], easyPool[2],          // Q1-3:  Dễ
+        medPool[0],  medPool[1],  medPool[2],            // Q4-6:  Trung bình
+        medPool[3],  hardPool[0], hardPool[1],           // Q7-9:  Trung bình → Khó
+        hardPool[2], hardPool[3], hardPool[4],           // Q10-12: Khó
+        hardPool[5], hardPool[6], hardPool[7],           // Q13-15: Cực khó
+    ].filter(Boolean); // loại bỏ undefined nếu pool không đủ
+
+    current = 0; selectedOpt = null; walkAway = false;
+    lifelines = { '5050': true, phone: true, audience: true };
+
+    // Reset lifeline buttons
+    ['5050','phone','audience'].forEach(ll => {
+        const btn = document.getElementById(`ll-${ll}`);
+        btn.disabled = false; btn.classList.remove('used');
+    });
+
+    buildLadder();
+    document.getElementById('screen-welcome').style.display = 'none';
+    document.getElementById('screen-result').style.display = 'none';
+    document.getElementById('screen-game').style.display = 'block';
+
+    showQuestion();
+}
+
+// ── SHOW QUESTION ─────────────────────────────────────────────────────────────
+function showQuestion() {
+    const q = questions[current];
+    selectedOpt = null;
+
+    document.getElementById('q-level-badge').textContent = `Câu ${current + 1} / 15`;
+    document.getElementById('q-prize-display').textContent = PRIZES[current].val;
+    document.getElementById('q-text').textContent = q.q;
+    document.getElementById('status-msg').textContent = '';
+    document.getElementById('explanation-box').style.display = 'none';
+    document.getElementById('explanation-box').innerHTML = '';
+    document.getElementById('btn-next').style.display = 'none';
+    document.getElementById('audience-result').style.display = 'none';
+    document.getElementById('phone-result').style.display = 'none';
+    document.getElementById('btn-confirm').style.display = 'none';
+
+    // Render options (shuffled display order)
+    const shuffleMap = shuffle([0,1,2,3]); // display positions → original indices
+    LETTERS.forEach((letter, pos) => {
+        const origIdx = shuffleMap[pos];
+        const btn = document.getElementById(`opt-${letter}`);
+        btn.className = 'opt-btn';
+        btn.disabled = false;
+        btn.dataset.origIdx = origIdx;
+        btn.dataset.isCorrect = (origIdx === q.ans) ? 'true' : 'false';
+        btn.querySelector('.opt-text').textContent = q.options[origIdx];
+    });
+
+    updateLadder(current);
+}
+
+// ── SELECT OPTION ─────────────────────────────────────────────────────────────
+LETTERS.forEach(letter => {
+    document.getElementById(`opt-${letter}`).addEventListener('click', function() {
+        if (this.disabled || this.classList.contains('hidden-opt')) return;
+        // Deselect previous
+        LETTERS.forEach(l => {
+            const b = document.getElementById(`opt-${l}`);
+            if (!b.classList.contains('hidden-opt')) b.classList.remove('selected');
+        });
+        this.classList.add('selected');
+        selectedOpt = letter;
+        document.getElementById('btn-confirm').style.display = 'inline-block';
+        document.getElementById('status-msg').textContent = '';
+    });
+});
+
+// ── CONFIRM ───────────────────────────────────────────────────────────────────
+document.getElementById('btn-confirm').addEventListener('click', () => {
+    if (!selectedOpt) return;
+    const btn = document.getElementById(`opt-${selectedOpt}`);
+    const correct = btn.dataset.isCorrect === 'true';
+
+    // Disable all options
+    LETTERS.forEach(l => {
+        const b = document.getElementById(`opt-${l}`);
+        b.disabled = true;
+    });
+    document.getElementById('btn-confirm').style.display = 'none';
+    document.getElementById('btn-walkaway').style.display = 'none';
+
+    const expl = questions[current].e || '';
+    const btnNext = document.getElementById('btn-next');
+
+    if (correct) {
+        btn.classList.remove('selected');
+        btn.classList.add('correct');
+        document.getElementById('status-msg').textContent = '✅ Chính xác!';
+
+        if (expl) {
+            document.getElementById('explanation-box').innerHTML = `<strong>💡 Giải thích:</strong> ${expl}`;
+            document.getElementById('explanation-box').style.display = 'block';
+        }
+
+        if (current === PRIZES.length - 1) {
+            btnNext.textContent = '🏆 Xem kết quả';
+            btnNext.style.display = 'inline-block';
+            btnNext.onclick = () => endGame(true, false);
+        } else {
+            btnNext.textContent = '➡ Câu tiếp theo';
+            btnNext.style.display = 'inline-block';
+            btnNext.onclick = () => {
+                current++;
+                document.getElementById('btn-walkaway').style.display = '';
+                showQuestion();
+            };
+        }
+    } else {
+        btn.classList.remove('selected');
+        btn.classList.add('wrong');
+        // Reveal correct
+        LETTERS.forEach(l => {
+            const b = document.getElementById(`opt-${l}`);
+            if (b.dataset.isCorrect === 'true') b.classList.add('correct');
+        });
+        document.getElementById('status-msg').textContent = '❌ Sai rồi!';
+
+        if (expl) {
+            document.getElementById('explanation-box').innerHTML = `<strong>💡 Giải thích:</strong> ${expl}`;
+            document.getElementById('explanation-box').style.display = 'block';
+        }
+
+        btnNext.textContent = '📊 Xem kết quả';
+        btnNext.style.display = 'inline-block';
+        btnNext.onclick = () => endGame(false, false);
+    }
+});
+
+// ── WALK AWAY ─────────────────────────────────────────────────────────────────
+document.getElementById('btn-walkaway').addEventListener('click', () => {
+    if (confirm(`Bạn chắc chắn muốn bỏ cuộc và nhận ${safeAmt(current - 1)}?`)) {
+        endGame(false, true);
+    }
+});
+
+// ── END GAME ──────────────────────────────────────────────────────────────────
+function endGame(won, walked) {
+    document.getElementById('screen-game').style.display = 'none';
+    const el = document.getElementById('screen-result');
+    el.style.display = 'flex';
+
+    let prize, icon, title, sub;
+
+    if (won) {
+        prize = PRIZES[14].val;
+        icon = '🏆'; title = 'XUẤT SẮC!';
+        sub = 'Bạn đã trả lời đúng tất cả 15 câu! Bạn là Triệu Phú!';
+    } else if (walked) {
+        prize = safeAmt(current - 1);
+        icon = '🚶'; title = 'Bỏ cuộc';
+        sub = `Bạn đã dừng ở câu ${current}. Chúc mừng với số tiền an toàn!`;
+    } else {
+        prize = safeAmt(current - 1);
+        icon = current < 5 ? '😢' : current < 10 ? '😐' : '🎉';
+        title = current === 0 ? 'Không có gì!' : 'Dừng cuộc chơi';
+        sub = `Bạn đã trả lời đúng ${current} câu. Về nhà với số tiền an toàn.`;
+    }
+
+    document.getElementById('result-icon').textContent  = icon;
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('result-prize').textContent = prize;
+    document.getElementById('result-sub').textContent   = sub;
+}
+
+// ── LIFELINES ─────────────────────────────────────────────────────────────────
+function useLifeline(name) {
+    if (!lifelines[name]) return;
+    lifelines[name] = false;
+    const btn = document.getElementById(`ll-${name}`);
+    btn.disabled = true; btn.classList.add('used');
+}
+
+// 50:50
+document.getElementById('ll-5050').addEventListener('click', () => {
+    if (!lifelines['5050']) return;
+    useLifeline('5050');
+
+    // Find correct and wrong options
+    const correctLetter = LETTERS.find(l => document.getElementById(`opt-${l}`).dataset.isCorrect === 'true');
+    const wrongLetters  = LETTERS.filter(l => {
+        const b = document.getElementById(`opt-${l}`);
+        return b.dataset.isCorrect === 'false' && !b.classList.contains('hidden-opt') && l !== selectedOpt;
+    });
+    // Hide 2 wrong (never the selected one)
+    shuffle(wrongLetters).slice(0, 2).forEach(l => {
+        const b = document.getElementById(`opt-${l}`);
+        b.classList.add('hidden-opt');
+        b.disabled = true;
+    });
+    document.getElementById('status-msg').textContent = '50:50 đã được sử dụng!';
+});
+
+// Phone a friend
+document.getElementById('ll-phone').addEventListener('click', () => {
+    if (!lifelines['phone']) return;
+    useLifeline('phone');
+
+    const q = questions[current];
+    const correctLetter = LETTERS.find(l => document.getElementById(`opt-${l}`).dataset.isCorrect === 'true');
+    const correctText   = document.getElementById(`opt-${correctLetter}`).querySelector('.opt-text').textContent;
+
+    // 80% chance friend gives right answer, else gives a plausible wrong
+    const sure = Math.random() < 0.80;
+    let text;
+    if (sure) {
+        const phrases = [
+            `Mình khá chắc đáp án là "${correctText}". Bạn hãy tin tưởng đi!`,
+            `Theo mình nhớ thì "${correctText}" là đúng, nhưng bạn tự quyết nhé.`,
+            `À, câu này mình biết! Đáp án là "${correctText}", 90% chắc chắn.`,
+        ];
+        text = shuffle(phrases)[0];
+    } else {
+        // Give a wrong-sounding guess
+        const wrongLetters = LETTERS.filter(l => document.getElementById(`opt-${l}`).dataset.isCorrect === 'false' && !document.getElementById(`opt-${l}`).classList.contains('hidden-opt'));
+        if (wrongLetters.length > 0) {
+            const wl = shuffle(wrongLetters)[0];
+            const wrongText = document.getElementById(`opt-${wl}`).querySelector('.opt-text').textContent;
+            text = `Hmm, mình không chắc lắm... có lẽ là "${wrongText}"? Bạn cân nhắc thêm nhé.`;
+        } else {
+            text = `Mình không nhớ rõ lắm. Có lẽ "${correctText}"?`;
+        }
+    }
+
+    document.getElementById('phone-text').textContent = text;
+    document.getElementById('phone-result').style.display = 'block';
+});
+
+// Ask the audience
+document.getElementById('ll-audience').addEventListener('click', () => {
+    if (!lifelines['audience']) return;
+    useLifeline('audience');
+
+    const visibleLetters = LETTERS.filter(l => !document.getElementById(`opt-${l}`).classList.contains('hidden-opt'));
+    const correctLetter  = visibleLetters.find(l => document.getElementById(`opt-${l}`).dataset.isCorrect === 'true');
+    const q = questions[current];
+
+    // Generate percentages weighted toward correct answer
+    const correctPct = 40 + Math.floor(Math.random() * 40); // 40–79%
+    const remaining  = 100 - correctPct;
+    const wrongCount = visibleLetters.length - 1;
+    let wrongPcts = [];
+    let left = remaining;
+    for (let i = 0; i < wrongCount; i++) {
+        if (i === wrongCount - 1) { wrongPcts.push(left); }
+        else {
+            const p = Math.floor(Math.random() * left * 0.8);
+            wrongPcts.push(p); left -= p;
+        }
+    }
+    wrongPcts = shuffle(wrongPcts);
+
+    let wi = 0;
+    const pcts = {};
+    visibleLetters.forEach(l => {
+        pcts[l] = l === correctLetter ? correctPct : wrongPcts[wi++];
+    });
+
+    const pollEl = document.getElementById('poll-rows');
+    pollEl.innerHTML = '';
+    visibleLetters.forEach(l => {
+        const text = document.getElementById(`opt-${l}`).querySelector('.opt-text').textContent;
+        const pct  = pcts[l];
+        const isHigh = pct === correctPct;
+        const row = document.createElement('div');
+        row.className = 'poll-row';
+        row.innerHTML = `
+            <div class="poll-letter">${l}</div>
+            <div style="flex:1">
+                <div style="font-size:0.78rem;color:#94a3b8;margin-bottom:4px">${text}</div>
+                <div class="poll-bar-wrap">
+                    <div class="poll-bar${isHigh?' highlight':''}" style="width:0%">
+                        <span class="pct">${pct}%</span>
+                    </div>
+                </div>
+            </div>`;
+        pollEl.appendChild(row);
+        // Animate bar
+        setTimeout(() => { row.querySelector('.poll-bar').style.width = pct + '%'; }, 50);
+    });
+
+    document.getElementById('audience-result').style.display = 'block';
+});
+
+// ── PLAY AGAIN ────────────────────────────────────────────────────────────────
+document.getElementById('btn-play-again').addEventListener('click', startGame);
+document.getElementById('btn-start').addEventListener('click', startGame);
+
+// ── DARK MODE ─────────────────────────────────────────────────────────────────
+const darkToggle = document.getElementById('darkToggle');
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+    darkToggle.textContent = '☀️';
+}
+darkToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    darkToggle.textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('darkMode', isDark);
+});
+</script>
+</body>
+</html>

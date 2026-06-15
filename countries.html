@@ -1,0 +1,2123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Countries - Capital, Currency & Famous For</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .page-header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #38bdf8, #818cf8, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-header p { color: #94a3b8; font-size: 1rem; }
+
+        /* Stats bar */
+        .countries-stats {
+            display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 22px;
+        }
+        .c-stat {
+            background: white; border-radius: 12px; padding: 14px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center;
+            flex: 1; min-width: 120px; border-top: 3px solid #6c5ce7;
+        }
+        .c-stat .val { font-size: 1.5rem; font-weight: 700; color: #6c5ce7; }
+        .c-stat .lbl { font-size: 0.78rem; color: #64748b; margin-top: 2px; }
+
+        /* Controls */
+        .controls-bar {
+            background: white; border-radius: 14px; padding: 18px 20px;
+            margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+        }
+        .search-wrap { flex: 1; min-width: 200px; position: relative; }
+        .search-wrap input {
+            width: 100%; padding: 10px 14px 10px 40px;
+            border: 2px solid #e2e8f0; border-radius: 10px;
+            font-size: 0.95rem; font-family: 'Inter', sans-serif;
+            outline: none; transition: border-color 0.2s;
+        }
+        .search-wrap input:focus { border-color: #6c5ce7; }
+        .search-wrap .si { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); }
+
+        .region-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+        .rfbtn {
+            padding: 8px 16px; border: 2px solid #e2e8f0; border-radius: 20px;
+            background: #f8fafc; color: #475569; cursor: pointer;
+            font-size: 0.85rem; font-weight: 500; font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+        .rfbtn:hover { border-color: #6c5ce7; color: #6c5ce7; }
+        .rfbtn.active { background: #6c5ce7; border-color: #6c5ce7; color: white; }
+        .rfbtn.africa.active    { background: #e67e22; border-color: #e67e22; }
+        .rfbtn.americas.active  { background: #e74c3c; border-color: #e74c3c; }
+        .rfbtn.asia.active      { background: #27ae60; border-color: #27ae60; }
+        .rfbtn.europe.active    { background: #2980b9; border-color: #2980b9; }
+        .rfbtn.oceania.active   { background: #16a085; border-color: #16a085; }
+
+        /* View toggle & sort */
+        .toolbar {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 10px; margin-bottom: 18px;
+        }
+        .sort-bar { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; color: #64748b; }
+        .sort-btn {
+            padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 8px;
+            background: white; color: #475569; cursor: pointer;
+            font-size: 0.82rem; font-family: 'Inter', sans-serif; transition: all 0.2s;
+        }
+        .sort-btn:hover, .sort-btn.active { background: #f0edff; border-color: #6c5ce7; color: #6c5ce7; }
+
+        .result-count { font-size: 0.85rem; color: #64748b; }
+
+        /* ── CARD GRID ─────────────────────────────────────────────────── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 18px;
+        }
+        .country-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+            overflow: hidden;
+            transition: transform 0.22s, box-shadow 0.22s;
+            display: flex; flex-direction: column;
+            border-top: 4px solid #6c5ce7;
+        }
+        .country-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 28px rgba(108,92,231,0.18);
+        }
+        .card-header {
+            padding: 22px 18px 14px;
+            text-align: center;
+            position: relative;
+        }
+        .card-flag {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .card-flag img {
+            width: 72px; height: auto;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.22);
+            display: block; margin: 0 auto;
+        }
+        .card-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 4px;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.2s ease, max-height 0.2s ease;
+        }
+        .card-header:hover .card-name {
+            opacity: 1;
+            max-height: 3rem;
+        }
+        .region-badge {
+            display: inline-block; padding: 2px 10px;
+            border-radius: 12px; font-size: 0.72rem; font-weight: 600;
+        }
+        .rb-africa   { background: #fef3e2; color: #e67e22; }
+        .rb-americas { background: #fde8e8; color: #e74c3c; }
+        .rb-asia     { background: #e8f8ee; color: #27ae60; }
+        .rb-europe   { background: #e8f4fd; color: #2980b9; }
+        .rb-oceania  { background: #e8faf6; color: #16a085; }
+
+        .card-body {
+            padding: 0 18px 14px;
+            flex: 1; display: flex; flex-direction: column; gap: 6px;
+        }
+        .card-info-row {
+            display: flex; align-items: flex-start; gap: 8px;
+            font-size: 0.85rem; color: #475569;
+        }
+        .card-info-row .icon { flex-shrink: 0; font-size: 0.95rem; }
+        .card-info-row .label { font-weight: 600; color: #1e293b; min-width: 64px; }
+        .card-info-row .value { color: #475569; }
+        .currency-code {
+            display: inline-block; background: #f0edff; color: #6c5ce7;
+            padding: 1px 6px; border-radius: 5px; font-size: 0.75rem;
+            font-weight: 700; font-family: monospace; margin-right: 4px;
+        }
+
+        .card-divider { height: 1px; background: #f1f5f9; margin: 8px 0 4px; }
+
+        .famous-label {
+            font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.6px; color: #94a3b8; margin-bottom: 6px;
+        }
+        .famous-tags {
+            display: flex; flex-wrap: wrap; gap: 5px;
+        }
+        .famous-tag {
+            background: #f8fafc; border: 1px solid #e2e8f0;
+            border-radius: 20px; padding: 3px 10px;
+            font-size: 0.76rem; color: #475569;
+            transition: all 0.15s;
+        }
+        .country-card:hover .famous-tag {
+            background: #f0edff; border-color: #c4b5fd; color: #6c5ce7;
+        }
+        .country-card { cursor: pointer; }
+        .card-detail-hint {
+            text-align: center; font-size: 0.72rem; color: #a29bfe;
+            margin-top: 8px; letter-spacing: 0.3px; opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .country-card:hover .card-detail-hint { opacity: 1; }
+
+        /* ── DETAIL MODAL ──────────────────────────────────────────────────── */
+        #country-modal-overlay {
+            position: fixed; inset: 0; z-index: 10000;
+            background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center;
+            padding: 16px;
+        }
+        #country-modal-overlay.open { display: flex; }
+        #country-modal {
+            background: white; border-radius: 20px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.28);
+            width: 100%; max-width: 500px; max-height: 90vh;
+            overflow-y: auto; position: relative;
+            animation: modalIn 0.22s ease;
+        }
+        @keyframes modalIn {
+            from { opacity:0; transform: scale(0.93) translateY(12px); }
+            to   { opacity:1; transform: scale(1)   translateY(0); }
+        }
+        .modal-hero {
+            background: linear-gradient(135deg,#1e293b,#0f172a);
+            padding: 30px 24px 24px;
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            position: relative;
+        }
+        .modal-hero .m-flag { display: none; }
+        .modal-hero .m-flag-img {
+            width: 140px; height: auto; border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.15);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+            display: block; margin-top: 4px;
+        }
+        .modal-hero .m-name {
+            font-size: 1.5rem; font-weight: 800; color: #f1f5f9;
+            font-family: 'Inter', sans-serif; text-align: center;
+        }
+        .modal-hero .m-region-badge {
+            padding: 3px 14px; border-radius: 20px;
+            font-size: 0.78rem; font-weight: 600;
+            font-family: 'Inter', sans-serif;
+        }
+        .modal-close {
+            position: absolute; top: 14px; right: 16px;
+            background: rgba(255,255,255,0.12); border: none;
+            color: white; font-size: 1.2rem; cursor: pointer;
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .modal-close:hover { background: rgba(255,255,255,0.25); }
+        .modal-body {
+            padding: 20px 24px 24px;
+            display: flex; flex-direction: column; gap: 14px;
+        }
+        .modal-intro {
+            font-size: 0.88rem; color: #475569; line-height: 1.65;
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc; border-radius: 12px; padding: 14px 16px;
+            border-left: 4px solid #6c5ce7;
+        }
+        .modal-info-row {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 0.88rem; color: #475569;
+            font-family: 'Inter', sans-serif;
+        }
+        .modal-info-row .icon { font-size: 1.1rem; flex-shrink: 0; }
+        .modal-info-row .label { font-weight: 700; color: #1e293b; min-width: 72px; }
+        .modal-section-title {
+            font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.7px; color: #94a3b8;
+            font-family: 'Inter', sans-serif;
+        }
+        .modal-famous-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .modal-famous-tag {
+            background: #f0edff; border: 1px solid #c4b5fd;
+            border-radius: 20px; padding: 4px 12px;
+            font-size: 0.8rem; color: #6c5ce7;
+            font-family: 'Inter', sans-serif; cursor: pointer;
+            transition: all 0.15s;
+        }
+        .modal-famous-tag:hover { background: #6c5ce7; color: white; border-color: #6c5ce7; }
+        /* Dark mode modal */
+        body.dark-mode #country-modal { background: #1e293b; }
+        body.dark-mode .modal-intro { background: #263043; color: #94a3b8; border-left-color: #a29bfe; }
+        body.dark-mode .modal-info-row { color: #94a3b8; }
+        body.dark-mode .modal-info-row .label { color: #e2e8f0; }
+        body.dark-mode .modal-famous-tag { background: #2d2050; border-color: #6c5ce7; }
+        body.dark-mode .modal-section-title { color: #64748b; }
+
+        /* Border color per region */
+        .country-card[data-region="Africa"]   { border-top-color: #e67e22; }
+        .country-card[data-region="Americas"] { border-top-color: #e74c3c; }
+        .country-card[data-region="Asia"]     { border-top-color: #27ae60; }
+        .country-card[data-region="Europe"]   { border-top-color: #2980b9; }
+        .country-card[data-region="Oceania"]  { border-top-color: #16a085; }
+
+        .no-results {
+            text-align: center; padding: 80px 20px; color: #94a3b8;
+            font-size: 1rem; grid-column: 1 / -1;
+        }
+        .no-results .emoji { font-size: 3rem; display: block; margin-bottom: 10px; }
+
+        /* Dark mode */
+        body.dark-mode .page-header { background: linear-gradient(135deg, #0f172a, #1e293b); }
+        body.dark-mode .c-stat,
+        body.dark-mode .controls-bar { background: #1e293b; }
+        body.dark-mode .c-stat .lbl { color: #94a3b8; }
+        body.dark-mode .search-wrap input { background: #263043; border-color: #334155; color: #e2e8f0; }
+        body.dark-mode .rfbtn { background: #263043; border-color: #334155; color: #94a3b8; }
+        body.dark-mode .sort-btn { background: #263043; border-color: #334155; color: #94a3b8; }
+        body.dark-mode .sort-bar { color: #94a3b8; }
+        body.dark-mode .result-count { color: #94a3b8; }
+        body.dark-mode .country-card { background: #1e293b; }
+        body.dark-mode .card-name { color: #f1f5f9; }
+        body.dark-mode .card-info-row .label { color: #e2e8f0; }
+        body.dark-mode .card-info-row .value { color: #94a3b8; }
+        body.dark-mode .currency-code { background: #2d3748; color: #a29bfe; }
+        body.dark-mode .card-divider { background: #334155; }
+        body.dark-mode .famous-tag { background: #263043; border-color: #334155; color: #94a3b8; }
+        body.dark-mode .country-card:hover .famous-tag { background: #2d2050; border-color: #6c5ce7; color: #a29bfe; }
+        body.dark-mode .famous-label { color: #64748b; }
+
+        .dark-mode-fab {
+            position: fixed; bottom: 20px; right: 20px; z-index: 9998;
+            width: 50px; height: 50px; border-radius: 50%;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white; border: none; font-size: 1.4rem;
+            cursor: pointer; box-shadow: 0 4px 15px rgba(108,92,231,0.4);
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s;
+        }
+        .dark-mode-fab:hover { transform: scale(1.1) rotate(15deg); }
+        body.dark-mode .dark-mode-fab { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 1.4rem; }
+            .controls-bar { flex-direction: column; gap: 10px; }
+            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+            .card-flag img { width: 56px; }
+            .card-name { font-size: 0.95rem; }
+        }
+        @media (max-width: 480px) {
+            .cards-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+        }
+
+        /* ── FLAG IMAGE TOOLTIP ──────────────────────────────────────────── */
+        .card-flag { cursor: pointer; }
+        #flag-tooltip {
+            position: fixed; z-index: 9999; pointer-events: none;
+            background: white; border-radius: 14px;
+            padding: 14px 16px 12px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.1);
+            display: none; flex-direction: column; align-items: center; gap: 8px;
+            min-width: 170px; border: 1px solid rgba(0,0,0,0.06);
+            opacity: 0; transition: opacity 0.15s ease;
+        }
+        #flag-tooltip.visible { opacity: 1; }
+        #flag-tooltip img {
+            width: 150px; height: auto; border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: block;
+        }
+        #flag-tooltip .tt-name {
+            font-size: 0.88rem; font-weight: 700; color: #1e293b;
+            text-align: center; font-family: 'Inter', sans-serif;
+        }
+        #flag-tooltip .tt-code {
+            font-size: 0.75rem; color: #94a3b8; font-family: monospace;
+            background: #f8fafc; padding: 2px 8px; border-radius: 4px;
+        }
+        body.dark-mode #flag-tooltip {
+            background: #1e293b; border-color: #334155;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+        }
+        body.dark-mode #flag-tooltip .tt-name { color: #f1f5f9; }
+        body.dark-mode #flag-tooltip img { border-color: #334155; }
+        body.dark-mode #flag-tooltip .tt-code { background: #263043; color: #64748b; }
+
+        /* ── FAMOUS-TAG TOOLTIP ──────────────────────────────────────────── */
+        #famous-tooltip {
+            position: fixed; z-index: 9998; pointer-events: none;
+            background: white; border-radius: 14px;
+            padding: 0; overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.1);
+            display: none; flex-direction: column; align-items: stretch;
+            width: 220px; border: 1px solid rgba(0,0,0,0.06);
+            opacity: 0; transition: opacity 0.18s ease;
+        }
+        #famous-tooltip.visible { opacity: 1; }
+        #famous-tooltip .ft-img-wrap {
+            width: 100%; height: 130px; background: #f1f5f9;
+            overflow: hidden; display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+        #famous-tooltip .ft-img-wrap img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+        }
+        #famous-tooltip .ft-img-wrap .ft-loading {
+            font-size: 1.6rem; position: absolute;
+        }
+        #famous-tooltip .ft-body {
+            padding: 10px 13px 12px;
+        }
+        #famous-tooltip .ft-title {
+            font-size: 0.87rem; font-weight: 700; color: #1e293b;
+            font-family: 'Inter', sans-serif; margin-bottom: 5px; line-height: 1.3;
+        }
+        #famous-tooltip .ft-desc {
+            font-size: 0.76rem; color: #64748b; line-height: 1.45;
+            font-family: 'Inter', sans-serif;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        #famous-tooltip .ft-wiki {
+            font-size: 0.7rem; color: #a29bfe; margin-top: 5px;
+            font-family: 'Inter', sans-serif;
+        }
+        body.dark-mode #famous-tooltip {
+            background: #1e293b; border-color: #334155;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+        }
+        body.dark-mode #famous-tooltip .ft-img-wrap { background: #263043; }
+        body.dark-mode #famous-tooltip .ft-title { color: #f1f5f9; }
+        body.dark-mode #famous-tooltip .ft-desc { color: #94a3b8; }
+
+        /* ── TABS ────────────────────────────────────────────────────────────── */
+        .tab-nav {
+            display: flex; gap: 8px; margin-bottom: 24px;
+            border-bottom: 2px solid #e2e8f0; padding-bottom: 0;
+        }
+        .tab-btn {
+            padding: 11px 28px; border: none; border-bottom: 3px solid transparent;
+            background: none; color: #64748b; font-size: 0.95rem; font-weight: 600;
+            cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
+            margin-bottom: -2px; border-radius: 0;
+        }
+        .tab-btn:hover { color: #6c5ce7; }
+        .tab-btn.active { color: #6c5ce7; border-bottom-color: #6c5ce7; }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+        body.dark-mode .tab-nav { border-bottom-color: #334155; }
+        body.dark-mode .tab-btn { color: #64748b; }
+        body.dark-mode .tab-btn:hover { color: #a29bfe; }
+        body.dark-mode .tab-btn.active { color: #a29bfe; border-bottom-color: #a29bfe; }
+
+        /* ── QUIZ ─────────────────────────────────────────────────────────────── */
+        .quiz-setup {
+            background: white; border-radius: 20px; padding: 36px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            max-width: 600px; margin: 0 auto; text-align: center;
+        }
+        .quiz-setup h2 { font-size: 1.6rem; color: #1e293b; margin-bottom: 6px; }
+        .quiz-setup p  { color: #64748b; margin-bottom: 28px; font-size: 0.92rem; }
+        .quiz-cat-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 28px;
+        }
+        .quiz-cat-btn {
+            padding: 14px; border: 2px solid #e2e8f0; border-radius: 14px;
+            background: #f8fafc; color: #475569; cursor: pointer;
+            font-size: 0.88rem; font-weight: 600; font-family: 'Inter', sans-serif;
+            transition: all 0.2s; text-align: center;
+        }
+        .quiz-cat-btn:hover, .quiz-cat-btn.selected {
+            border-color: #6c5ce7; background: #f0edff; color: #6c5ce7;
+        }
+        .quiz-cat-btn .cat-icon { font-size: 1.6rem; display: block; margin-bottom: 5px; }
+        .quiz-start-btn {
+            display: inline-block; padding: 14px 40px;
+            background: linear-gradient(135deg,#6c5ce7,#a29bfe);
+            color: white; border: none; border-radius: 14px;
+            font-size: 1rem; font-weight: 700; cursor: pointer;
+            font-family: 'Inter', sans-serif; transition: all 0.2s;
+            box-shadow: 0 4px 14px rgba(108,92,231,0.35);
+        }
+        .quiz-start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(108,92,231,0.4); }
+        .quiz-qcount-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; color: #475569; font-size: 0.9rem; }
+        .quiz-qcount-row select {
+            padding: 6px 12px; border: 2px solid #e2e8f0; border-radius: 8px;
+            font-family: 'Inter', sans-serif; font-size: 0.9rem; background: white; color: #1e293b;
+        }
+
+        /* Quiz Game Screen */
+        .quiz-game { max-width: 640px; margin: 0 auto; }
+        .quiz-progress-bar-wrap {
+            background: #e2e8f0; border-radius: 10px; height: 8px;
+            margin-bottom: 18px; overflow: hidden;
+        }
+        .quiz-progress-bar {
+            height: 100%; background: linear-gradient(90deg,#6c5ce7,#a29bfe);
+            border-radius: 10px; transition: width 0.4s ease;
+        }
+        .quiz-meta {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; font-size: 0.85rem; color: #64748b;
+        }
+        .quiz-meta .q-num { font-weight: 700; color: #1e293b; }
+        .quiz-meta .q-score { font-weight: 700; color: #6c5ce7; }
+        .quiz-meta .q-timer {
+            font-weight: 700; font-size: 1rem;
+            width: 38px; height: 38px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: #f0edff; color: #6c5ce7;
+            transition: background 0.3s;
+        }
+        .quiz-meta .q-timer.urgent { background: #fee2e2; color: #e74c3c; }
+
+        .quiz-question-card {
+            background: white; border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 28px; margin-bottom: 18px;
+            text-align: center;
+        }
+        .quiz-question-card .q-category {
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.8px; color: #a29bfe; margin-bottom: 12px;
+        }
+        .quiz-question-card .q-text {
+            font-size: 1.08rem; font-weight: 700; color: #1e293b; line-height: 1.45;
+        }
+        .quiz-question-card .q-flag-display {
+            display: block; margin: 10px auto;
+        }
+        .quiz-question-card .q-flag-display img {
+            height: 90px; border-radius: 6px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.22);
+        }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+        .quiz-option {
+            padding: 14px 20px; border: 2px solid #e2e8f0; border-radius: 14px;
+            background: white; text-align: left; cursor: pointer;
+            font-size: 0.92rem; font-family: 'Inter', sans-serif;
+            color: #1e293b; transition: all 0.18s; font-weight: 500;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .quiz-option:hover:not(:disabled) { border-color: #6c5ce7; background: #f0edff; color: #6c5ce7; }
+        .quiz-option .opt-letter {
+            width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+            background: #f1f5f9; display: flex; align-items: center; justify-content: center;
+            font-size: 0.78rem; font-weight: 700; color: #64748b;
+        }
+        .quiz-option.correct { border-color: #22c55e; background: #f0fdf4; color: #16a34a; }
+        .quiz-option.correct .opt-letter { background: #22c55e; color: white; }
+        .quiz-option.wrong   { border-color: #ef4444; background: #fef2f2; color: #dc2626; }
+        .quiz-option.wrong .opt-letter { background: #ef4444; color: white; }
+        .quiz-option.reveal  { border-color: #22c55e; background: #f0fdf4; color: #16a34a; opacity: 0.7; }
+        .quiz-option.reveal .opt-letter { background: #22c55e; color: white; }
+        .quiz-option:disabled { cursor: default; }
+
+        .quiz-feedback {
+            text-align: center; padding: 12px 16px;
+            border-radius: 12px; font-size: 0.88rem; font-weight: 600;
+            margin-bottom: 12px; display: none;
+        }
+        .quiz-feedback.correct { background: #f0fdf4; color: #16a34a; }
+        .quiz-feedback.wrong   { background: #fef2f2; color: #dc2626; }
+        .quiz-next-btn {
+            width: 100%; padding: 13px; background: #6c5ce7; color: white;
+            border: none; border-radius: 14px; font-size: 0.95rem; font-weight: 700;
+            cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
+            display: none;
+        }
+        .quiz-next-btn:hover { background: #5b4bd5; }
+        .auto-next-count {
+            display: inline-block; width: 22px; height: 22px; line-height: 22px;
+            background: rgba(255,255,255,0.25); border-radius: 50%;
+            font-size: 0.8rem; font-weight: 700; text-align: center;
+            margin-left: 6px;
+        }
+
+        /* Results screen */
+        .quiz-results {
+            background: white; border-radius: 20px; padding: 40px 32px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            max-width: 520px; margin: 0 auto; text-align: center; display: none;
+        }
+        .quiz-results .score-circle {
+            width: 110px; height: 110px; border-radius: 50%;
+            background: linear-gradient(135deg,#6c5ce7,#a29bfe);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            margin: 0 auto 20px; box-shadow: 0 8px 24px rgba(108,92,231,0.35);
+        }
+        .quiz-results .score-circle .sc-num  { font-size: 2rem; font-weight: 800; color: white; line-height: 1; }
+        .quiz-results .score-circle .sc-denom { font-size: 0.85rem; color: rgba(255,255,255,0.8); }
+        .quiz-results h3 { font-size: 1.4rem; color: #1e293b; margin-bottom: 6px; }
+        .quiz-results p  { color: #64748b; font-size: 0.9rem; margin-bottom: 24px; }
+        .quiz-results-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .quiz-btn-secondary {
+            padding: 11px 24px; border: 2px solid #6c5ce7; border-radius: 12px;
+            background: white; color: #6c5ce7; font-size: 0.9rem; font-weight: 700;
+            cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
+        }
+        .quiz-btn-secondary:hover { background: #f0edff; }
+        /* Dark mode quiz */
+        body.dark-mode .quiz-setup, body.dark-mode .quiz-question-card, body.dark-mode .quiz-results {
+            background: #1e293b;
+        }
+        body.dark-mode .quiz-setup h2, body.dark-mode .quiz-results h3,
+        body.dark-mode .quiz-question-card .q-text, body.dark-mode .quiz-meta .q-num { color: #f1f5f9; }
+        body.dark-mode .quiz-setup p, body.dark-mode .quiz-results p,
+        body.dark-mode .quiz-meta { color: #94a3b8; }
+        body.dark-mode .quiz-cat-btn { background: #263043; border-color: #334155; color: #94a3b8; }
+        body.dark-mode .quiz-cat-btn.selected, body.dark-mode .quiz-cat-btn:hover {
+            border-color: #6c5ce7; background: #2d2050; color: #a29bfe;
+        }
+        body.dark-mode .quiz-option { background: #263043; border-color: #334155; color: #e2e8f0; }
+        body.dark-mode .quiz-option .opt-letter { background: #334155; color: #94a3b8; }
+        body.dark-mode .quiz-option:hover:not(:disabled) { border-color: #6c5ce7; background: #2d2050; color: #a29bfe; }
+        body.dark-mode .quiz-progress-bar-wrap { background: #334155; }
+        body.dark-mode .quiz-qcount-row select { background: #263043; border-color: #334155; color: #e2e8f0; }
+        body.dark-mode .quiz-meta .q-timer { background: #2d2050; }
+        body.dark-mode .quiz-btn-secondary { background: #1e293b; }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">📚 Learning Hub</div>
+            <div class="sidebar-subtitle">Navigation Menu</div>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="home.html"><span class="sidebar-icon">🏠</span> Home</a></li>
+            <li><a href="index.html"><span class="sidebar-icon">💰</span> Finance</a></li>
+            <li><a href="gold-price.html"><span class="sidebar-icon">🥇</span> Gold Price</a></li>
+            <li><a href="split.html"><span class="sidebar-icon">🧾</span> Split Money</a></li>
+            <li><a href="c-interview.html"><span class="sidebar-icon">💻</span> C Q&A</a></li>
+            <li><a href="embedded-interview.html"><span class="sidebar-icon">🔧</span> Embedded</a></li>
+            <li class="has-submenu">
+                <a href="linux-interview.html#knowledge"><span class="sidebar-icon">🐧</span> Linux/Driver <span class="submenu-arrow">▾</span></a>
+                <ul class="sidebar-submenu">
+                    <li><a href="linux-interview.html#knowledge">📖 Knowledge</a></li>
+                    <li><a href="linux-interview.html#quiz">🎯 Quiz</a></li>
+                </ul>
+            </li>
+            <li><a href="olympia-quiz.html"><span class="sidebar-icon">🏆</span> Olympia Quiz</a></li>
+            <li><a href="millionaire.html"><span class="sidebar-icon">💰</span> Ai Là Triệu Phú</a></li>
+            <li><a href="cpp-challenge.html"><span class="sidebar-icon">🚀</span> C/C++ Challenge</a></li>
+            <li><a href="rust.html"><span class="sidebar-icon">🦀</span> Rust</a></li>
+            <li class="has-submenu">
+                <a href="countries.html"><span class="sidebar-icon">🌍</span> World Countries <span class="submenu-arrow">▾</span></a>
+                <ul class="sidebar-submenu">
+                    <li><a href="#info" id="submenu-info">📋 Information</a></li>
+                    <li><a href="#quiz" id="submenu-quiz">🎯 Quiz</a></li>
+                </ul>
+            </li>
+            <li class="has-submenu">
+                <a href="vietnam-unesco.html"><span class="sidebar-icon">🇻🇳</span> VN &amp; UNESCO <span class="submenu-arrow">▾</span></a>
+                <ul class="sidebar-submenu">
+                    <li><a href="vietnam-unesco.html#info">📋 Thông tin</a></li>
+                    <li><a href="vietnam-unesco.html#quiz">🎯 Quiz</a></li>
+                </ul>
+            </li>
+        </ul>
+    </aside>
+
+    <div class="main-content">
+        <div class="content-area">
+
+
+            <!-- ── INFORMATION TAB ───────────────────────────────────────────────── -->
+            <div class="tab-panel active" id="tab-info">
+            <div class="page-header">
+                <h1>🌍 World Countries</h1>
+                <p>Capital cities, currencies, and famous highlights for every country</p>
+            </div>
+
+            <div class="countries-stats">
+                <div class="c-stat"><div class="val" id="statTotal">197</div><div class="lbl">Countries</div></div>
+                <div class="c-stat"><div class="val" id="statShown">197</div><div class="lbl">Showing</div></div>
+                <div class="c-stat"><div class="val">5</div><div class="lbl">Regions</div></div>
+                <div class="c-stat"><div class="val" id="statCurrencies">–</div><div class="lbl">Currencies</div></div>
+            </div>
+
+            <div class="controls-bar">
+                <div class="search-wrap">
+                    <span class="si">🔍</span>
+                    <input type="text" id="searchBox" placeholder="Search country, capital, currency, or famous for…">
+                </div>
+                <div class="region-filters">
+                    <button class="rfbtn active" data-region="all">🌐 All</button>
+                    <button class="rfbtn africa" data-region="Africa">🌍 Africa</button>
+                    <button class="rfbtn americas" data-region="Americas">🌎 Americas</button>
+                    <button class="rfbtn asia" data-region="Asia">🌏 Asia</button>
+                    <button class="rfbtn europe" data-region="Europe">🏰 Europe</button>
+                    <button class="rfbtn oceania" data-region="Oceania">🌊 Oceania</button>
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <div class="sort-bar">
+                    Sort by:
+                    <button class="sort-btn active" data-sort="name">Country ▲</button>
+                    <button class="sort-btn" data-sort="capital">Capital</button>
+                    <button class="sort-btn" data-sort="region">Region</button>
+                </div>
+                <div class="result-count" id="resultCount">Showing 197 countries</div>
+            </div>
+
+            <div class="cards-grid" id="cardsGrid"></div>
+            </div><!-- /#tab-info -->
+
+            <!-- ── QUIZ TAB ─────────────────────────────────────────────────────── -->
+            <div class="tab-panel" id="tab-quiz">
+
+                <!-- Setup screen -->
+                <div class="quiz-setup" id="quiz-setup">
+                    <h2>🌍 Countries Quiz</h2>
+                    <p>Test your knowledge of world capitals, currencies, flags, and famous landmarks!</p>
+                    <div class="quiz-cat-grid">
+                        <button class="quiz-cat-btn selected" data-cat="all">
+                            <span class="cat-icon">🌎</span>All Categories
+                        </button>
+                        <button class="quiz-cat-btn" data-cat="capitals">
+                            <span class="cat-icon">🏛️</span>Capitals
+                        </button>
+                        <button class="quiz-cat-btn" data-cat="currencies">
+                            <span class="cat-icon">💰</span>Currencies
+                        </button>
+                        <button class="quiz-cat-btn" data-cat="flags">
+                            <span class="cat-icon">🏳️</span>Flags
+                        </button>
+                        <button class="quiz-cat-btn" data-cat="famous">
+                            <span class="cat-icon">✨</span>Famous For
+                        </button>
+                        <button class="quiz-cat-btn" data-cat="region">
+                            <span class="cat-icon">📍</span>Regions
+                        </button>
+                    </div>
+                    <div class="quiz-qcount-row">
+                        <label for="quiz-qcount">📝 Questions per round:</label>
+                        <select id="quiz-qcount">
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    <button class="quiz-start-btn" id="quiz-start-btn">▶️ Start Quiz</button>
+                </div>
+
+                <!-- Game screen -->
+                <div class="quiz-game" id="quiz-game" style="display:none">
+                    <div class="quiz-progress-bar-wrap">
+                        <div class="quiz-progress-bar" id="quiz-progress-bar" style="width:0%"></div>
+                    </div>
+                    <div class="quiz-meta">
+                        <span class="q-num" id="q-num">Question 1 / 10</span>
+                        <div class="q-timer" id="q-timer">20</div>
+                        <span class="q-score" id="q-score">🏆 0</span>
+                    </div>
+                    <div class="quiz-question-card">
+                        <div class="q-category" id="q-category"></div>
+                        <span class="q-flag-display" id="q-flag-display" style="display:none"></span>
+                        <div class="q-text" id="q-text"></div>
+                    </div>
+                    <div class="quiz-options" id="quiz-options"></div>
+                    <div class="quiz-feedback" id="quiz-feedback"></div>
+                </div>
+
+                <!-- Results screen -->
+                <div class="quiz-results" id="quiz-results">
+                    <div class="score-circle">
+                        <span class="sc-num" id="result-score">0</span>
+                        <span class="sc-denom" id="result-denom">/ 10</span>
+                    </div>
+                    <h3 id="result-title">Quiz Complete!</h3>
+                    <p id="result-msg"></p>
+                    <div class="quiz-results-btns">
+                        <button class="quiz-start-btn" id="quiz-play-again">🔁 Play Again</button>
+                        <button class="quiz-btn-secondary" id="quiz-change-cat">🔧 Change Settings</button>
+                    </div>
+                </div>
+
+            </div><!-- /#tab-quiz -->
+        </div>
+    </div>
+</div>
+
+<button class="dark-mode-fab" id="darkToggle" title="Toggle dark mode">🌙</button>
+
+<script>
+const COUNTRIES = [
+  // ── AFRICA ────────────────────────────────────────────────────────────────
+  {name:"Algeria",flag:"🇩🇿",capital:"Algiers",currency:"Algerian Dinar",code:"DZD",region:"Africa",
+   famous:["🏜️ Sahara Desert","🏛️ Roman Ruins (Timgad)","🫒 Olive Oil","🎶 Raï Music","🛢️ Oil & Gas"]},
+  {name:"Angola",flag:"🇦🇴",capital:"Luanda",currency:"Angolan Kwanza",code:"AOA",region:"Africa",
+   famous:["💎 Diamonds","🛢️ Oil Reserves","🌿 Coffee","🐘 Wildlife Safaris","🎵 Kizomba Music"]},
+  {name:"Benin",flag:"🇧🇯",capital:"Porto-Novo",currency:"West African CFA Franc",code:"XOF",region:"Africa",
+   famous:["🏛️ Kingdom of Dahomey","🎭 Voodoo Culture","🌾 Yam Production","🐆 Pendjari NP","🎨 Bronze Art"]},
+  {name:"Botswana",flag:"🇧🇼",capital:"Gaborone",currency:"Botswana Pula",code:"BWP",region:"Africa",
+   famous:["💎 Diamond Mining","🦁 Okavango Delta","🐘 Chobe Safari","🌵 Kalahari Desert","🏛️ Stable Democracy"]},
+  {name:"Burkina Faso",flag:"🇧🇫",capital:"Ouagadougou",currency:"West African CFA Franc",code:"XOF",region:"Africa",
+   famous:["🎬 FESPACO Film Festival","🌾 Cotton","🎭 Mask Festivals","🏺 Crafts","🌍 Land of Honest People"]},
+  {name:"Burundi",flag:"🇧🇮",capital:"Gitega",currency:"Burundian Franc",code:"BIF",region:"Africa",
+   famous:["🌊 Lake Tanganyika","☕ Coffee","🥁 Royal Drummers (UNESCO)","🌿 Tea","🏔️ Green Hills"]},
+  {name:"Cabo Verde",flag:"🇨🇻",capital:"Praia",currency:"Cape Verdean Escudo",code:"CVE",region:"Africa",
+   famous:["🎵 Morna Music (Cesária Évora)","🏖️ Beaches","🌊 Surfing","🐢 Sea Turtles","🌋 Fogo Volcano"]},
+  {name:"Cameroon",flag:"🇨🇲",capital:"Yaoundé",currency:"Central African CFA Franc",code:"XAF",region:"Africa",
+   famous:["⚽ Football (Indomitable Lions)","☕ Coffee & Cocoa","🦍 Gorillas","🌊 Mount Cameroon","🎭 Diverse Cultures"]},
+  {name:"Central African Republic",flag:"🇨🇫",capital:"Bangui",currency:"Central African CFA Franc",code:"XAF",region:"Africa",
+   famous:["💎 Diamonds","🦁 Dzanga-Sangha Reserve","🐘 Forest Elephants","🌿 Rainforests","🏞️ Bamingui-Bangoran NP"]},
+  {name:"Chad",flag:"🇹🇩",capital:"N'Djamena",currency:"Central African CFA Franc",code:"XAF",region:"Africa",
+   famous:["🏜️ Sahara & Tibesti Mts","🦒 Zakouma NP","🛢️ Oil","🌊 Lake Chad","🐪 Camel Routes"]},
+  {name:"Comoros",flag:"🇰🇲",capital:"Moroni",currency:"Comorian Franc",code:"KMF",region:"Africa",
+   famous:["🌸 Ylang-Ylang Perfume","🌋 Mount Karthala Volcano","🐋 Whale Watching","🌴 Tropical Islands","🎶 Twarab Music"]},
+  {name:"Congo (Republic)",flag:"🇨🇬",capital:"Brazzaville",currency:"Central African CFA Franc",code:"XAF",region:"Africa",
+   famous:["🌿 Congo Rainforest","🦍 Western Lowland Gorillas","🛢️ Oil","🎵 Congolese Rumba","🌊 Congo River"]},
+  {name:"Congo (DR)",flag:"🇨🇩",capital:"Kinshasa",currency:"Congolese Franc",code:"CDF",region:"Africa",
+   famous:["🌿 World's 2nd Largest Rainforest","🦍 Mountain Gorillas","⚡ Congo River Hydro","💎 Coltan","🎵 Soukous Music"]},
+  {name:"Djibouti",flag:"🇩🇯",capital:"Djibouti City",currency:"Djiboutian Franc",code:"DJF",region:"Africa",
+   famous:["🌊 Lake Assal (Lowest Point Africa)","🐋 Whale Shark Diving","⚓ Strategic Port","🏜️ Danakil Desert","🌋 Ardoukoba Volcano"]},
+  {name:"Egypt",flag:"🇪🇬",capital:"Cairo",currency:"Egyptian Pound",code:"EGP",region:"Africa",
+   famous:["🔺 Pyramids of Giza","🦁 Sphinx","🏺 Ancient Pharaohs","🌊 Nile River","🎡 Luxor Temples"]},
+  {name:"Equatorial Guinea",flag:"🇬🇶",capital:"Malabo",currency:"Central African CFA Franc",code:"XAF",region:"Africa",
+   famous:["🛢️ Oil Wealth","🦍 Gorillas","🌿 Bioko Island","🐢 Sea Turtles","🌿 Monte Alén NP"]},
+  {name:"Eritrea",flag:"🇪🇷",capital:"Asmara",currency:"Eritrean Nakfa",code:"ERN",region:"Africa",
+   famous:["🏛️ Art Deco Asmara (UNESCO)","⚓ Red Sea Coast","🚂 Historic Railway","🐟 Marine Life","🌿 Coffee Ceremony"]},
+  {name:"Eswatini",flag:"🇸🇿",capital:"Mbabane",currency:"Swazi Lilangeni",code:"SZL",region:"Africa",
+   famous:["👑 Last Absolute Monarchy Africa","🎭 Umhlanga Reed Dance","🦁 Hlane NP","🖼️ Traditional Crafts","🌿 Mlilwane Sanctuary"]},
+  {name:"Ethiopia",flag:"🇪🇹",capital:"Addis Ababa",currency:"Ethiopian Birr",code:"ETB",region:"Africa",
+   famous:["☕ Coffee (Birthplace)","🏃 Long-Distance Runners","🕌 Rock-Hewn Churches Lalibela","🦁 Endemic Wildlife","📜 Lucy Fossil"]},
+  {name:"Gabon",flag:"🇬🇦",capital:"Libreville",currency:"Central African CFA Franc",code:"XAF",region:"Africa",
+   famous:["🌿 Rainforest (85% Forest Cover)","🐘 Forest Elephants","🛢️ Oil","🦍 Gorillas","🏖️ Loango NP Beaches"]},
+  {name:"Gambia",flag:"🇬🇲",capital:"Banjul",currency:"Gambian Dalasi",code:"GMD",region:"Africa",
+   famous:["🐦 Bird Watching","🌊 Gambia River","🏖️ Atlantic Beaches","🎵 Kora Music","🌍 Smallest African Mainland Country"]},
+  {name:"Ghana",flag:"🇬🇭",capital:"Accra",currency:"Ghanaian Cedi",code:"GHS",region:"Africa",
+   famous:["🍫 Cocoa & Chocolate","🥁 Kente Cloth","⚽ Black Stars Football","🏰 Cape Coast Castle","🌿 Kakum Canopy Walk"]},
+  {name:"Guinea",flag:"🇬🇳",capital:"Conakry",currency:"Guinean Franc",code:"GNF",region:"Africa",
+   famous:["🔩 Bauxite (Largest Reserves)","🌊 Fouta Djallon Highlands","🎵 Griot Music","🌿 Chimpanzees","🌊 Niger River Source"]},
+  {name:"Guinea-Bissau",flag:"🇬🇼",capital:"Bissau",currency:"West African CFA Franc",code:"XOF",region:"Africa",
+   famous:["🏝️ Bijagós Archipelago (UNESCO)","🐊 Mangroves","🌾 Cashews","🐋 Humpback Whales","🐦 Rare Birds"]},
+  {name:"Ivory Coast",flag:"🇨🇮",capital:"Yamoussoukro",currency:"West African CFA Franc",code:"XOF",region:"Africa",
+   famous:["🍫 World's #1 Cocoa Producer","⚽ Didier Drogba","🕌 Basilica of Our Lady of Peace","☕ Coffee","🌿 Taï Forest NP"]},
+  {name:"Kenya",flag:"🇰🇪",capital:"Nairobi",currency:"Kenyan Shilling",code:"KES",region:"Africa",
+   famous:["🦁 Masai Mara Safari","🏃 World-Class Marathoners","🏔️ Mount Kenya","☕ Kenyan Tea & Coffee","🦒 Giraffes"]},
+  {name:"Lesotho",flag:"🇱🇸",capital:"Maseru",currency:"Lesotho Loti",code:"LSL",region:"Africa",
+   famous:["🏔️ Kingdom in the Sky","⛷️ Skiing (Africa)","🌊 Maletsunyane Falls","🐑 Basotho Blankets","💎 Diamonds"]},
+  {name:"Liberia",flag:"🇱🇷",capital:"Monrovia",currency:"Liberian Dollar",code:"LRD",region:"Africa",
+   famous:["🌿 West African Rainforest","🦏 Pygmy Hippo","⚓ Founded by Freed US Slaves","🌊 Beaches","🌳 Sapo NP"]},
+  {name:"Libya",flag:"🇱🇾",capital:"Tripoli",currency:"Libyan Dinar",code:"LYD",region:"Africa",
+   famous:["🏛️ Leptis Magna (Roman Ruins)","🏜️ Sahara Desert","🛢️ Oil Reserves","🌴 Oasis Towns","🏺 Ancient Rock Art"]},
+  {name:"Madagascar",flag:"🇲🇬",capital:"Antananarivo",currency:"Malagasy Ariary",code:"MGA",region:"Africa",
+   famous:["🦎 Lemurs (Found Nowhere Else)","🌿 Unique Biodiversity","🌳 Baobab Trees","🐠 Coral Reefs","🌋 Volcanic Highlands"]},
+  {name:"Malawi",flag:"🇲🇼",capital:"Lilongwe",currency:"Malawian Kwacha",code:"MWK",region:"Africa",
+   famous:["🌊 Lake Malawi (Lake of Stars)","🐟 Cichlid Fish","🎭 Gule Wamkulu (UNESCO)","🏔️ Mulanje Mountain","🫖 Tea"]},
+  {name:"Mali",flag:"🇲🇱",capital:"Bamako",currency:"West African CFA Franc",code:"XOF",region:"Africa",
+   famous:["🏛️ Timbuktu (Ancient Learning)","🕌 Djenné Mosque (Mud Architecture)","🎵 Mali Blues Music","🏜️ Sahara","🐊 Niger River"]},
+  {name:"Mauritania",flag:"🇲🇷",capital:"Nouakchott",currency:"Mauritanian Ouguiya",code:"MRU",region:"Africa",
+   famous:["🏜️ Saharan Chinguetti (UNESCO)","🚂 World's Longest Train","🐟 Iron Ore","🌊 Banc d'Arguin NP","🐪 Camel Caravans"]},
+  {name:"Mauritius",flag:"🇲🇺",capital:"Port Louis",currency:"Mauritian Rupee",code:"MUR",region:"Africa",
+   famous:["🏖️ Tropical Beaches","🐦 Dodo Bird (Extinct)","🌊 Underwater Waterfall Illusion","🎣 Sport Fishing","🌿 Chamarel Colored Earths"]},
+  {name:"Morocco",flag:"🇲🇦",capital:"Rabat",currency:"Moroccan Dirham",code:"MAD",region:"Africa",
+   famous:["🕌 Marrakech Medina","🏜️ Sahara Camel Treks","🧆 Tagine & Couscous","🧱 Fez Tanneries","🎭 Gnawa Music"]},
+  {name:"Mozambique",flag:"🇲🇿",capital:"Maputo",currency:"Mozambican Metical",code:"MZN",region:"Africa",
+   famous:["🏝️ Quirimbas Archipelago","🦈 Whale Sharks","💎 Rubies","🎵 Marrabenta Music","🌊 Indian Ocean Beaches"]},
+  {name:"Namibia",flag:"🇳🇦",capital:"Windhoek",currency:"Namibian Dollar",code:"NAD",region:"Africa",
+   famous:["🏜️ Namib Desert (Oldest Desert)","🦁 Etosha NP","🏔️ Fish River Canyon","🐘 Desert Elephants","🌅 Sossusvlei Dunes"]},
+  {name:"Niger",flag:"🇳🇪",capital:"Niamey",currency:"West African CFA Franc",code:"XOF",region:"Africa",
+   famous:["🦒 Giraffe (World's Last Wild Herd Near City)","🏜️ Sahara","🌾 Millet","🦴 Dinosaur Fossils","🐊 Niger River"]},
+  {name:"Nigeria",flag:"🇳🇬",capital:"Abuja",currency:"Nigerian Naira",code:"NGN",region:"Africa",
+   famous:["🎬 Nollywood (3rd Largest Film Industry)","🛢️ Oil","🥁 Afrobeats Music","🌍 Most Populous African Country","🍜 Jollof Rice"]},
+  {name:"Rwanda",flag:"🇷🇼",capital:"Kigali",currency:"Rwandan Franc",code:"RWF",region:"Africa",
+   famous:["🦍 Mountain Gorilla Trekking","🌿 Land of Thousand Hills","🏛️ Genocide Memorial","☕ Specialty Coffee","♻️ Plastic-Free Nation"]},
+  {name:"São Tomé and Príncipe",flag:"🇸🇹",capital:"São Tomé",currency:"São Tomé Dobra",code:"STN",region:"Africa",
+   famous:["🍫 Fine Cacao & Chocolate","🌿 Biodiversity Hotspot","🐦 Endemic Birds","🏖️ Pristine Beaches","🌋 Pico de São Tomé"]},
+  {name:"Senegal",flag:"🇸🇳",capital:"Dakar",currency:"West African CFA Franc",code:"XOF",region:"Africa",
+   famous:["🎵 Mbalax Music (Youssou N'Dour)","🏖️ Pink Lake (Lac Rose)","🦁 Niokolo-Koba NP","🌍 Dakar Rally","🎭 Tabaski Festivals"]},
+  {name:"Seychelles",flag:"🇸🇨",capital:"Victoria",currency:"Seychellois Rupee",code:"SCR",region:"Africa",
+   famous:["🏖️ Anse Source d'Argent Beach","🌿 Vallée de Mai (Coco de Mer)","🐢 Aldabra Giant Tortoises","🐠 Coral Reefs","🏝️ 115 Tropical Islands"]},
+  {name:"Sierra Leone",flag:"🇸🇱",capital:"Freetown",currency:"Sierra Leonean Leone",code:"SLE",region:"Africa",
+   famous:["💎 Diamond Mining","🏖️ Beaches","🦁 Tiwai Island Wildlife","🎵 Afrobeats","🌿 Tacugama Chimp Sanctuary"]},
+  {name:"Somalia",flag:"🇸🇴",capital:"Mogadishu",currency:"Somali Shilling",code:"SOS",region:"Africa",
+   famous:["🌊 Longest African Coastline","🐪 Camel Herding","🎭 Ancient Cave Paintings (Laas Geel)","🐟 Fishing","📜 Ancient Punt Trading Kingdom"]},
+  {name:"South Africa",flag:"🇿🇦",capital:"Pretoria",currency:"South African Rand",code:"ZAR",region:"Africa",
+   famous:["💎 Diamonds & Gold","🦁 Kruger NP Big Five","🍷 Cape Winelands","🏉 Rugby (Springboks)","🌈 Nelson Mandela's Legacy"]},
+  {name:"South Sudan",flag:"🇸🇸",capital:"Juba",currency:"South Sudanese Pound",code:"SSP",region:"Africa",
+   famous:["🌿 Boma NP (Wildlife Migration)","🌊 White Nile","🐆 Sudd Wetlands","🔥 World's Newest Country (2011)","🌾 Nile Basin Agriculture"]},
+  {name:"Sudan",flag:"🇸🇩",capital:"Khartoum",currency:"Sudanese Pound",code:"SDG",region:"Africa",
+   famous:["🔺 More Pyramids Than Egypt","🏛️ Ancient Nubian Kingdom","🌊 Nile River","🏜️ Sahara","☕ Sorghum & Sesame"]},
+  {name:"Tanzania",flag:"🇹🇿",capital:"Dodoma",currency:"Tanzanian Shilling",code:"TZS",region:"Africa",
+   famous:["🏔️ Mount Kilimanjaro (Africa's Highest)","🦁 Serengeti Migration","🏝️ Zanzibar Spice Islands","🦒 Ngorongoro Crater","💎 Tanzanite Gemstone"]},
+  {name:"Togo",flag:"🇹🇬",capital:"Lomé",currency:"West African CFA Franc",code:"XOF",region:"Africa",
+   famous:["🏖️ Lomé Beaches","🎭 Voodoo Market","🌿 Fazao-Malfakassa NP","🔩 Phosphate","🌾 Kpalimé Waterfalls"]},
+  {name:"Tunisia",flag:"🇹🇳",capital:"Tunis",currency:"Tunisian Dinar",code:"TND",region:"Africa",
+   famous:["🏛️ Carthage Ruins","⭐ Star Wars Filming Locations","🌅 Sahara to Mediterranean","🫒 Olive Oil","🏖️ Hammamet Beaches"]},
+  {name:"Uganda",flag:"🇺🇬",capital:"Kampala",currency:"Ugandan Shilling",code:"UGX",region:"Africa",
+   famous:["🦍 Mountain Gorilla Trekking","🌊 Source of the Nile","☕ Specialty Coffee","🐦 500+ Bird Species","🌿 Bwindi Impenetrable Forest"]},
+  {name:"Zambia",flag:"🇿🇲",capital:"Lusaka",currency:"Zambian Kwacha",code:"ZMW",region:"Africa",
+   famous:["🌊 Victoria Falls (Shared)","🐘 South Luangwa Safari","💎 Copper & Emeralds","🌿 Kafue NP","🎵 Zambian Music Scene"]},
+  {name:"Zimbabwe",flag:"🇿🇼",capital:"Harare",currency:"Zimbabwe Gold",code:"ZiG",region:"Africa",
+   famous:["🌊 Victoria Falls","🦁 Hwange NP","🏛️ Great Zimbabwe Ruins","💎 Diamonds","🦏 White Rhino Conservation"]},
+
+  // ── AMERICAS ──────────────────────────────────────────────────────────────
+  {name:"Antigua and Barbuda",flag:"🇦🇬",capital:"Saint John's",currency:"East Caribbean Dollar",code:"XCD",region:"Americas",
+   famous:["🏖️ 365 Beaches (One Per Day)","⛵ Sailing Week","🦞 Lobster","🏏 Cricket","🌊 Nelson's Dockyard (UNESCO)"]},
+  {name:"Argentina",flag:"🇦🇷",capital:"Buenos Aires",currency:"Argentine Peso",code:"ARS",region:"Americas",
+   famous:["💃 Tango Dance","⚽ Lionel Messi & Maradona","🥩 Asado (BBQ)","🍷 Malbec Wine","🏔️ Andes & Patagonia"]},
+  {name:"Bahamas",flag:"🇧🇸",capital:"Nassau",currency:"Bahamian Dollar",code:"BSD",region:"Americas",
+   famous:["🏖️ Pink Sand Beaches","🐠 Crystal Clear Waters","🐬 Dolphin Swimming","🎰 Tourism","🏝️ 700 Islands"]},
+  {name:"Barbados",flag:"🇧🇧",capital:"Bridgetown",currency:"Barbadian Dollar",code:"BBD",region:"Americas",
+   famous:["🎤 Rihanna's Birthplace","🍹 Rum & Mount Gay Rum","🏏 Cricket","🏄 Surfing (Bathsheba)","🌴 Platinum Coast"]},
+  {name:"Belize",flag:"🇧🇿",capital:"Belmopan",currency:"Belize Dollar",code:"BZD",region:"Americas",
+   famous:["🐠 Great Blue Hole (Scuba Diving)","🏛️ Maya Ruins (Caracol)","🦜 Scarlet Macaw","🌊 Barrier Reef","🌿 Rainforest Eco-Tourism"]},
+  {name:"Bolivia",flag:"🇧🇴",capital:"Sucre",currency:"Boliviano",code:"BOB",region:"Americas",
+   famous:["🏔️ Andes & World's Highest Capital","🌊 Salar de Uyuni (Salt Flat)","🌿 Amazon Rainforest","🎭 Carnaval de Oruro","🦙 Llamas & Alpacas"]},
+  {name:"Brazil",flag:"🇧🇷",capital:"Brasília",currency:"Brazilian Real",code:"BRL",region:"Americas",
+   famous:["🎉 Rio Carnival","⚽ Football (5× World Cup)","🌿 Amazon Rainforest","🗿 Christ the Redeemer","🌊 Copacabana Beach"]},
+  {name:"Canada",flag:"🇨🇦",capital:"Ottawa",currency:"Canadian Dollar",code:"CAD",region:"Americas",
+   famous:["🍁 Maple Syrup","🏒 Ice Hockey","🌊 Niagara Falls","🐻 Rocky Mountains","🦦 Diverse Wilderness"]},
+  {name:"Chile",flag:"🇨🇱",capital:"Santiago",currency:"Chilean Peso",code:"CLP",region:"Americas",
+   famous:["🏜️ Atacama Desert (Driest)","🗿 Easter Island (Moai)","🍷 Carménère Wine","🏔️ Torres del Paine","🐧 Patagonia Penguins"]},
+  {name:"Colombia",flag:"🇨🇴",capital:"Bogotá",currency:"Colombian Peso",code:"COP",region:"Americas",
+   famous:["☕ World-Famous Coffee","🎤 Shakira & Vallenato Music","🌸 Cartagena Walled City","🌿 Biodiversity Hotspot","🏛️ Gabriel García Márquez"]},
+  {name:"Costa Rica",flag:"🇨🇷",capital:"San José",currency:"Costa Rican Colón",code:"CRC",region:"Americas",
+   famous:["🌿 Eco-Tourism Pioneer","🦥 Sloths & Toucans","🌋 Arenal Volcano","🏄 Surfing","🌎 Pura Vida Lifestyle"]},
+  {name:"Cuba",flag:"🇨🇺",capital:"Havana",currency:"Cuban Peso",code:"CUP",region:"Americas",
+   famous:["🚗 Classic American Cars","🎵 Salsa & Son Music","🍹 Mojito & Daiquiri","🏛️ Old Havana (UNESCO)","🎺 Buena Vista Social Club"]},
+  {name:"Dominica",flag:"🇩🇲",capital:"Roseau",currency:"East Caribbean Dollar",code:"XCD",region:"Americas",
+   famous:["🌿 Nature Isle of the Caribbean","🌋 Boiling Lake","🐦 Sisserou Parrot","🌊 Whale Watching","♨️ Hot Springs & Waterfalls"]},
+  {name:"Dominican Republic",flag:"🇩🇴",capital:"Santo Domingo",currency:"Dominican Peso",code:"DOP",region:"Americas",
+   famous:["🏖️ Punta Cana Beaches","🎵 Bachata & Merengue","🥊 Oscar De La Hoya","🏛️ First Cathedral Americas","⚾ Baseball"]},
+  {name:"Ecuador",flag:"🇪🇨",capital:"Quito",currency:"US Dollar",code:"USD",region:"Americas",
+   famous:["🦎 Galápagos Islands (Darwin)","🌿 Amazon & Andes & Coast","🌹 Rose Exports","🍌 Banana Export","🏔️ Chimborazo Volcano"]},
+  {name:"El Salvador",flag:"🇸🇻",capital:"San Salvador",currency:"US Dollar",code:"USD",region:"Americas",
+   famous:["🌋 Land of Volcanoes","🏄 World-Class Surfing","🫔 Pupusas (National Dish)","🦋 Butterfly Sanctuary","💻 Bitcoin Legal Tender"]},
+  {name:"Grenada",flag:"🇬🇩",capital:"Saint George's",currency:"East Caribbean Dollar",code:"XCD",region:"Americas",
+   famous:["🌿 Isle of Spice (Nutmeg)","🏖️ Grand Anse Beach","🐠 Underwater Sculpture Park","🍫 Fine Chocolate","🎉 Spicemas Carnival"]},
+  {name:"Guatemala",flag:"🇬🇹",capital:"Guatemala City",currency:"Guatemalan Quetzal",code:"GTQ",region:"Americas",
+   famous:["🏛️ Tikal Maya Ruins","🌮 Corn & Pepian Cuisine","🦜 Quetzal Bird","🌋 Acatenango Volcano","🧵 Colorful Textiles"]},
+  {name:"Guyana",flag:"🇬🇾",capital:"Georgetown",currency:"Guyanese Dollar",code:"GYD",region:"Americas",
+   famous:["🌿 Amazon Rainforest","🌊 Kaieteur Falls (World's Largest)","🐅 Jaguars","🛢️ Oil Discovery","🦜 Harpy Eagles"]},
+  {name:"Haiti",flag:"🇭🇹",capital:"Port-au-Prince",currency:"Haitian Gourde",code:"HTG",region:"Americas",
+   famous:["🎨 Haitian Art","🏛️ First Black Republic (1804)","🥁 Vodou Culture","🌴 Citadelle Laferrière","🎵 Kompa Music"]},
+  {name:"Honduras",flag:"🇭🇳",capital:"Tegucigalpa",currency:"Honduran Lempira",code:"HNL",region:"Americas",
+   famous:["🏛️ Copán Maya Ruins","🐠 Bay Islands Diving","🌿 Cloud Forests","🍌 Banana Republic Origin","🦜 Macaw Mountain Bird Park"]},
+  {name:"Jamaica",flag:"🇯🇲",capital:"Kingston",currency:"Jamaican Dollar",code:"JMD",region:"Americas",
+   famous:["🎵 Bob Marley & Reggae","🏃 Usain Bolt (Fastest Human)","☕ Blue Mountain Coffee","🍹 Rum","🌴 Beaches & Rastafari Culture"]},
+  {name:"Mexico",flag:"🇲🇽",capital:"Mexico City",currency:"Mexican Peso",code:"MXN",region:"Americas",
+   famous:["🌮 Tacos & Guacamole","🏛️ Chichen Itza Maya Ruins","🌵 Mariachi Music","🎉 Día de Muertos","🌋 Popocatépetl Volcano"]},
+  {name:"Nicaragua",flag:"🇳🇮",capital:"Managua",currency:"Nicaraguan Córdoba",code:"NIO",region:"Americas",
+   famous:["🌋 Land of Lakes and Volcanoes","☕ Shade-Grown Coffee","🏄 Surfing","🌊 Lake Nicaragua (Freshwater Sharks)","🎩 Sandinista Revolution"]},
+  {name:"Panama",flag:"🇵🇦",capital:"Panama City",currency:"Panamanian Balboa",code:"PAB",region:"Americas",
+   famous:["⚓ Panama Canal","🎩 Panama Hat (From Ecuador)","🌿 Biodiversity Bridge","🐸 Poison Dart Frogs","🏦 Financial Hub"]},
+  {name:"Paraguay",flag:"🇵🇾",capital:"Asunción",currency:"Paraguayan Guaraní",code:"PYG",region:"Americas",
+   famous:["💧 Itaipú Dam (Largest Hydroelectric)","🎵 Harp Music","🌿 Mate Tea","⚽ Club Olimpia","🌾 Soy & Beef Export"]},
+  {name:"Peru",flag:"🇵🇪",capital:"Lima",currency:"Peruvian Sol",code:"PEN",region:"Americas",
+   famous:["🏛️ Machu Picchu (Inca Citadel)","🌮 World-Class Cuisine (Ceviche)","🦙 Machu Picchu Llamas","🌊 Nazca Lines","🏔️ Andes & Amazon"]},
+  {name:"Saint Kitts and Nevis",flag:"🇰🇳",capital:"Basseterre",currency:"East Caribbean Dollar",code:"XCD",region:"Americas",
+   famous:["🏰 Brimstone Hill Fortress (UNESCO)","🌿 Eco-Tourism","🍬 Sugar Cane History","🐒 Vervet Monkeys","🌊 Nevis Peak Volcano"]},
+  {name:"Saint Lucia",flag:"🇱🇨",capital:"Castries",currency:"East Caribbean Dollar",code:"XCD",region:"Americas",
+   famous:["🌋 Pitons (UNESCO Twin Peaks)","🌿 Tropical Rainforest","🎤 Two Nobel Laureates","🍌 Bananas","🐦 Saint Lucia Parrot"]},
+  {name:"Saint Vincent and the Grenadines",flag:"🇻🇨",capital:"Kingstown",currency:"East Caribbean Dollar",code:"XCD",region:"Americas",
+   famous:["⛵ Sailing Paradise","🌋 La Soufrière Volcano","🎬 Pirates of the Caribbean Filming","🐬 Tobago Cays Marine Park","🌿 Breadfruit (Introduced by Captain Bligh)"]},
+  {name:"Suriname",flag:"🇸🇷",capital:"Paramaribo",currency:"Surinamese Dollar",code:"SRD",region:"Americas",
+   famous:["🌿 93% Forest Cover","🏛️ Paramaribo (UNESCO Wooden City)","🌊 Amazon Rainforest","🍫 Cacao","🦜 Biodiversity Hotspot"]},
+  {name:"Trinidad and Tobago",flag:"🇹🇹",capital:"Port of Spain",currency:"Trinidad and Tobago Dollar",code:"TTD",region:"Americas",
+   famous:["🎉 Trinidad Carnival","🎵 Calypso & Soca Music","🥁 Steel Pan (Invented Here)","🛢️ Oil & Natural Gas","🐦 Most Bird Species Per km²"]},
+  {name:"United States",flag:"🇺🇸",capital:"Washington D.C.",currency:"US Dollar",code:"USD",region:"Americas",
+   famous:["🗽 Statue of Liberty","🎬 Hollywood","🏀 NBA & NFL","🚀 NASA & Space Exploration","🍔 Fast Food Culture"]},
+  {name:"Uruguay",flag:"🇺🇾",capital:"Montevideo",currency:"Uruguayan Peso",code:"UYU",region:"Americas",
+   famous:["⚽ First FIFA World Cup (1930)","🥩 World's Best Beef","💃 Tango","🏖️ Punta del Este Resort","🌿 Progressive Policies"]},
+  {name:"Venezuela",flag:"🇻🇪",capital:"Caracas",currency:"Venezuelan Bolívar",code:"VES",region:"Americas",
+   famous:["🌊 Angel Falls (World's Highest)","🛢️ Largest Oil Reserves","🌿 Amazon Rainforest","👸 Miss Universe Wins","🌅 Los Roques Archipelago"]},
+
+  // ── ASIA ──────────────────────────────────────────────────────────────────
+  {name:"Afghanistan",flag:"🇦🇫",capital:"Kabul",currency:"Afghan Afghani",code:"AFN",region:"Asia",
+   famous:["🏔️ Hindu Kush Mountains","🌺 Blue Mosque Mazar-i-Sharif","🫐 Pomegranates & Grapes","🌸 Bamiyan Valley","🏺 Ancient Silk Road"]},
+  {name:"Armenia",flag:"🇦🇲",capital:"Yerevan",currency:"Armenian Dram",code:"AMD",region:"Asia",
+   famous:["🍷 World's Oldest Winery","🏛️ Geghard Monastery","🎻 Duduk Music (UNESCO)","🏔️ Mount Ararat","📜 First Christian Nation"]},
+  {name:"Azerbaijan",flag:"🇦🇿",capital:"Baku",currency:"Azerbaijani Manat",code:"AZN",region:"Asia",
+   famous:["🔥 Land of Fire (Eternal Flames)","🛢️ Oil & Gas","🏛️ Walled City of Baku","🎵 Mugham Music","🌍 Gobustan Rock Art"]},
+  {name:"Bahrain",flag:"🇧🇭",capital:"Manama",currency:"Bahraini Dinar",code:"BHD",region:"Asia",
+   famous:["🏎️ F1 Grand Prix","🌴 Tree of Life (400-Year-Old)","🛢️ First Gulf Oil Discovery","🕌 Al-Fateh Mosque","🐟 Pearl Diving Heritage"]},
+  {name:"Bangladesh",flag:"🇧🇩",capital:"Dhaka",currency:"Bangladeshi Taka",code:"BDT",region:"Asia",
+   famous:["🌿 Sundarbans Mangrove (UNESCO)","🐅 Bengal Tiger","🧵 Textile & Garment Industry","🌊 Cox's Bazar (Longest Beach)","🌾 Rice & Jute"]},
+  {name:"Bhutan",flag:"🇧🇹",capital:"Thimphu",currency:"Bhutanese Ngultrum",code:"BTN",region:"Asia",
+   famous:["🧘 Gross National Happiness Policy","🏯 Tiger's Nest Monastery","🏔️ Himalayan Peaks","🦩 Black-Necked Crane","🌿 Carbon Negative Country"]},
+  {name:"Brunei",flag:"🇧🇳",capital:"Bandar Seri Begawan",currency:"Brunei Dollar",code:"BND",region:"Asia",
+   famous:["🛢️ Oil Wealth","🕌 Omar Ali Saifuddien Mosque","🌿 Borneo Rainforest","🦧 Proboscis Monkeys","👑 Sultan's Palace (Largest Residential Palace)"]},
+  {name:"Cambodia",flag:"🇰🇭",capital:"Phnom Penh",currency:"Cambodian Riel",code:"KHR",region:"Asia",
+   famous:["🏛️ Angkor Wat (Largest Temple Complex)","🌾 Rice & Lotus Flowers","🐊 Tonle Sap Lake","🎭 Apsara Dance","🌿 Cardamom Mountains"]},
+  {name:"China",flag:"🇨🇳",capital:"Beijing",currency:"Renminbi (Yuan)",code:"CNY",region:"Asia",
+   famous:["🏯 Great Wall of China","🐼 Giant Panda","🥟 Dim Sum & Dumplings","🏛️ Forbidden City","🧧 Silk Road Origin"]},
+  {name:"Cyprus",flag:"🇨🇾",capital:"Nicosia",currency:"Euro",code:"EUR",region:"Asia",
+   famous:["🌊 Aphrodite's Birthplace","🍷 Ancient Wine Culture","🏖️ Mediterranean Beaches","🕌 Kykkos Monastery","🌿 Akamas Peninsula"]},
+  {name:"Georgia",flag:"🇬🇪",capital:"Tbilisi",currency:"Georgian Lari",code:"GEL",region:"Asia",
+   famous:["🍷 Oldest Wine Country (8000 Years)","🏔️ Caucasus Mountains","🕌 Tbilisi Old Town","🌿 Borjomi Mineral Water","🎵 Polyphonic Singing (UNESCO)"]},
+  {name:"India",flag:"🇮🇳",capital:"New Delhi",currency:"Indian Rupee",code:"INR",region:"Asia",
+   famous:["🏛️ Taj Mahal","🍛 Spices & Curry","🎬 Bollywood","🐘 Elephants & Tigers","🧘 Yoga & Meditation"]},
+  {name:"Indonesia",flag:"🇮🇩",capital:"Jakarta",currency:"Indonesian Rupiah",code:"IDR",region:"Asia",
+   famous:["🏝️ Bali (Island of Gods)","🌋 Krakatoa Volcano","🦧 Orangutans","🛺 Batik Fabric","🌊 World's Largest Archipelago (17,000 Islands)"]},
+  {name:"Iran",flag:"🇮🇷",capital:"Tehran",currency:"Iranian Rial",code:"IRR",region:"Asia",
+   famous:["🏛️ Persepolis Ancient Ruins","🌺 Persian Carpets","🧆 Persian Cuisine (Kebab, Saffron)","🕌 Nasir al-Mulk Mosque","🍇 Pomegranate & Pistachios"]},
+  {name:"Iraq",flag:"🇮🇶",capital:"Baghdad",currency:"Iraqi Dinar",code:"IQD",region:"Asia",
+   famous:["🏛️ Babylon (Mesopotamia Cradle)","🌊 Tigris & Euphrates Rivers","🛢️ Oil Reserves","🕌 Shrine of Imam Ali","📜 Oldest Writing System (Cuneiform)"]},
+  {name:"Israel",flag:"🇮🇱",capital:"Jerusalem",currency:"Israeli New Shekel",code:"ILS",region:"Asia",
+   famous:["🕌 Jerusalem Holy Sites","💻 Silicon Wadi (Tech Hub)","🌊 Dead Sea (Lowest Point Earth)","🥙 Hummus & Falafel","🌿 Kibbutz Communities"]},
+  {name:"Japan",flag:"🇯🇵",capital:"Tokyo",currency:"Japanese Yen",code:"JPY",region:"Asia",
+   famous:["⛩️ Mount Fuji","🍣 Sushi & Ramen","🌸 Cherry Blossom Season","🤖 Anime & Manga","🚄 Bullet Train (Shinkansen)"]},
+  {name:"Jordan",flag:"🇯🇴",capital:"Amman",currency:"Jordanian Dinar",code:"JOD",region:"Asia",
+   famous:["🏛️ Petra (Rose City)","🌊 Dead Sea Floating","🏜️ Wadi Rum Desert","🕌 Jerash Roman Ruins","🌊 Aqaba Red Sea Diving"]},
+  {name:"Kazakhstan",flag:"🇰🇿",capital:"Astana",currency:"Kazakhstani Tenge",code:"KZT",region:"Asia",
+   famous:["🌾 Vast Steppes","🚀 Baikonur Cosmodrome (Space Launch)","🐎 Nomadic Horse Culture","🌊 Aral Sea (Shrinking)","🎵 Dombyra Music"]},
+  {name:"Kuwait",flag:"🇰🇼",capital:"Kuwait City",currency:"Kuwaiti Dinar",code:"KWD",region:"Asia",
+   famous:["🛢️ Oil Wealth (KWD = World's Highest Currency)","🕌 Grand Mosque","🌅 Kuwait Towers","🐚 Pearl Diving History","🍖 Machboos Dish"]},
+  {name:"Kyrgyzstan",flag:"🇰🇬",capital:"Bishkek",currency:"Kyrgyzstani Som",code:"KGS",region:"Asia",
+   famous:["🏔️ Tian Shan Mountains","🐎 Nomadic Culture & Yurts","🦅 Berkutchi Eagle Hunting","🌊 Issyk-Kul Lake","🧶 Shyrdak Felt Carpets"]},
+  {name:"Laos",flag:"🇱🇦",capital:"Vientiane",currency:"Lao Kip",code:"LAK",region:"Asia",
+   famous:["🐘 Elephant Sanctuary","🏛️ Luang Prabang (UNESCO)","🌊 Mekong River","💣 Most Bombed Country Per Capita","🌾 Sticky Rice Culture"]},
+  {name:"Lebanon",flag:"🇱🇧",capital:"Beirut",currency:"Lebanese Pound",code:"LBP",region:"Asia",
+   famous:["🥙 Lebanese Cuisine (Hummus, Tabouleh)","🌲 Cedar of Lebanon","🏛️ Baalbek Roman Ruins","🎵 Fairuz Music","🍷 Bekaa Valley Wine"]},
+  {name:"Malaysia",flag:"🇲🇾",capital:"Kuala Lumpur",currency:"Malaysian Ringgit",code:"MYR",region:"Asia",
+   famous:["🏙️ Petronas Twin Towers","🌿 Borneo Rainforest","🦧 Orangutans","🍜 Nasi Lemak","🏖️ Langkawi & Perhentian Islands"]},
+  {name:"Maldives",flag:"🇲🇻",capital:"Malé",currency:"Maldivian Rufiyaa",code:"MVR",region:"Asia",
+   famous:["🏝️ Overwater Bungalows","🐠 World's Best Snorkeling","🌊 1,200 Coral Islands","🐬 Bioluminescent Beaches","⚠️ Climate Change Frontline Nation"]},
+  {name:"Mongolia",flag:"🇲🇳",capital:"Ulaanbaatar",currency:"Mongolian Tögrög",code:"MNT",region:"Asia",
+   famous:["🏜️ Gobi Desert","🐎 Genghis Khan's Empire","🎪 Naadam Festival","🌿 Nomadic Yurt Life","🦅 Eagle Hunting"]},
+  {name:"Myanmar",flag:"🇲🇲",capital:"Naypyidaw",currency:"Myanmar Kyat",code:"MMK",region:"Asia",
+   famous:["🏯 Bagan (2,000 Temples)","🌺 Golden Rock (Kyaiktiyo)","💎 Rubies & Jade","🙏 Shwedagon Pagoda","🌿 Inle Lake"]},
+  {name:"Nepal",flag:"🇳🇵",capital:"Kathmandu",currency:"Nepalese Rupee",code:"NPR",region:"Asia",
+   famous:["🏔️ Mount Everest (World's Highest)","🧘 Buddhism & Hinduism Birthplace","🐅 Bengal Tigers & Snow Leopards","🎒 Trekking","🏛️ Pashupatinath Temple"]},
+  {name:"North Korea",flag:"🇰🇵",capital:"Pyongyang",currency:"North Korean Won",code:"KPW",region:"Asia",
+   famous:["🏟️ Mass Games (Arirang)","🎖️ Juche Ideology","🏯 Koryo Dynasty Ruins","🌊 DMZ Border","🎵 State Orchestra"]},
+  {name:"Oman",flag:"🇴🇲",capital:"Muscat",currency:"Omani Rial",code:"OMR",region:"Asia",
+   famous:["🏰 Nizwa Fort","🌺 Frankincense Trade Route","🐢 Ras Al Jinz Turtle Reserve","🏜️ Empty Quarter","🎵 Razha Traditional Music"]},
+  {name:"Pakistan",flag:"🇵🇰",capital:"Islamabad",currency:"Pakistani Rupee",code:"PKR",region:"Asia",
+   famous:["🏔️ K2 (World's 2nd Highest)","🏏 Cricket","🍛 Biryani & Nihari","🏛️ Mohenjo-daro (Indus Civilization)","🌺 Shalwar Kameez"]},
+  {name:"Philippines",flag:"🇵🇭",capital:"Manila",currency:"Philippine Peso",code:"PHP",region:"Asia",
+   famous:["🌋 Mayon Volcano","🏖️ Palawan Island","🥊 Manny Pacquiao","🎉 Sinulog Festival","🍚 Adobo & Lechon Cuisine"]},
+  {name:"Qatar",flag:"🇶🇦",capital:"Doha",currency:"Qatari Riyal",code:"QAR",region:"Asia",
+   famous:["🏟️ FIFA World Cup 2022 Host","🛢️ Largest LNG Exporter","🏙️ Lusail Stadium","🌅 Inland Sea (Khor Al Adaid)","🎨 Museum of Islamic Art"]},
+  {name:"Saudi Arabia",flag:"🇸🇦",capital:"Riyadh",currency:"Saudi Riyal",code:"SAR",region:"Asia",
+   famous:["🕋 Mecca & Medina (Islam Holiest Sites)","🛢️ World's Largest Oil Producer","🏜️ Rub' al Khali Desert","🏛️ Al-Ula Ancient City","🐪 Camel Racing"]},
+  {name:"Singapore",flag:"🇸🇬",capital:"Singapore",currency:"Singapore Dollar",code:"SGD",region:"Asia",
+   famous:["🌿 Gardens by the Bay","🍜 Hawker Center Food","🏙️ Marina Bay Sands","✈️ Changi Airport (World's Best)","🌆 Lion City Financial Hub"]},
+  {name:"South Korea",flag:"🇰🇷",capital:"Seoul",currency:"South Korean Won",code:"KRW",region:"Asia",
+   famous:["🎵 K-Pop (BTS, BLACKPINK)","🏛️ Gyeongbokgung Palace","🍜 Kimchi & Bibimbap","📱 Samsung & LG Tech","🎮 E-Sports Nation"]},
+  {name:"Sri Lanka",flag:"🇱🇰",capital:"Sri Jayawardenepura Kotte",currency:"Sri Lankan Rupee",code:"LKR",region:"Asia",
+   famous:["🫖 Ceylon Tea","🐘 Elephant Safaris","🏛️ Sigiriya Rock Fortress","🌿 Spice Island","🐋 Blue Whale Watching"]},
+  {name:"Syria",flag:"🇸🇾",capital:"Damascus",currency:"Syrian Pound",code:"SYP",region:"Asia",
+   famous:["🏛️ Damascus (World's Oldest Inhabited City)","🌹 Damascus Rose","🏺 Palmyra Ancient Ruins","🥙 Syrian Cuisine","📜 Ugarit Alphabet"]},
+  {name:"Taiwan",flag:"🇹🇼",capital:"Taipei",currency:"New Taiwan Dollar",code:"TWD",region:"Asia",
+   famous:["💻 TSMC Semiconductor","🥟 Din Tai Fung Soup Dumplings","🏯 Taipei 101","🌿 Taroko Gorge","🎪 Night Markets"]},
+  {name:"Tajikistan",flag:"🇹🇯",capital:"Dushanbe",currency:"Tajikistani Somoni",code:"TJS",region:"Asia",
+   famous:["🏔️ Pamir Mountains (Roof of World)","🌊 Iskanderkul Lake","🥟 Plov & Shashlik","🌿 Wakhan Corridor","🎵 Shashmaqam Classical Music"]},
+  {name:"Thailand",flag:"🇹🇭",capital:"Bangkok",currency:"Thai Baht",code:"THB",region:"Asia",
+   famous:["🏯 Temples & Buddhism","🍜 Pad Thai & Tom Yum","🐘 Elephant Sanctuaries","🌴 Phuket & Koh Samui","🥊 Muay Thai Boxing"]},
+  {name:"Timor-Leste",flag:"🇹🇱",capital:"Dili",currency:"US Dollar",code:"USD",region:"Asia",
+   famous:["🌊 Atauro Island Diving","☕ Specialty Coffee","🛢️ Oil & Gas (Sunrise LNG)","🌿 Christ the King Statue","🏛️ Young Nation (2002)"]},
+  {name:"Turkey",flag:"🇹🇷",capital:"Ankara",currency:"Turkish Lira",code:"TRY",region:"Asia",
+   famous:["🏛️ Hagia Sophia","🌅 Cappadocia Hot Air Balloons","☕ Turkish Tea & Coffee","🌊 Bosphorus Strait","🧺 Turkish Bazaars"]},
+  {name:"Turkmenistan",flag:"🇹🇲",capital:"Ashgabat",currency:"Turkmenistani Manat",code:"TMT",region:"Asia",
+   famous:["🔥 Door to Hell (Gas Crater)","🌿 Karakum Desert","🐎 Akhal-Teke Horse","🏛️ Merv Ancient City (UNESCO)","🌾 Natural Gas Reserves"]},
+  {name:"United Arab Emirates",flag:"🇦🇪",capital:"Abu Dhabi",currency:"UAE Dirham",code:"AED",region:"Asia",
+   famous:["🏙️ Burj Khalifa (World's Tallest)","🐪 Camel Racing","🛢️ Oil Wealth","🛍️ Dubai Mall","🌅 Desert Safari"]},
+  {name:"Uzbekistan",flag:"🇺🇿",capital:"Tashkent",currency:"Uzbekistani Som",code:"UZS",region:"Asia",
+   famous:["🏛️ Samarkand (Silk Road)","🕌 Registan Square","🍑 Melons & Pomegranates","🌿 Fergana Valley","🎵 Shashmaqam Music"]},
+  {name:"Vietnam",flag:"🇻🇳",capital:"Hanoi",currency:"Vietnamese Đồng",code:"VND",region:"Asia",
+   famous:["🍜 Phở & Bánh Mì","🌊 Ha Long Bay (UNESCO)","🛵 Motorbikes","🏛️ Hội An Ancient Town","☕ Egg Coffee"]},
+  {name:"Yemen",flag:"🇾🇪",capital:"Sana'a",currency:"Yemeni Rial",code:"YER",region:"Asia",
+   famous:["🏛️ Old Sana'a Walled City (UNESCO)","🌴 Socotra Island (Alien Trees)","☕ Mocha Coffee (Origin)","🏗️ Tower Houses","🌊 Socotra Dragon Blood Tree"]},
+
+  // ── EUROPE ────────────────────────────────────────────────────────────────
+  {name:"Albania",flag:"🇦🇱",capital:"Tirana",currency:"Albanian Lek",code:"ALL",region:"Europe",
+   famous:["🏔️ Albanian Riviera","🦅 Land of Eagles","🏰 Berat Castle (UNESCO)","🌊 Ionian & Adriatic Coasts","🍷 Raki (Traditional Spirit)"]},
+  {name:"Andorra",flag:"🇦🇩",capital:"Andorra la Vella",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["⛷️ Ski Resorts","🛍️ Duty-Free Shopping","🏔️ Pyrenees Mountains","🏛️ Oldest State in Iberia","⚽ Tiny Football Nation"]},
+  {name:"Austria",flag:"🇦🇹",capital:"Vienna",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🎵 Mozart & Beethoven's Home","☕ Viennese Coffee Houses","🎡 Vienna Opera House","🏔️ Alps & Skiing","🎂 Sachertorte Cake"]},
+  {name:"Belarus",flag:"🇧🇾",capital:"Minsk",currency:"Belarusian Ruble",code:"BYN",region:"Europe",
+   famous:["🌿 Belovezhskaya Pushcha (Europe's Last Primeval Forest)","🥔 Potato Dishes","🏛️ WWII Brest Fortress","🐗 European Bison","🎭 Kupala Folk Traditions"]},
+  {name:"Belgium",flag:"🇧🇪",capital:"Brussels",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🍫 Belgian Chocolate","🍺 Belgian Beer","🧇 Waffles","🏰 Bruges Medieval City","💼 NATO & EU Headquarters"]},
+  {name:"Bosnia and Herzegovina",flag:"🇧🇦",capital:"Sarajevo",currency:"Convertible Mark",code:"BAM",region:"Europe",
+   famous:["🌉 Stari Most Bridge Mostar (UNESCO)","☕ Bosnian Coffee","🏔️ Dinaric Alps","🏛️ Sarajevo Assassination (WWI)","🌊 Una River"]},
+  {name:"Bulgaria",flag:"🇧🇬",capital:"Sofia",currency:"Bulgarian Lev",code:"BGN",region:"Europe",
+   famous:["🌹 Rose Valley (Rose Oil)","🏛️ Rila Monastery","🧆 Banitsa Pastry","🌊 Black Sea Resorts","🎵 Bulgarian Folk Music"]},
+  {name:"Croatia",flag:"🇭🇷",capital:"Zagreb",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🌊 Dubrovnik Old City (Game of Thrones)","🏝️ Dalmatian Islands","🌊 Plitvice Lakes (UNESCO)","⚽ Luka Modrić","🍷 Plavac Mali Wine"]},
+  {name:"Czech Republic",flag:"🇨🇿",capital:"Prague",currency:"Czech Koruna",code:"CZK",region:"Europe",
+   famous:["🏰 Prague Castle","🍺 Pilsner Beer (Birthplace)","🎄 Christmas Markets","🌉 Charles Bridge","🎵 Dvořák & Smetana Music"]},
+  {name:"Denmark",flag:"🇩🇰",capital:"Copenhagen",currency:"Danish Krone",code:"DKK",region:"Europe",
+   famous:["🧜 The Little Mermaid Statue","🚲 Cycling Culture","🍽️ New Nordic Cuisine (Noma)","🌊 Viking Heritage","🏗️ Lego (Invented Here)"]},
+  {name:"Estonia",flag:"🇪🇪",capital:"Tallinn",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["💻 Most Digital Society (e-Estonia)","🏰 Tallinn Medieval Old Town","🌲 Bogs & Forests","🎵 Song Festival Tradition","🦢 Saaremaa Island"]},
+  {name:"Finland",flag:"🇫🇮",capital:"Helsinki",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🎅 Santa Claus Lapland","🌅 Northern Lights","🧖 Sauna Culture","🌊 1,000 Lakes","🎮 Angry Birds & Nokia"]},
+  {name:"France",flag:"🇫🇷",capital:"Paris",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🗼 Eiffel Tower","🍷 Bordeaux Wine","🥐 Croissants & Baguettes","🎨 Louvre Museum","🏎️ Formula 1 History"]},
+  {name:"Germany",flag:"🇩🇪",capital:"Berlin",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🍺 Oktoberfest Beer Festival","🏰 Neuschwanstein Castle","🚗 BMW, Mercedes & Volkswagen","🎄 Christmas Markets","🎵 Beethoven & Bach"]},
+  {name:"Greece",flag:"🇬🇷",capital:"Athens",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🏛️ Acropolis & Parthenon","🌊 Santorini Blue Domes","🫒 Olive Oil","🏛️ Olympic Games Origin","🐙 Greek Cuisine"]},
+  {name:"Hungary",flag:"🇭🇺",capital:"Budapest",currency:"Hungarian Forint",code:"HUF",region:"Europe",
+   famous:["🌊 Danube River & Chain Bridge","🧖 Thermal Baths","🌶️ Goulash & Paprika","🎵 Liszt & Bartók","🏰 Buda Castle"]},
+  {name:"Iceland",flag:"🇮🇸",capital:"Reykjavik",currency:"Icelandic Króna",code:"ISK",region:"Europe",
+   famous:["🌅 Northern Lights","🌋 Geysers & Volcanoes","⚽ Viking Clap","🌊 Blue Lagoon","🐋 Whale Watching"]},
+  {name:"Ireland",flag:"🇮🇪",capital:"Dublin",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🍀 Cliffs of Moher","🍺 Guinness Beer","🎵 Traditional Celtic Music","☘️ Saint Patrick's Day","📚 James Joyce & Oscar Wilde"]},
+  {name:"Italy",flag:"🇮🇹",capital:"Rome",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🏛️ Colosseum & Vatican","🍕 Pizza & Pasta","🎨 Renaissance Art","🛍️ Fashion (Milan)","🏎️ Ferrari & Lamborghini"]},
+  {name:"Kosovo",flag:"🇽🇰",capital:"Pristina",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🏛️ Newborn Monument","⛪ Gračanica Monastery","🎵 Dua Lipa's Heritage","🏔️ Rugova Canyon","🌍 Youngest Country in Europe"]},
+  {name:"Latvia",flag:"🇱🇻",capital:"Riga",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🏛️ Riga Art Nouveau Architecture","🎵 Song & Dance Festival","🌲 Gauja National Park","🏖️ Jūrmala Beach Resort","🌿 Amber Jewelry"]},
+  {name:"Liechtenstein",flag:"🇱🇮",capital:"Vaduz",currency:"Swiss Franc",code:"CHF",region:"Europe",
+   famous:["🏰 Vaduz Castle","⛷️ Alpine Skiing","🏦 Banking & Finance","🌿 Rhine River Valley","🎭 Only Country Between Two Doubly Landlocked Countries"]},
+  {name:"Lithuania",flag:"🇱🇹",capital:"Vilnius",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🏰 Vilnius Old Town (UNESCO)","🌳 Hill of Crosses","🎵 Baltic Song Festival","🌊 Curonian Spit","⛪ Gates of Dawn"]},
+  {name:"Luxembourg",flag:"🇱🇺",capital:"Luxembourg City",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["💰 Highest GDP Per Capita","🏰 Luxembourg Fortress (UNESCO)","🌿 Moselle Wine Region","💼 EU Institutions Hub","🎪 Schueberfouer Fair"]},
+  {name:"Malta",flag:"🇲🇹",capital:"Valletta",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🏛️ Valletta (World's Smallest Capital)","🌊 Azure Window (collapsed)","🏰 Knights of St. John","🎬 Game of Thrones & Gladiator Filming","🐟 Fishing & Boat Culture"]},
+  {name:"Moldova",flag:"🇲🇩",capital:"Chișinău",currency:"Moldovan Leu",code:"MDL",region:"Europe",
+   famous:["🍷 Cricova Wine Cellars (Largest Underground)","🌾 Sunflower & Corn","🏛️ Soroca Fortress","🎵 Doina Folk Music","🐦 Orheiul Vechi Monastery"]},
+  {name:"Monaco",flag:"🇲🇨",capital:"Monaco",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🏎️ Monaco F1 Grand Prix","🎰 Monte-Carlo Casino","🛥️ Yacht-Lined Harbour","💰 World's Most Expensive Real Estate","🌿 Exotic Garden"]},
+  {name:"Montenegro",flag:"🇲🇪",capital:"Podgorica",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🌊 Bay of Kotor (UNESCO)","🏔️ Durmitor NP","🌿 Tara River Canyon","🏰 Kotor Medieval Walls","🌊 Adriatic Sea Beaches"]},
+  {name:"Netherlands",flag:"🇳🇱",capital:"Amsterdam",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🌷 Tulips & Keukenhof","🚲 Cycling Capital","🧀 Gouda & Edam Cheese","🎨 Rembrandt & Van Gogh","🌊 Windmills & Dykes"]},
+  {name:"North Macedonia",flag:"🇲🇰",capital:"Skopje",currency:"Macedonian Denar",code:"MKD",region:"Europe",
+   famous:["🕍 Ohrid Lake & Town (UNESCO)","🙏 Mother Teresa Birthplace","🏔️ Mavrovo NP","🍷 Tikveš Wine","🌸 Popova Kula"]},
+  {name:"Norway",flag:"🇳🇴",capital:"Oslo",currency:"Norwegian Krone",code:"NOK",region:"Europe",
+   famous:["🌊 Fjords (Geirangerfjord)","🌅 Northern Lights","🐋 Whale Watching","🎿 Winter Olympics Skiing","🛢️ Oil Wealth (Sovereign Fund)"]},
+  {name:"Poland",flag:"🇵🇱",capital:"Warsaw",currency:"Polish Złoty",code:"PLN",region:"Europe",
+   famous:["🏰 Wawel Castle Kraków","🥟 Pierogi Dumplings","🎵 Chopin Music","🌿 Białowieża Forest","🏛️ Marie Curie's Birthplace"]},
+  {name:"Portugal",flag:"🇵🇹",capital:"Lisbon",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🎵 Fado Music","🏄 Surfing (Nazaré Biggest Waves)","🍊 Port Wine","🏛️ Belém Tower","🌊 Algarve Beaches"]},
+  {name:"Romania",flag:"🇷🇴",capital:"Bucharest",currency:"Romanian Leu",code:"RON",region:"Europe",
+   famous:["🧛 Dracula's Bran Castle","🌲 Transylvania","🐺 Carpathian Brown Bears","🌉 Danube Delta","🍺 Tuică Plum Brandy"]},
+  {name:"Russia",flag:"🇷🇺",capital:"Moscow",currency:"Russian Ruble",code:"RUB",region:"Europe",
+   famous:["🏰 Kremlin & Red Square","🥚 Fabergé Eggs","🎵 Tchaikovsky Ballet","🌅 Trans-Siberian Railway","🚀 First in Space (Sputnik, Gagarin)"]},
+  {name:"San Marino",flag:"🇸🇲",capital:"San Marino",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🏰 Three Towers on Monte Titano","🌍 World's Oldest Republic (301 AD)","🏎️ Formula Racing Heritage","🎭 Medieval Crossbow Tournament","🏔️ Apennine Views"]},
+  {name:"Serbia",flag:"🇷🇸",capital:"Belgrade",currency:"Serbian Dinar",code:"RSD",region:"Europe",
+   famous:["🎾 Novak Djokovic","🎵 Serbian Music & Guča Trumpet","🌊 Danube River","🏛️ Kalemegdan Fortress","🥃 Šljivovica Plum Brandy"]},
+  {name:"Slovakia",flag:"🇸🇰",capital:"Bratislava",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🏰 Bratislava Castle","🌲 High Tatras Mountains","⛷️ Skiing","🏛️ Spiš Castle (UNESCO)","🍺 Zlatý Bažant Beer"]},
+  {name:"Slovenia",flag:"🇸🇮",capital:"Ljubljana",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🏔️ Lake Bled (Fairytale Island)","🌊 Postojna Cave","🏞️ Triglav NP","🧀 Tolmin Cheese","🚵 Cycling & Outdoor Sports"]},
+  {name:"Spain",flag:"🇪🇸",capital:"Madrid",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["🎨 Sagrada Família & Gaudí","💃 Flamenco Dance","🐂 Running of the Bulls","🍷 Rioja Wine & Tapas","⚽ FC Barcelona & Real Madrid"]},
+  {name:"Sweden",flag:"🇸🇪",capital:"Stockholm",currency:"Swedish Krona",code:"SEK",region:"Europe",
+   famous:["🏆 Nobel Prize (Established Here)","🌅 Midnight Sun","🧩 IKEA & H&M","🎵 ABBA & Pop Music","🫙 IKEA Meatballs"]},
+  {name:"Switzerland",flag:"🇨🇭",capital:"Bern",currency:"Swiss Franc",code:"CHF",region:"Europe",
+   famous:["⛷️ Alps & Skiing","🍫 Swiss Chocolate","⌚ Luxury Watches","🏦 Banking & Finance","🧀 Fondue & Raclette"]},
+  {name:"Ukraine",flag:"🇺🇦",capital:"Kyiv",currency:"Ukrainian Hryvnia",code:"UAH",region:"Europe",
+   famous:["🌻 Sunflower Fields","🏛️ Saint Sophia Cathedral (UNESCO)","🥘 Borscht & Varenyky","🌾 Breadbasket of Europe","🎵 Bandura Music"]},
+  {name:"United Kingdom",flag:"🇬🇧",capital:"London",currency:"Pound Sterling",code:"GBP",region:"Europe",
+   famous:["🎡 Big Ben & Tower Bridge","🎵 The Beatles","⚽ Football (Invented Here)","👑 Royal Family","🧙 Harry Potter & Sherlock Holmes"]},
+  {name:"Vatican City",flag:"🇻🇦",capital:"Vatican City",currency:"Euro",code:"EUR",region:"Europe",
+   famous:["⛪ St. Peter's Basilica","🎨 Sistine Chapel (Michelangelo)","🌍 Smallest Country in the World","🙏 Pope's Residence","📜 Vatican Museums"]},
+
+  // ── OCEANIA ───────────────────────────────────────────────────────────────
+  {name:"Australia",flag:"🇦🇺",capital:"Canberra",currency:"Australian Dollar",code:"AUD",region:"Oceania",
+   famous:["🐨 Koalas & Kangaroos","🏖️ Great Barrier Reef","🏛️ Sydney Opera House","🌅 Uluru (Ayers Rock)","🎾 Australian Open Tennis"]},
+  {name:"Fiji",flag:"🇫🇯",capital:"Suva",currency:"Fijian Dollar",code:"FJD",region:"Oceania",
+   famous:["🏖️ Coral Reefs & Snorkeling","🌴 333 Tropical Islands","🥊 Rugby 7s (Olympic Gold)","💧 Fiji Water Brand","🎭 Kava Ceremony"]},
+  {name:"Kiribati",flag:"🇰🇮",capital:"South Tarawa",currency:"Australian Dollar",code:"AUD",region:"Oceania",
+   famous:["⚠️ First Nation to Disappear (Climate Change)","🐟 Phoenix Islands Marine Reserve","🌊 Straddles International Date Line","🌺 Pandanus Culture","🐢 Green Sea Turtles"]},
+  {name:"Marshall Islands",flag:"🇲🇭",capital:"Majuro",currency:"US Dollar",code:"USD",region:"Oceania",
+   famous:["☢️ Bikini Atoll Nuclear Tests (UNESCO)","🌊 WWII Battle of Midway","🐠 Clear Lagoons Diving","🌴 Copra (Coconut Oil)","🚣 Traditional Navigation"]},
+  {name:"Micronesia",flag:"🇫🇲",capital:"Palikir",currency:"US Dollar",code:"USD",region:"Oceania",
+   famous:["🏛️ Nan Madol Ancient City","🐠 World-Class Wreck Diving","🌺 Yap Stone Money","🌊 Truk Lagoon WWII Wrecks","🌴 608 Atolls & Islands"]},
+  {name:"Nauru",flag:"🇳🇷",capital:"Yaren",currency:"Australian Dollar",code:"AUD",region:"Oceania",
+   famous:["⚠️ World's Smallest Island Nation","🪨 Phosphate (Now Depleted)","⚽ Unique Football Culture","🌊 Surrounded by Coral","🌍 No Official Capital City"]},
+  {name:"New Zealand",flag:"🇳🇿",capital:"Wellington",currency:"New Zealand Dollar",code:"NZD",region:"Oceania",
+   famous:["🧝 Lord of the Rings Filming Location","🏉 All Blacks Rugby & Haka","🥝 Kiwifruit","🌋 Geothermal Rotorua","🐦 Kiwi Bird"]},
+  {name:"Palau",flag:"🇵🇼",capital:"Ngerulmud",currency:"US Dollar",code:"USD",region:"Oceania",
+   famous:["🪼 Jellyfish Lake (Stingless Jellyfish)","🐠 Top World Scuba Diving","🌿 Marine Sanctuary (No-Take Zone)","🌊 Rock Islands (UNESCO)","🌺 Hawksbill Sea Turtles"]},
+  {name:"Papua New Guinea",flag:"🇵🇬",capital:"Port Moresby",currency:"Papua New Guinean Kina",code:"PGK",region:"Oceania",
+   famous:["🦜 800+ Bird Species (Birds of Paradise)","🌿 One of World's Most Biodiverse","🎭 800+ Tribal Languages","🏔️ Owen Stanley Range","💎 Gold & Copper Mining"]},
+  {name:"Samoa",flag:"🇼🇸",capital:"Apia",currency:"Samoan Tālā",code:"WST",region:"Oceania",
+   famous:["🏉 Rugby & Dwayne 'The Rock' Johnson Heritage","🎭 Fiafia Cultural Performance","🌊 To Sua Ocean Trench","🌺 Faofao Beach","🐋 Humpback Whale Migration"]},
+  {name:"Solomon Islands",flag:"🇸🇧",capital:"Honiara",currency:"Solomon Islands Dollar",code:"SBD",region:"Oceania",
+   famous:["🪸 World's Top Coral Biodiversity","🐠 WWII Iron Bottom Sound Wrecks","🌿 Marovo Lagoon (UNESCO Candidate)","🎭 Kastom Culture","🦅 Sanford's Sea Eagle"]},
+  {name:"Tonga",flag:"🇹🇴",capital:"Nukuʻalofa",currency:"Tongan Paʻanga",code:"TOP",region:"Oceania",
+   famous:["🐋 Humpback Whale Swimming","👑 Last Polynesian Kingdom","🥊 Malakai Fekitoa Rugby","🌺 Ha'amonga 'a Maui Trilithon","🌊 Ha'apai Islands"]},
+  {name:"Tuvalu",flag:"🇹🇻",capital:"Funafuti",currency:"Australian Dollar",code:"AUD",region:"Oceania",
+   famous:["⚠️ Sinking Nation (Sea Level Rise)","🌐 .tv Domain Name (Major Revenue)","🌊 Funafuti Marine Conservation Area","🐢 Green Turtles","🌴 Atoll Atolls"]},
+  {name:"Vanuatu",flag:"🇻🇺",capital:"Port Vila",currency:"Vanuatu Vatu",code:"VUV",region:"Oceania",
+   famous:["🌋 Yasur Volcano (World's Most Accessible)","🤿 SS President Coolidge Wreck Diving","🏝️ Land Diving Ritual (Pentecost)","🥥 Kava Ceremony","🌿 80 Islands Archipelago"]},
+];
+
+const COUNTRY_INTROS = {
+  // Africa
+  "Algeria": "Largest country in Africa, Algeria bridges the Mediterranean coast with the vast Sahara Desert and boasts over 7,000 years of history.",
+  "Angola": "Rich in oil and diamonds, Angola is a vast nation rebuilding after decades of civil war, with stunning national parks and a vibrant Kizomba music scene.",
+  "Benin": "Birthplace of the Voodoo religion, Benin was home to the powerful Kingdom of Dahomey whose legendary women warriors inspired global culture.",
+  "Botswana": "One of Africa's most stable democracies, Botswana transformed from one of the world's poorest nations to a middle-income country through responsible diamond mining.",
+  "Burkina Faso": "Meaning 'Land of Honest People,' Burkina Faso is a landlocked West African nation known for its rich traditions in art, craft, and the FESPACO film festival.",
+  "Burundi": "A tiny, densely populated landlocked nation, Burundi is famed for its UNESCO-listed royal drummers and the crystal-blue shores of Lake Tanganyika.",
+  "Cabo Verde": "An archipelago of 10 volcanic islands off West Africa, Cabo Verde blends African and Portuguese cultures into a uniquely vibrant society and gave the world soulful Morna music.",
+  "Cameroon": "Called 'Africa in miniature' for its remarkable geographic diversity, Cameroon is a land of rainforests, savannahs, highlands, and over 250 ethnic groups.",
+  "Central African Republic": "A landlocked nation at the heart of the continent, the CAR shelters extraordinary wildlife including forest elephants and western lowland gorillas in vast unspoiled wilderness.",
+  "Chad": "Stretching from the Sahara to tropical savannahs, Chad is home to Lake Chad—a vital water source for millions—and the ancient volcanic Tibesti Mountains.",
+  "Comoros": "A tiny volcanic archipelago in the Indian Ocean, Comoros produces most of the world's ylang-ylang perfume and blends Arab, African, and French influences.",
+  "Congo (Republic)": "Straddling the equator, the Republic of Congo is blanketed in lush rainforest and hosts some of the world's largest populations of western lowland gorillas.",
+  "Congo (DR)": "The second-largest country in Africa, the DRC contains the world's second-largest tropical rainforest and an extraordinary wealth of natural resources and biodiversity.",
+  "Djibouti": "A tiny but strategically vital nation at the Horn of Africa, Djibouti sits at one of the world's busiest shipping lanes and contains Lake Assal, Africa's lowest point.",
+  "Egypt": "Home to one of humanity's oldest civilizations, Egypt gave the world the pyramids, hieroglyphics, and papyrus, while the Nile River continues to be its life-giving artery.",
+  "Equatorial Guinea": "The only Spanish-speaking country in Africa, Equatorial Guinea is a small oil-rich nation split between a mainland and the lush volcanic island of Bioko.",
+  "Eritrea": "Gaining independence from Ethiopia in 1993, Eritrea's capital Asmara is a UNESCO World Heritage Site celebrated for its remarkable collection of modernist Italian architecture.",
+  "Eswatini": "One of the world's last absolute monarchies, this landlocked kingdom is renowned for its colorful traditional ceremonies and rich wildlife sanctuaries in southern Africa.",
+  "Ethiopia": "Africa's oldest independent nation, Ethiopia is the birthplace of coffee, home to one of the world's oldest Christian traditions, and produces world-champion marathon runners.",
+  "Gabon": "One of the most forested nations on Earth, Gabon has set aside 13% of its land as national parks and is a global leader in rainforest conservation and carbon offsetting.",
+  "Gambia": "Africa's smallest mainland country, Gambia is a sliver of land along the Gambia River, beloved by birdwatchers and beach tourists for its diverse wildlife and warm hospitality.",
+  "Ghana": "The first sub-Saharan African country to gain independence in 1957, Ghana is a beacon of democracy and the world's second-largest cocoa producer.",
+  "Guinea": "Rich in bauxite (holding over a third of the world's reserves), Guinea is also the source of the Niger River and home to the scenic Fouta Djallon highlands.",
+  "Guinea-Bissau": "A small coastal nation with a vast offshore archipelago, Guinea-Bissau's Bijagós Archipelago is a UNESCO Biosphere Reserve teeming with marine life and rare wildlife.",
+  "Ivory Coast": "The world's largest producer of cocoa, Côte d'Ivoire is West Africa's economic powerhouse and home to the world's largest Christian basilica.",
+  "Kenya": "East Africa's economic hub, Kenya is synonymous with the Great Migration wildebeest spectacle, world-class long-distance runners, and some of Africa's most spectacular wildlife safaris.",
+  "Lesotho": "Entirely surrounded by South Africa, Lesotho is the only country in the world that lies completely above 1,000 meters in elevation, earning it the nickname 'Kingdom in the Sky.'",
+  "Liberia": "Africa's oldest republic, founded by freed American slaves in 1847, Liberia harbors some of West Africa's most pristine rainforests and the critically endangered pygmy hippopotamus.",
+  "Libya": "Home to some of the Roman Empire's most spectacular ruins and bordered by the vast Sahara, Libya possesses enormous oil reserves beneath its desert sands.",
+  "Madagascar": "An isolated island continent off East Africa, Madagascar evolved independently for 90 million years, producing extraordinary species found nowhere else on Earth.",
+  "Malawi": "The warm heart of Africa, Malawi wraps around Lake Malawi—a UNESCO World Heritage Site—which contains more freshwater fish species than any other lake on Earth.",
+  "Mali": "Once home to the richest man in history and a center of Islamic scholarship, Mali gave the world Timbuktu and is considered a birthplace of the blues music tradition.",
+  "Mauritania": "Where the Sahara meets the Atlantic Ocean, Mauritania is home to ancient Saharan trading cities, the world's longest train, and the spectacular Bay of Dakhlet Nouadhibou.",
+  "Mauritius": "A volcanic island paradise in the Indian Ocean, Mauritius dazzles with its beaches, multicultural heritage, and was once home to the now-extinct dodo bird.",
+  "Morocco": "Where Africa meets Europe and the Arab world, Morocco captivates with its labyrinthine medinas, snow-capped Atlas Mountains, and vast Saharan dune landscapes.",
+  "Mozambique": "Blessed with one of Africa's longest coastlines, Mozambique is an emerging dive destination with spectacular coral reefs and warm Indian Ocean turquoise waters.",
+  "Namibia": "Home to the world's oldest desert, Namibia dazzles with surreal landscapes of towering red dunes, desert-adapted elephants, and the largest cheetah population on Earth.",
+  "Niger": "A landlocked Saharan nation, Niger is home to one of West Africa's last wild giraffe herds and some of the world's most significant dinosaur fossil discoveries.",
+  "Nigeria": "Africa's most populous country and largest economy, Nigeria is a cultural powerhouse producing Nollywood films, Afrobeats music, and a vibrant literary tradition.",
+  "Rwanda": "Transformed from the tragedy of 1994 into one of Africa's most progressive nations, Rwanda is a model of governance and conservation, protecting half the world's mountain gorillas.",
+  "São Tomé and Príncipe": "A tiny island nation in the Gulf of Guinea, this former Portuguese colony is celebrated for its single-origin fine chocolate and extraordinary tropical biodiversity.",
+  "Senegal": "Known as the 'Gateway to Africa,' Senegal is a beacon of political stability in the region, celebrated for its Teranga hospitality culture and vibrant arts and music scene.",
+  "Seychelles": "An archipelago of 115 islands in the western Indian Ocean, Seychelles is home to the world's rarest sea turtles and the iconic Coco de Mer palm with the heaviest seed in the plant kingdom.",
+  "Sierra Leone": "Meaning 'Lion Mountains,' Sierra Leone is recovering from its civil war to become a rising eco-tourism destination with stunning beaches and remarkable biodiversity.",
+  "Somalia": "East Africa's coastal giant with the continent's longest shoreline, Somalia has one of the world's most culturally homogeneous populations and a rich tradition of poetry and oral literature.",
+  "South Africa": "The 'Rainbow Nation' at Africa's southern tip, South Africa combines world-class wildlife safaris, stunning Cape winelands, and the enduring legacy of Nelson Mandela.",
+  "South Sudan": "The world's youngest country, South Sudan gained independence in 2011 and is home to one of Africa's largest wildlife migrations through the vast Sudd wetlands.",
+  "Sudan": "Home to more ancient pyramids than Egypt, Sudan was the seat of the powerful Nubian kingdoms of Kush and Meroë that rivaled ancient Egypt for centuries.",
+  "Tanzania": "East Africa's largest country, Tanzania is home to Mount Kilimanjaro, the Serengeti's Great Wildebeest Migration, and the spice-scented paradise island of Zanzibar.",
+  "Togo": "One of Africa's narrowest countries, Togo stretches from the Gulf of Guinea to the Sahel, blending vibrant voodoo markets with misty coffee-growing highlands.",
+  "Tunisia": "The northernmost country in Africa, Tunisia seamlessly blends ancient Carthaginian and Roman ruins with Mediterranean beaches and Saharan dune landscapes.",
+  "Uganda": "Nicknamed the 'Pearl of Africa' by Winston Churchill, Uganda offers mountain gorilla trekking, the source of the Nile, and some of the continent's finest birdwatching.",
+  "Zambia": "Home to half of Victoria Falls, Zambia offers some of Africa's most authentic safari experiences and was a pioneer in banning trophy hunting in favor of photographic tourism.",
+  "Zimbabwe": "Home to the majestic Victoria Falls and the mysterious ancient stone city of Great Zimbabwe, this landlocked southern African nation has an extraordinarily rich cultural heritage.",
+  // Americas
+  "Antigua and Barbuda": "Twin Caribbean islands offering 365 beaches—one for each day of the year—plus a world-famous sailing week and a vibrant Creole food and music culture.",
+  "Argentina": "South America's second-largest country, Argentina gave the world tango, the mate drink, legendary football stars, and the breathtaking wilderness of Patagonia.",
+  "Bahamas": "An archipelago of 700 islands and cays in the Atlantic, the Bahamas is famed for its extraordinary turquoise waters, pink sand beaches, and vibrant coral marine life.",
+  "Barbados": "A sophisticated Caribbean island known as 'Little England,' Barbados is the birthplace of rum, cricket, and pop icon Rihanna.",
+  "Belize": "The only English-speaking nation in Central America, Belize is a biodiversity hotspot with ancient Maya ruins, jaguar preserves, and one of the world's most spectacular barrier reefs.",
+  "Bolivia": "The world's highest-altitude country, Bolivia is a landlocked Andean nation of extraordinary contrasts—from the world's largest salt flat to the depths of the Amazon rainforest.",
+  "Brazil": "The world's fifth-largest country and Latin America's powerhouse, Brazil is a land of samba, football, the Amazon, and one of the most biodiverse ecosystems on Earth.",
+  "Canada": "The world's second-largest country by area, Canada is known for its stunning natural landscapes, welcoming multicultural cities, and consistently high quality of life.",
+  "Chile": "A long sliver of land along South America's Pacific coast, Chile stretches from the driest desert on Earth to wind-swept Patagonia and the mysterious Easter Island.",
+  "Colombia": "Straddling the equator, Colombia has transformed its global image to become one of South America's top travel destinations, famous for coffee, flowers, and vibrant cultural expression.",
+  "Costa Rica": "A small Central American nation that abolished its military, Costa Rica channels its resources into education and eco-tourism, protecting extraordinary biodiversity.",
+  "Cuba": "The Caribbean's largest island, Cuba is a fascinating time capsule of 1950s architecture, vintage cars, passionate music, and complex revolutionary political history.",
+  "Dominica": "A rugged volcanic island covered in lush rainforest and hot springs, Dominica is called 'the Nature Isle of the Caribbean'—the way the Caribbean used to be.",
+  "Dominican Republic": "The most visited destination in the Caribbean, the Dominican Republic shares Hispaniola with Haiti and dazzles visitors with world-class beaches and rich colonial history.",
+  "Ecuador": "Sitting right on the equator, Ecuador packs extraordinary biodiversity into a small area—from the Galápagos Islands to Amazonian rainforest to Andean peaks.",
+  "El Salvador": "The smallest country in Central America, El Salvador is reinventing itself as a world-class surfing destination and recently made history as the first country to adopt Bitcoin as legal tender.",
+  "Grenada": "Known as the Isle of Spice, Grenada is the world's second-largest nutmeg producer and offers an enchanting underwater sculpture park that has become a thriving artificial reef.",
+  "Guatemala": "Heart of the ancient Maya civilization, Guatemala is a land of volcanic landscapes, colorful indigenous markets, and the spectacular colonial gem of Antigua.",
+  "Guyana": "Part of the Guiana Shield—one of Earth's oldest geological formations—Guyana has one of the highest forest-cover percentages in the world and the awe-inspiring Kaieteur Falls.",
+  "Haiti": "The first Black republic in the world, Haiti achieved independence in 1804 after a successful slave revolution, and its vibrant art, music, and indomitable spirit endure to this day.",
+  "Honduras": "Home to the spectacular Maya ruins of Copán—once the intellectual capital of the Maya world—Honduras also offers world-class scuba diving in the Bay Islands.",
+  "Jamaica": "A small island with an outsized cultural impact, Jamaica gave the world reggae music, Rastafari philosophy, and the fastest human sprinters in Olympic history.",
+  "Mexico": "The birthplace of the Maya and Aztec civilizations, Mexico is a land of ancient pyramids, stunning beaches, world-famous cuisine, and vibrant Day of the Dead celebrations.",
+  "Nicaragua": "The largest country in Central America, Nicaragua is a land of lakes, volcanoes, and revolutionary history, earning the evocative nickname 'Land of Lakes and Volcanoes.'",
+  "Panama": "A narrow isthmus connecting North and South America, Panama is home to the canal that transformed global trade and harbors extraordinary biological diversity.",
+  "Paraguay": "A landlocked South American nation along the Paraná River, Paraguay is home to the world's most powerful hydroelectric dam and a unique blend of Spanish and Guaraní cultures.",
+  "Peru": "Cradle of the Inca Empire and home to Machu Picchu, the Amazon River, and one of the world's most celebrated and inventive cuisines.",
+  "Saint Kitts and Nevis": "The smallest nation in the Western Hemisphere by area and population, this twin-island federation is known for its sugar cane heritage and dramatic volcanic peaks.",
+  "Saint Lucia": "A volcanic island in the eastern Caribbean, Saint Lucia is famous for its dramatic twin Piton peaks, lush rainforest, and the remarkable distinction of producing two Nobel laureates.",
+  "Saint Vincent and the Grenadines": "A chain of 32 islands and cays in the Caribbean, this nation is a renowned sailing paradise and provided the dramatic backdrop for Pirates of the Caribbean.",
+  "Suriname": "The smallest sovereign country in South America, Suriname is a melting pot of African, Asian, European, and Indigenous cultures, with vast untouched Amazon rainforest.",
+  "Trinidad and Tobago": "The birthplace of calypso, soca, and the steel pan instrument, Trinidad and Tobago is the Caribbean's energy powerhouse and host of one of the world's greatest carnivals.",
+  "United States": "The world's third-largest country and a global superpower, the United States has the world's largest economy, extraordinary cultural diversity, and iconic landmarks from coast to coast.",
+  "Uruguay": "South America's smallest Spanish-speaking country, Uruguay consistently ranks as Latin America's most progressive, peaceful, and well-governed nation.",
+  "Venezuela": "A land of extraordinary natural beauty, Venezuela is home to Angel Falls (the world's highest waterfall), the Amazon jungle, and some of the largest oil reserves on Earth.",
+  // Asia
+  "Afghanistan": "A landlocked nation at the crossroads of Central and South Asia, Afghanistan has been a meeting point of civilizations for millennia, from Alexander the Great to the ancient Silk Road.",
+  "Armenia": "One of the world's oldest nations, Armenia was the first country to adopt Christianity as its state religion in 301 AD and boasts an unbroken 3,000-year civilizational history.",
+  "Azerbaijan": "Straddling Eastern Europe and Western Asia, Azerbaijan is known as the 'Land of Fire' for its naturally occurring surface flames and a history of oil production stretching back centuries.",
+  "Bahrain": "A small island kingdom in the Persian Gulf, Bahrain was the first Gulf state to discover oil and has since transformed into a thriving regional business, financial, and entertainment hub.",
+  "Bangladesh": "One of the world's most densely populated countries, Bangladesh is home to the Bengalis—a people with a rich literary tradition who founded their nation through a liberation struggle in 1971.",
+  "Bhutan": "A tiny Himalayan kingdom that measures progress in Gross National Happiness rather than GDP, Bhutan is one of the world's last remaining carbon-negative countries.",
+  "Brunei": "A wealthy oil-rich sultanate on the island of Borneo, Brunei offers a fascinating window into Malay Islamic Monarchy culture surrounded by pristine Bornean rainforest.",
+  "Cambodia": "Home to Angkor Wat—the world's largest religious monument—Cambodia is a nation of remarkable resilience that has rebuilt itself from the tragedy of the Khmer Rouge era.",
+  "China": "The world's most populous nation and home to one of humanity's oldest continuous civilizations, China has the second-largest economy and spans an extraordinary range of landscapes and cultures.",
+  "Cyprus": "A sun-drenched Mediterranean island said to be the birthplace of Aphrodite, Cyprus has been a crossroads of civilizations for over 10,000 years.",
+  "Georgia": "A Caucasian nation with 8,000 years of winemaking tradition, Georgia sits at the crossroads of Europe and Asia with a unique ancient alphabet, medieval churches, and the towering Greater Caucasus.",
+  "India": "The world's most populous democracy, India is an ancient civilization of over a billion people, spanning dozens of languages and every terrain from Himalayan peaks to tropical beaches.",
+  "Indonesia": "The world's largest archipelago nation with over 17,000 islands, Indonesia is home to the fourth-largest population, extraordinary biodiversity, and hundreds of distinct ethnic cultures.",
+  "Iran": "Home to one of the world's oldest civilizations, the Persian Empire shaped art, science, and philosophy across the ancient world, and Iran's culture continues to profoundly influence the region.",
+  "Iraq": "The cradle of civilization, ancient Mesopotamia—modern Iraq—gave humanity writing, the wheel, irrigation, and the first cities over 7,000 years ago.",
+  "Israel": "A small but historically profound country at the junction of three continents, Israel contains sites of profound religious significance for Judaism, Christianity, and Islam.",
+  "Japan": "An archipelago of 6,852 islands, Japan uniquely blends ancient samurai traditions and Shinto shrines with cutting-edge technology, anime, and some of the world's finest cuisine.",
+  "Jordan": "A stable and welcoming country at the heart of the Middle East, Jordan is home to Petra—the rose-red city carved from rock—and the lowest point on Earth, the Dead Sea.",
+  "Kazakhstan": "The world's largest landlocked country, Kazakhstan spans from the Caspian Sea to the Altai Mountains and was the launch site of humanity's first journey into outer space.",
+  "Kuwait": "A small but extraordinarily wealthy Gulf state, Kuwait was among the first Arab nations to adopt a constitution and parliament, and mints the world's highest-value currency.",
+  "Kyrgyzstan": "A mountainous Central Asian nation where nomadic traditions remain vibrantly alive, Kyrgyzstan offers some of the world's most dramatic trekking landscapes in the Tian Shan range.",
+  "Laos": "Southeast Asia's only landlocked country, Laos is a nation of Buddhist temples, French colonial towns, and the mighty Mekong River winding through ancient forested hills.",
+  "Lebanon": "Despite its small size, Lebanon has exerted an outsized cultural influence through its cuisine, intellectuals, and merchants across the globe, and Beirut was once the 'Paris of the Middle East.'",
+  "Malaysia": "A multicultural Southeast Asian nation spanning the Malay Peninsula and northern Borneo, Malaysia is one of the world's most biodiverse countries with iconic modern skylines.",
+  "Maldives": "The world's lowest-lying country, the Maldives is a paradise archipelago in the Indian Ocean famed for overwater bungalows and spectacular coral marine biodiversity.",
+  "Mongolia": "The homeland of Genghis Khan, Mongolia is a vast landlocked country of endless steppes, nomadic horsemen, and the dramatic Gobi Desert stretching to China's borders.",
+  "Myanmar": "A land of over 135 ethnic groups and 2,000 ancient Buddhist temples at Bagan, Myanmar is one of Southeast Asia's most culturally rich and spiritually profound nations.",
+  "Nepal": "Home to eight of the world's ten highest mountains including Everest, Nepal is the birthplace of the Buddha and a sanctuary of Himalayan culture, spirituality, and trekking.",
+  "North Korea": "One of the world's most isolated nations, North Korea is a secretive state renowned for its spectacular mass games, nuclear program, and the unique Juche ideology.",
+  "Oman": "A Gulf sultanate with a proud tradition of seafaring and trade, Oman is one of the oldest civilizations in the Arab world and is renowned for genuine warmth and hospitality.",
+  "Pakistan": "A South Asian nation of 220+ million people, Pakistan is home to ancient civilizations like Mohenjo-daro, the second-highest mountain on Earth (K2), and a passionate cricketing culture.",
+  "Philippines": "An archipelago of 7,641 islands, the Philippines is a nation of extraordinary natural beauty, uniquely warm and hospitable people, and a blend of Asian, Spanish, and American influences.",
+  "Qatar": "A tiny oil-rich Gulf state that transformed itself in one generation from pearl diving to hosting the FIFA World Cup, Qatar is now one of the world's wealthiest nations per capita.",
+  "Saudi Arabia": "Birthplace of Islam and custodian of its two holiest sites, Saudi Arabia sits atop the world's second-largest oil reserves and is undergoing the most rapid social transformation in its history.",
+  "Singapore": "A city-state and island nation at the tip of the Malay Peninsula, Singapore is a global financial hub and one of the world's cleanest, safest, and most efficiently run cities.",
+  "South Korea": "A nation that rebuilt from devastation after the Korean War to become a global technology, automotive, and culture powerhouse—and the birthplace of the K-pop phenomenon.",
+  "Sri Lanka": "The 'Pearl of the Indian Ocean,' Sri Lanka is a teardrop-shaped island of ancient Buddhist temples, lush highland tea estates, and extraordinary wildlife including blue whales.",
+  "Syria": "One of the world's oldest continuously inhabited regions, Syria was the birthplace of agriculture and home to ancient Damascus—often cited as the oldest capital city in the world.",
+  "Taiwan": "A high-tech island democracy of 23 million people, Taiwan produces the world's most advanced semiconductors and is famed for its night markets, mountains, and culinary scene.",
+  "Tajikistan": "The smallest Central Asian republic, Tajikistan is dominated by the Pamir Mountains—the 'Roof of the World'—and sits at the historic intersection of the ancient Silk Road.",
+  "Thailand": "Known as the 'Land of Smiles,' Thailand combines ornate Buddhist temples, world-class cuisine, elephant sanctuaries, and stunning beaches into one of Asia's most-loved destinations.",
+  "Timor-Leste": "One of the world's youngest nations, Timor-Leste gained independence in 2002 after decades of struggle, and is home to some of the world's most pristine and biodiverse marine ecosystems.",
+  "Turkey": "Straddling two continents, Turkey is a bridge between East and West, home to some of humanity's most important ancient sites—from Troy and Ephesus to the magnificent Hagia Sophia.",
+  "Turkmenistan": "One of the world's most closed societies, Turkmenistan sits atop vast natural gas reserves and is home to the eternal 'Door to Hell' gas crater burning continuously since 1971.",
+  "United Arab Emirates": "A federation of seven emirates, the UAE transformed from pearl-diving villages to a global luxury, business, and tourism powerhouse in just five extraordinary decades.",
+  "Uzbekistan": "Heart of the ancient Silk Road, Uzbekistan's cities of Samarkand and Bukhara were once the most magnificently decorated cities in the Islamic world.",
+  "Vietnam": "A narrow S-shaped country with 4,000 years of history, Vietnam is one of Asia's fastest-growing economies, famous for its cuisine, Ha Long Bay, and ancient Hội An town.",
+  "Yemen": "Once a wealthy frankincense and spice trading kingdom, Yemen is home to Socotra Island with its alien dragon blood trees and the ancient walled city of Sana'a.",
+  // Europe
+  "Albania": "A small Balkan nation emerging as one of Europe's best-kept secrets, Albania offers stunning Riviera beaches, Ottoman-era towns, and an ancient Illyrian heritage.",
+  "Andorra": "A tiny co-principality tucked in the Pyrenees between France and Spain, Andorra is one of Europe's premier ski destinations and a beloved duty-free shopping enclave.",
+  "Austria": "A landlocked Alpine nation at the heart of Europe, Austria was the center of the Habsburg Empire and gave the world Mozart, the waltz, and the Viennese coffee house culture.",
+  "Belarus": "Known as the 'Lungs of Europe' for its pristine ancient forests, Belarus preserves the last primeval forest on the continent and has a complex identity shaped by WWII and Soviet history.",
+  "Belgium": "A small but richly diverse kingdom at the heart of Europe, Belgium is home to NATO, the EU headquarters, world-famous chocolates, and over 1,500 varieties of beer.",
+  "Bosnia and Herzegovina": "A Balkan nation of extraordinary natural beauty and complex history, Bosnia's iconic Stari Most bridge in Mostar has become a powerful UNESCO symbol of reconciliation.",
+  "Bulgaria": "The oldest country in Europe to retain its original name since 681 AD, Bulgaria is a land of ancient Thracian treasures, rose oil production, and beautiful Black Sea resorts.",
+  "Croatia": "An Adriatic jewel with over a thousand islands, Croatia's Dubrovnik—the 'Pearl of the Adriatic'—is one of Europe's most beautifully preserved medieval walled cities.",
+  "Czech Republic": "The historic heart of Bohemia, the Czech Republic is home to the fairytale city of Prague—one of Europe's finest medieval capitals—and the birthplace of Pilsner beer.",
+  "Denmark": "The oldest kingdom in Europe, Denmark consistently ranks among the world's happiest nations and is the home of LEGO, Hans Christian Andersen, and New Nordic cuisine.",
+  "Estonia": "The world's most digitally advanced society, Estonia pioneered e-residency and online voting while preserving the medieval grandeur of Tallinn and vast unspoiled peat bogs.",
+  "Finland": "A Nordic nation of a thousand lakes, Finland is famous for Santa Claus, the Northern Lights, the sauna culture, and its record as the world's happiest country.",
+  "France": "The world's most visited country, France is synonymous with art, haute cuisine, fashion, and romance—from the Eiffel Tower to the lavender fields of Provence.",
+  "Germany": "Europe's largest economy, Germany gave the world the printing press, the automobile, and some of history's greatest philosophers, composers, and scientists.",
+  "Greece": "The birthplace of democracy, philosophy, the Olympics, and Western civilization, Greece continues to captivate with ancient ruins, island-hopping, and Mediterranean lifestyle.",
+  "Hungary": "A landlocked Central European nation on the Danube, Hungary is famous for its thermal baths, rich paprika-spiced cuisine, and the stunning baroque grandeur of Budapest.",
+  "Iceland": "A volcanic island in the North Atlantic powered almost entirely by renewable energy, Iceland is one of the world's most sparsely populated countries and home to the Northern Lights.",
+  "Ireland": "The Emerald Isle of Celtic legends and lush green landscapes, Ireland is known for its extraordinary literary tradition, warm pub culture, and a diaspora that shaped the world.",
+  "Italy": "The cradle of the Renaissance and heir to the Roman Empire, Italy has more UNESCO World Heritage Sites than any other country and remains a global icon of art, food, and fashion.",
+  "Kosovo": "One of Europe's newest countries, Kosovo declared independence in 2008 and is rebuilding with a young and resilient population proud of its ancient Illyrian heritage.",
+  "Latvia": "The middle Baltic state with a breathtaking Art Nouveau architectural heritage in Riga, Latvia is known for its amber coast, ancient oak forests, and powerful choral singing tradition.",
+  "Liechtenstein": "One of only two doubly landlocked countries in the world, Liechtenstein is a tiny Alpine principality with one of the highest GDPs per capita and a scenic Rhine River valley.",
+  "Lithuania": "The largest and most populous Baltic state, Lithuania is home to the Hill of Crosses—a powerful symbol of national identity—and the medieval grandeur of Vilnius old town.",
+  "Luxembourg": "One of the world's wealthiest nations per capita, tiny Luxembourg is a global financial center and founding member of the European Union nestled between Belgium, France, and Germany.",
+  "Malta": "An archipelago nation in the heart of the Mediterranean ruled by Phoenicians, Romans, Arabs, and the Knights of St. John, leaving a uniquely layered cultural mosaic.",
+  "Moldova": "Europe's least-visited country hides extraordinary surprises including the world's largest underground wine cellar and a warm, hospitable culture rooted in ancient Dacian heritage.",
+  "Monaco": "The world's second-smallest country, Monaco is a glamorous microstate on the French Riviera famous for its casino, Formula 1 street race, and as a playground for the ultra-wealthy.",
+  "Montenegro": "A tiny Adriatic jewel that became independent only in 2006, Montenegro packs mountains, medieval walled cities, and turquoise bays into a territory smaller than Connecticut.",
+  "Netherlands": "A low-lying nation that has literally engineered itself out of the sea, the Netherlands is the world's second-largest agricultural exporter and the birthplace of Rembrandt and Van Gogh.",
+  "North Macedonia": "A landlocked Balkan nation in the ancient Macedonian heartland, it is home to one of Europe's deepest and most beautiful lakes—Ohrid—and is the birthplace of Mother Teresa.",
+  "Norway": "A spectacular Nordic nation of fjords and midnight sun, Norway has the world's largest sovereign wealth fund and consistently ranks at the very top of the Human Development Index.",
+  "Poland": "Central Europe's largest country and one of its fastest-growing economies, Poland has a turbulent but rich history and gave the world Chopin, Marie Curie, and Pope John Paul II.",
+  "Portugal": "Europe's westernmost nation, Portugal was once a global maritime empire that mapped the known world, and today is celebrated for Fado music, port wine, and a golden Atlantic coastline.",
+  "Romania": "A Carpathian nation where medieval castles and ancient Dacian fortresses dot a landscape of extraordinary natural beauty, immortalized through Bram Stoker's Dracula legend.",
+  "Russia": "The world's largest country by area, Russia spans eleven time zones across two continents and has profoundly shaped global history, science, literature, ballet, and music.",
+  "San Marino": "Entirely surrounded by Italy, San Marino claims to be the world's oldest republic, founded in 301 AD, and is one of Europe's smallest and most charming microstates.",
+  "Serbia": "A proud Balkan nation at the crossroads of Central and Southeastern Europe, Serbia was the birthplace of Nikola Tesla and a major medieval power in European history.",
+  "Slovakia": "Independent since 1993, Slovakia is a Central European land of fairytale castles, pristine mountain wilderness in the High Tatras, and a rich folk culture and music tradition.",
+  "Slovenia": "A tiny Alpine nation that punches far above its weight in natural beauty, Slovenia is one of the world's most forested countries and home to the storybook Lake Bled.",
+  "Spain": "One of Europe's great civilizations, Spain combines passionate flamenco, world-famous cuisine, La Liga football, and architectural treasures spanning from Roman to Gaudí's modernism.",
+  "Sweden": "A Scandinavian superpower of design, innovation, and progressive values, Sweden is home to IKEA, Spotify, ABBA, and the institution of the Nobel Prize.",
+  "Switzerland": "The land of precision and neutrality, Switzerland is famous for Alpine scenery, multilingual culture, luxury watches, milk chocolate, and centuries of banking expertise.",
+  "Ukraine": "The largest country entirely within Europe, Ukraine is 'Europe's breadbasket' with some of the world's most fertile soil, a proud Cossack heritage, and extraordinary cultural resilience.",
+  "United Kingdom": "A constitutional monarchy and former global empire, the UK gave the world the English language, parliamentary democracy, the Industrial Revolution, the Beatles, and Shakespeare.",
+  "Vatican City": "The world's smallest independent state, Vatican City is the spiritual heart of the Roman Catholic Church and home to some of humanity's greatest artistic and architectural treasures.",
+  // Oceania
+  "Australia": "The world's sixth-largest country and only continent-nation, Australia is home to unique wildlife found nowhere else on Earth, the Great Barrier Reef, and a vibrant multicultural society.",
+  "Fiji": "An archipelago of 333 islands in the South Pacific, Fiji is renowned for its warm and welcoming people, spectacular coral reefs, and as a premier destination for island paradise living.",
+  "Kiribati": "Spanning the International Date Line, Kiribati is one of the first countries to greet each new day—and is on the stark frontline of climate change, facing potential submersion within decades.",
+  "Marshall Islands": "A remote Pacific archipelago steeped in WWII history, the Marshall Islands' Bikini Atoll was the site of nuclear testing and is today a haunting UNESCO World Heritage Site.",
+  "Micronesia": "A vast Pacific nation scattered across 607 islands, Micronesia is home to the ancient megalithic city of Nan Madol and the world-class WWII wreck diving of Truk Lagoon.",
+  "Nauru": "The world's smallest island nation, Nauru was once among the wealthiest per-capita countries thanks to phosphate mining, but now faces serious economic challenges and rising sea levels.",
+  "New Zealand": "A stunning island nation in the southwestern Pacific, New Zealand is celebrated for its Māori culture, Lord of the Rings landscapes, and the All Blacks rugby team's fearsome Haka.",
+  "Palau": "A Pacific island nation of extraordinary marine biodiversity, Palau was the world's first country to redesign its laws to protect sharks, and is home to the unique stingless Jellyfish Lake.",
+  "Papua New Guinea": "One of the world's most culturally diverse countries with over 800 languages, Papua New Guinea shelters some of Earth's last uncontacted tribes in its vast rainforests.",
+  "Samoa": "A Polynesian island nation known as the 'Cradle of Polynesia,' Samoa was the first Pacific island nation to gain independence and is the ancestral homeland of Polynesian culture.",
+  "Solomon Islands": "A Melanesian archipelago in the southwestern Pacific that witnessed some of WWII's fiercest naval battles, the Solomon Islands today offer pristine coral reefs and authentic tribal cultures.",
+  "Tonga": "The only surviving Polynesian monarchy, Tonga is an archipelago of 169 islands famed for its annual humpback whale season and the mysterious ancient trilithon of Ha'amonga 'a Maui.",
+  "Tuvalu": "One of the world's smallest and most remote nations, Tuvalu generates significant national revenue from its .tv internet domain while facing an existential threat from rising sea levels.",
+  "Vanuatu": "An archipelago of 80 islands known for spectacular volcanic landscapes and uniquely authentic Melanesian cultures, Vanuatu is where the ancient land diving ritual inspired modern bungee jumping.",
+};
+
+let currentRegion = 'all';
+let currentSort = 'name';
+let sortAsc = true;
+let searchTerm = '';
+
+function getFiltered() {
+    let list = COUNTRIES.slice();
+    if (currentRegion !== 'all') list = list.filter(c => c.region === currentRegion);
+    if (searchTerm) {
+        const q = searchTerm.toLowerCase();
+        list = list.filter(c =>
+            c.name.toLowerCase().includes(q) ||
+            c.capital.toLowerCase().includes(q) ||
+            c.currency.toLowerCase().includes(q) ||
+            c.code.toLowerCase().includes(q) ||
+            c.famous.some(f => f.toLowerCase().includes(q))
+        );
+    }
+    list.sort((a, b) => {
+        const av = a[currentSort] || a.name;
+        const bv = b[currentSort] || b.name;
+        return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
+    });
+    return list;
+}
+
+function regionClass(r) { return 'rb-' + r.toLowerCase(); }
+
+function flagToCode(emoji) {
+    return [...emoji]
+        .map(c => String.fromCodePoint(c.codePointAt(0) - 0x1F1E6 + 65))
+        .join('').toLowerCase();
+}
+
+function render() {
+    const list = getFiltered();
+    const grid = document.getElementById('cardsGrid');
+    document.getElementById('statShown').textContent = list.length;
+    document.getElementById('resultCount').textContent = `Showing ${list.length} of ${COUNTRIES.length} countries`;
+
+    if (list.length === 0) {
+        grid.innerHTML = '<div class="no-results"><span class="emoji">🔍</span>No countries match your search.</div>';
+        return;
+    }
+
+    grid.innerHTML = list.map(c => `
+        <div class="country-card" data-region="${c.region}">
+            <div class="card-header">
+                <span class="card-flag" data-iso="${flagToCode(c.flag)}"><img src="https://flagcdn.com/w80/${flagToCode(c.flag)}.png" alt="${c.name} flag" loading="lazy"></span>
+                <div class="card-name">${c.name}</div>
+                <span class="region-badge ${regionClass(c.region)}">${c.region}</span>
+            </div>
+            <div class="card-body">
+                <div class="card-info-row">
+                    <span class="icon">🏛️</span>
+                    <span class="label">Capital</span>
+                    <span class="value">${c.capital}</span>
+                </div>
+                <div class="card-info-row">
+                    <span class="icon">💰</span>
+                    <span class="label">Currency</span>
+                    <span class="value"><span class="currency-code">${c.code}</span>${c.currency}</span>
+                </div>
+                <div class="card-divider"></div>
+                <div class="famous-label">✨ Famous for</div>
+                <div class="famous-tags">
+                    ${c.famous.map(f => `<span class="famous-tag">${f}</span>`).join('')}
+                </div>
+                <div class="card-detail-hint">🔍 Click for details</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function initStats() {
+    document.getElementById('statTotal').textContent = COUNTRIES.length;
+    document.getElementById('statCurrencies').textContent = new Set(COUNTRIES.map(c => c.code)).size;
+}
+
+document.querySelectorAll('.rfbtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.rfbtn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentRegion = btn.dataset.region;
+        render();
+    });
+});
+
+document.querySelectorAll('.sort-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const s = btn.dataset.sort;
+        if (currentSort === s) {
+            sortAsc = !sortAsc;
+            btn.textContent = btn.textContent.replace(/[▲▼]/, sortAsc ? '▲' : '▼');
+        } else {
+            document.querySelectorAll('.sort-btn').forEach(b => {
+                b.classList.remove('active');
+                b.textContent = b.textContent.replace(/\s[▲▼]/, '');
+            });
+            currentSort = s;
+            sortAsc = true;
+            btn.classList.add('active');
+            btn.textContent += ' ▲';
+        }
+        render();
+    });
+});
+
+document.getElementById('searchBox').addEventListener('input', e => {
+    searchTerm = e.target.value.trim();
+    render();
+});
+
+const darkToggle = document.getElementById('darkToggle');
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+    darkToggle.textContent = '☀️';
+}
+darkToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    darkToggle.textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('darkMode', isDark);
+});
+
+initStats();
+render();
+
+// ── COUNTRY DETAIL MODAL ──────────────────────────────────────────────────
+(function () {
+    function flagToCode(emoji) {
+        return [...emoji]
+            .map(c => String.fromCodePoint(c.codePointAt(0) - 0x1F1E6 + 65))
+            .join('').toLowerCase();
+    }
+
+    function regionClass(r) { return 'rb-' + r.toLowerCase(); }
+
+    // Build modal HTML
+    const overlay = document.createElement('div');
+    overlay.id = 'country-modal-overlay';
+    overlay.innerHTML = `
+        <div id="country-modal">
+            <div class="modal-hero">
+                <button class="modal-close" id="modal-close-btn" title="Close">✕</button>
+                <span class="m-flag" id="m-flag"></span>
+                <img class="m-flag-img" id="m-flag-img" src="" alt="">
+                <div class="m-name" id="m-name"></div>
+                <span class="m-region-badge" id="m-region-badge"></span>
+            </div>
+            <div class="modal-body">
+                <p class="modal-intro" id="m-intro"></p>
+                <div class="modal-info-row">
+                    <span class="icon">🏛️</span>
+                    <span class="label">Capital</span>
+                    <span id="m-capital"></span>
+                </div>
+                <div class="modal-info-row">
+                    <span class="icon">💰</span>
+                    <span class="label">Currency</span>
+                    <span id="m-currency"></span>
+                </div>
+                <div class="modal-section-title" style="margin-top:4px">✨ FAMOUS FOR</div>
+                <div class="modal-famous-tags" id="m-famous"></div>
+            </div>
+        </div>`;
+    document.body.appendChild(overlay);
+
+    function openModal(country) {
+        const c = COUNTRIES.find(x => x.name === country);
+        if (!c) return;
+
+        document.getElementById('m-name').textContent  = c.name;
+
+        // Flag image
+        const iso = flagToCode(c.flag);
+        const img = document.getElementById('m-flag-img');
+        img.src = `https://flagcdn.com/w160/${iso}.png`;
+        img.style.display = 'block';
+        img.onerror = () => { img.style.display = 'none'; };
+
+        // Region badge
+        const badge = document.getElementById('m-region-badge');
+        badge.textContent = c.region;
+        badge.className   = 'm-region-badge ' + regionClass(c.region);
+
+        // Intro
+        const introEl = document.getElementById('m-intro');
+        const intro = COUNTRY_INTROS[c.name];
+        if (intro) { introEl.textContent = intro; introEl.style.display = ''; }
+        else        { introEl.style.display = 'none'; }
+
+        document.getElementById('m-capital').textContent  = c.capital;
+        document.getElementById('m-currency').innerHTML   =
+            `<span class="currency-code">${c.code}</span> ${c.currency}`;
+
+        const famousEl = document.getElementById('m-famous');
+        famousEl.innerHTML = c.famous
+            .map(f => `<span class="modal-famous-tag">${f}</span>`)
+            .join('');
+
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    // Click on card (not on flag or famous-tag, those have their own tooltips)
+    document.getElementById('cardsGrid').addEventListener('click', e => {
+        if (e.target.closest('.card-flag') || e.target.closest('.famous-tag')) return;
+        const card = e.target.closest('.country-card');
+        if (card) openModal(card.querySelector('.card-name').textContent.trim());
+    });
+
+    document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+}());
+
+// ── FLAG IMAGE TOOLTIP ──────────────────────────────────────────────────────
+(function () {
+    // Decode flag emoji → ISO 3166-1 alpha-2 code (e.g. 🇻🇳 → "vn")
+    function flagToCode(emoji) {
+        return [...emoji]
+            .map(c => String.fromCodePoint(c.codePointAt(0) - 0x1F1E6 + 65))
+            .join('')
+            .toLowerCase();
+    }
+
+    const tip = document.createElement('div');
+    tip.id = 'flag-tooltip';
+    tip.innerHTML = '<img src="" alt="">' +
+                    '<div class="tt-name"></div>' +
+                    '<div class="tt-code"></div>';
+    document.body.appendChild(tip);
+
+    const tipImg  = tip.querySelector('img');
+    const tipName = tip.querySelector('.tt-name');
+    const tipCode = tip.querySelector('.tt-code');
+    let hideTimer  = null;
+
+    function show(flagEl) {
+        clearTimeout(hideTimer);
+        const card    = flagEl.closest('.country-card');
+        const name    = card.querySelector('.card-name').textContent.trim();
+        const iso     = flagEl.dataset.iso;
+        const imgUrl  = `https://flagcdn.com/w160/${iso}.png`;
+
+        tipImg.src  = imgUrl;
+        tipImg.alt  = name + ' flag';
+        tipImg.onerror = () => { tipImg.style.display = 'none'; };
+        tipImg.onload  = () => { tipImg.style.display = 'block'; };
+        tipName.textContent = name;
+        tipCode.textContent = iso.toUpperCase();
+        tip.style.display = 'flex';
+        requestAnimationFrame(() => tip.classList.add('visible'));
+    }
+
+    function hide() {
+        hideTimer = setTimeout(() => {
+            tip.classList.remove('visible');
+            setTimeout(() => { tip.style.display = 'none'; }, 150);
+        }, 80);
+    }
+
+    function position(e) {
+        if (tip.style.display === 'none') return;
+        const tw = tip.offsetWidth  || 182;
+        const th = tip.offsetHeight || 160;
+        let x = e.clientX + 18;
+        let y = e.clientY - th / 2;
+        if (x + tw > window.innerWidth  - 12) x = e.clientX - tw - 18;
+        if (y < 10) y = 10;
+        if (y + th > window.innerHeight - 10) y = window.innerHeight - th - 10;
+        tip.style.left = x + 'px';
+        tip.style.top  = y + 'px';
+    }
+
+    // Event delegation on the grid (survives re-renders)
+    const grid = document.getElementById('cardsGrid');
+    grid.addEventListener('mouseover', e => {
+        const flag = e.target.closest('.card-flag');
+        if (flag) show(flag);
+    });
+    grid.addEventListener('mouseout', e => {
+        if (e.target.closest('.card-flag') && !e.relatedTarget?.closest('.card-flag')) hide();
+    });
+    document.addEventListener('mousemove', position);
+}());
+
+// ── FAMOUS TAG IMAGE TOOLTIP (Wikipedia) ───────────────────────────────────
+(function () {
+    // Strip emoji and parentheticals, return searchable keyword
+    function extractKeyword(rawText) {
+        let t = rawText.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '').trim();
+        t = t.replace(/\(.*?\)/g, '').trim();   // remove (parenthetical)
+        t = t.split(/[&,+\/]/)[0].trim();        // first chunk before &, comma, +, /
+        t = t.replace(/[#!?:;]/g, '').trim();
+        return t;
+    }
+
+    const cache = {};
+
+    const tip = document.createElement('div');
+    tip.id = 'famous-tooltip';
+    tip.innerHTML =
+        '<div class="ft-img-wrap"><span class="ft-loading">⏳</span><img src="" alt="" style="display:none"></div>' +
+        '<div class="ft-body">' +
+          '<div class="ft-title"></div>' +
+          '<div class="ft-desc"></div>' +
+          '<div class="ft-wiki">📖 Wikipedia</div>' +
+        '</div>';
+    document.body.appendChild(tip);
+
+    const ftImgWrap  = tip.querySelector('.ft-img-wrap');
+    const ftImg      = tip.querySelector('.ft-img-wrap img');
+    const ftLoading  = tip.querySelector('.ft-loading');
+    const ftTitle    = tip.querySelector('.ft-title');
+    const ftDesc     = tip.querySelector('.ft-desc');
+    let hideTimer = null;
+    let currentKw = '';
+
+    async function fetchWiki(keyword) {
+        if (cache[keyword]) return cache[keyword];
+        const url = 'https://en.wikipedia.org/api/rest_v1/page/summary/' +
+                    encodeURIComponent(keyword) + '?redirect=true';
+        try {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('not found');
+            const data = await res.json();
+            cache[keyword] = data;
+            return data;
+        } catch { cache[keyword] = null; return null; }
+    }
+
+    async function show(tagEl) {
+        clearTimeout(hideTimer);
+        const raw = tagEl.textContent.trim();
+        const kw  = extractKeyword(raw);
+        if (!kw) return;
+        currentKw = kw;
+
+        // Reset
+        ftTitle.textContent  = kw;
+        ftDesc.textContent   = '';
+        ftImg.style.display  = 'none';
+        ftLoading.style.display = 'block';
+        tip.style.display    = 'flex';
+        requestAnimationFrame(() => tip.classList.add('visible'));
+
+        const data = await fetchWiki(kw);
+        if (currentKw !== kw) return; // stale
+
+        ftLoading.style.display = 'none';
+        if (data) {
+            ftTitle.textContent = data.title || kw;
+            ftDesc.textContent  = data.extract || '';
+            if (data.thumbnail && data.thumbnail.source) {
+                ftImg.src = data.thumbnail.source;
+                ftImg.alt = data.title;
+                ftImg.style.display = 'block';
+                ftImg.onerror = () => {
+                    ftImg.style.display = 'none';
+                    ftImgWrap.style.display = 'none';
+                };
+            } else {
+                ftImgWrap.style.display = 'none';
+            }
+        } else {
+            ftTitle.textContent = raw;
+            ftDesc.textContent  = 'No Wikipedia article found.';
+            ftImgWrap.style.display = 'none';
+        }
+    }
+
+    function hide() {
+        currentKw = '';
+        hideTimer = setTimeout(() => {
+            tip.classList.remove('visible');
+            setTimeout(() => {
+                tip.style.display = 'none';
+                ftImgWrap.style.display = '';
+            }, 180);
+        }, 100);
+    }
+
+    function position(e) {
+        if (tip.style.display === 'none') return;
+        const tw = tip.offsetWidth  || 220;
+        const th = tip.offsetHeight || 200;
+        let x = e.clientX + 18;
+        let y = e.clientY - th / 2;
+        if (x + tw > window.innerWidth  - 12) x = e.clientX - tw - 18;
+        if (y < 10) y = 10;
+        if (y + th > window.innerHeight - 10) y = window.innerHeight - th - 10;
+        tip.style.left = x + 'px';
+        tip.style.top  = y + 'px';
+    }
+
+    const grid = document.getElementById('cardsGrid');
+    grid.addEventListener('mouseover', e => {
+        const tag = e.target.closest('.famous-tag');
+        if (tag) show(tag);
+    });
+    grid.addEventListener('mouseout', e => {
+        if (e.target.closest('.famous-tag') && !e.relatedTarget?.closest('.famous-tag')) hide();
+    });
+    document.addEventListener('mousemove', position);
+}());
+
+// ── TAB SWITCHING (hash-based via sidebar submenu) ───────────────────────
+function activateTab(tab) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    const panel = document.getElementById('tab-' + tab);
+    if (panel) panel.classList.add('active');
+    document.querySelectorAll('.sidebar-submenu a').forEach(a => {
+        const href = a.getAttribute('href');
+        a.classList.toggle('active', href === '#' + tab);
+    });
+}
+
+// Init from URL hash
+(function () {
+    const h = (location.hash || '#info').replace('#', '');
+    activateTab(['info', 'quiz'].includes(h) ? h : 'info');
+}());
+
+window.addEventListener('hashchange', () => {
+    const h = (location.hash || '#info').replace('#', '');
+    activateTab(['info', 'quiz'].includes(h) ? h : 'info');
+});
+
+// Intercept submenu clicks — switch tab without full page reload
+document.querySelectorAll('.sidebar-submenu a').forEach(a => {
+    a.addEventListener('click', e => {
+        const href = a.getAttribute('href');
+        if (href.startsWith('#')) {
+            e.preventDefault();
+            history.pushState(null, '', href);
+            activateTab(href.replace('#', ''));
+        }
+    });
+});
+
+// ── QUIZ LOGIC ─────────────────────────────────────────────────────────────
+(function () {
+    const LETTERS = ['A', 'B', 'C', 'D'];
+    let questions = [];
+    let current   = 0;
+    let score     = 0;
+    let answered  = false;
+    let timerInterval = null;
+    let timeLeft  = 20;
+    let selectedCat = 'all';
+    let totalQ  = 10;
+
+    // ── Category button selection ──────────────────────────────────────────
+    document.querySelectorAll('.quiz-cat-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.quiz-cat-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedCat = btn.dataset.cat;
+        });
+    });
+
+    // ── Helpers ────────────────────────────────────────────────────────────
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function pick(arr, n) { return shuffle(arr).slice(0, n); }
+
+    function randExcept(arr, exclude, n) {
+        return pick(arr.filter(x => x !== exclude), n);
+    }
+
+    function uniqueValues(field) {
+        return [...new Set(COUNTRIES.map(c => c[field]))];
+    }
+
+    // ── Question generators ────────────────────────────────────────────────
+    const generators = {
+        capitals: () => {
+            const c = pick(COUNTRIES, 1)[0];
+            const wrongs = randExcept(uniqueValues('capital'), c.capital, 3);
+            return {
+                category: '🏛️ CAPITALS',
+                question: `What is the capital of <b>${c.name}</b>?`,
+                flag: null,
+                correct: c.capital,
+                options: shuffle([c.capital, ...wrongs])
+            };
+        },
+        capitals_reverse: () => {
+            const c = pick(COUNTRIES, 1)[0];
+            const wrongs = randExcept(COUNTRIES, c, 3);
+            return {
+                category: '🏛️ CAPITALS',
+                question: `<b>${c.capital}</b> is the capital of which country?`,
+                flag: null,
+                correct: c.name,
+                options: shuffle([c.name, ...wrongs.map(x => x.name)])
+            };
+        },
+        currencies: () => {
+            const c = pick(COUNTRIES, 1)[0];
+            const wrongs = randExcept(COUNTRIES.filter(x => x.currency !== c.currency), c, 3);
+            return {
+                category: '💰 CURRENCIES',
+                question: `Which currency is used in <b>${c.name}</b>?`,
+                flag: null,
+                correct: `${c.currency} (${c.code})`,
+                options: shuffle([`${c.currency} (${c.code})`, ...wrongs.map(x => `${x.currency} (${x.code})`)])
+            };
+        },
+        flags: () => {
+            const c = pick(COUNTRIES, 1)[0];
+            const wrongs = randExcept(COUNTRIES, c, 3);
+            return {
+                category: '🏳️ FLAGS',
+                question: 'Which country does this flag belong to?',
+                flag: c.flag,
+                correct: c.name,
+                options: shuffle([c.name, ...wrongs.map(x => x.name)])
+            };
+        },
+        famous: () => {
+            const c = pick(COUNTRIES, 1)[0];
+            const correctFact = pick(c.famous, 1)[0];
+            // Pick 3 wrong facts from other countries
+            const otherFacts = shuffle(
+                COUNTRIES.filter(x => x.name !== c.name).flatMap(x => x.famous)
+            ).filter(f => f !== correctFact).slice(0, 3);
+            return {
+                category: '✨ FAMOUS FOR',
+                question: `<b>${c.name}</b> is famous for which of these?`,
+                flag: c.flag,
+                correct: correctFact,
+                options: shuffle([correctFact, ...otherFacts])
+            };
+        },
+        region: () => {
+            const c = pick(COUNTRIES, 1)[0];
+            const regions = ['Africa', 'Americas', 'Asia', 'Europe', 'Oceania'];
+            const wrongs = regions.filter(r => r !== c.region);
+            return {
+                category: '📍 REGIONS',
+                question: `Which region is <b>${c.name}</b> located in?`,
+                flag: c.flag,
+                correct: c.region,
+                options: shuffle([c.region, ...pick(wrongs, 3)])
+            };
+        }
+    };
+
+    function getCategoryGenerators(cat) {
+        if (cat === 'all')       return [generators.capitals, generators.capitals_reverse, generators.currencies, generators.flags, generators.famous, generators.region];
+        if (cat === 'capitals')  return [generators.capitals, generators.capitals_reverse];
+        if (cat === 'currencies')return [generators.currencies];
+        if (cat === 'flags')     return [generators.flags];
+        if (cat === 'famous')    return [generators.famous];
+        if (cat === 'region')    return [generators.region];
+        return [generators.capitals];
+    }
+
+    function generateQuestions(cat, n) {
+        const gens = getCategoryGenerators(cat);
+        const qs = [];
+        for (let i = 0; i < n; i++) {
+            const gen = gens[i % gens.length];
+            qs.push(gen());
+        }
+        return shuffle(qs);
+    }
+
+    // ── Quiz flow ──────────────────────────────────────────────────────────
+    function startQuiz() {
+        totalQ = parseInt(document.getElementById('quiz-qcount').value);
+        questions = generateQuestions(selectedCat, totalQ);
+        current = 0; score = 0;
+        document.getElementById('quiz-setup').style.display   = 'none';
+        document.getElementById('quiz-results').style.display = 'none';
+        document.getElementById('quiz-game').style.display    = 'block';
+        showQuestion();
+    }
+
+    function showQuestion() {
+        answered = false;
+        const q = questions[current];
+
+        // Progress
+        document.getElementById('quiz-progress-bar').style.width = (current / totalQ * 100) + '%';
+        document.getElementById('q-num').textContent  = `Question ${current + 1} / ${totalQ}`;
+        document.getElementById('q-score').textContent = `🏆 ${score}`;
+
+        // Question card
+        document.getElementById('q-category').textContent = q.category;
+        document.getElementById('q-text').innerHTML = q.question;
+
+        const flagEl = document.getElementById('q-flag-display');
+        if (q.flag) {
+            const iso = flagToCode(q.flag);
+            flagEl.innerHTML = `<img src="https://flagcdn.com/w160/${iso}.png" alt="">`;
+            flagEl.style.display = 'block';
+        } else {
+            flagEl.style.display = 'none';
+            flagEl.innerHTML = '';
+        }
+
+        // Options
+        const optContainer = document.getElementById('quiz-options');
+        optContainer.innerHTML = q.options.map((opt, i) => `
+            <button class="quiz-option" data-opt="${opt.replace(/"/g,'&quot;')}">
+                <span class="opt-letter">${LETTERS[i]}</span>${opt}
+            </button>`).join('');
+        optContainer.querySelectorAll('.quiz-option').forEach(btn => {
+            btn.addEventListener('click', () => selectAnswer(btn, q));
+        });
+
+        // Feedback
+        const fb = document.getElementById('quiz-feedback');
+        fb.style.display = 'none'; fb.className = 'quiz-feedback';
+
+        // Timer
+        startTimer();
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        timeLeft = 20;
+        const timerEl = document.getElementById('q-timer');
+        timerEl.textContent = timeLeft;
+        timerEl.classList.remove('urgent');
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            timerEl.textContent = timeLeft;
+            if (timeLeft <= 5) timerEl.classList.add('urgent');
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                if (!answered) timeUp();
+            }
+        }, 1000);
+    }
+
+    function timeUp() {
+        answered = true;
+        const q = questions[current];
+        // Reveal correct answer
+        document.querySelectorAll('.quiz-option').forEach(btn => {
+            btn.disabled = true;
+            if (btn.dataset.opt === q.correct) btn.classList.add('reveal');
+        });
+        showFeedback(false, `⏰ Time's up! The answer was: <b>${q.correct}</b>`);
+        autoAdvance();
+    }
+
+    function selectAnswer(btn, q) {
+        if (answered) return;
+        answered = true;
+        clearInterval(timerInterval);
+
+        const chosen = btn.dataset.opt;
+        const isCorrect = chosen === q.correct;
+
+        document.querySelectorAll('.quiz-option').forEach(b => {
+            b.disabled = true;
+            if (b.dataset.opt === q.correct) b.classList.add(isCorrect ? 'correct' : 'reveal');
+        });
+        if (!isCorrect) btn.classList.add('wrong');
+
+        if (isCorrect) {
+            score++;
+            document.getElementById('q-score').textContent = `🏆 ${score}`;
+            showFeedback(true, '✅ Correct!');
+        } else {
+            showFeedback(false, `❌ Wrong! The correct answer is: <b>${q.correct}</b>`);
+        }
+        autoAdvance();
+    }
+
+    function autoAdvance() {
+        const fb = document.getElementById('quiz-feedback');
+        let sec = 2;
+        fb.innerHTML += ` <span class="auto-next-count">${sec}</span>`;
+        const countEl = fb.querySelector('.auto-next-count');
+        const iv = setInterval(() => {
+            sec--;
+            if (countEl) countEl.textContent = sec;
+            if (sec <= 0) { clearInterval(iv); nextQuestion(); }
+        }, 1000);
+    }
+
+    function showFeedback(correct, msg) {
+        const fb = document.getElementById('quiz-feedback');
+        fb.innerHTML = msg;
+        fb.className = 'quiz-feedback ' + (correct ? 'correct' : 'wrong');
+        fb.style.display = 'block';
+    }
+
+    function nextQuestion() {
+        current++;
+        if (current >= totalQ) { showResults(); return; }
+        showQuestion();
+    }
+
+    function showResults() {
+        clearInterval(timerInterval);
+        document.getElementById('quiz-game').style.display = 'none';
+        const resultsEl = document.getElementById('quiz-results');
+        resultsEl.style.display = 'block';
+
+        document.getElementById('result-score').textContent = score;
+        document.getElementById('result-denom').textContent = `/ ${totalQ}`;
+
+        const pct = score / totalQ;
+        let title, msg;
+        if      (pct === 1)   { title = '🎉 Perfect Score!'; msg = 'Outstanding! You\'re a world geography genius!'; }
+        else if (pct >= 0.8)  { title = '🌟 Excellent!';     msg = 'Amazing work! You really know your countries.'; }
+        else if (pct >= 0.6)  { title = '👍 Good Job!';      msg = 'Nice effort! A little more study and you\'ll be a pro.'; }
+        else if (pct >= 0.4)  { title = '📚 Keep Learning!'; msg = 'Not bad! Explore the Information tab to learn more.'; }
+        else                  { title = '🌍 Keep Exploring!';msg = 'Every journey starts somewhere! Try again after browsing the info.'; }
+        document.getElementById('result-title').textContent = title;
+        document.getElementById('result-msg').textContent   = msg;
+    }
+
+    // Button events
+    document.getElementById('quiz-start-btn').addEventListener('click', startQuiz);
+    document.getElementById('quiz-play-again').addEventListener('click', startQuiz);
+    document.getElementById('quiz-change-cat').addEventListener('click', () => {
+        clearInterval(timerInterval);
+        document.getElementById('quiz-game').style.display    = 'none';
+        document.getElementById('quiz-results').style.display = 'none';
+        document.getElementById('quiz-setup').style.display   = 'block';
+    });
+}());
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "Olympia Quiz Vietnam 2026",
+    "slug": "olympia-iphone-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#0f172a"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bienth.olympiaquizvn2026"
+    },
+    "android": {
+      "package": "com.bienth.olympiaquizvn2026"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}

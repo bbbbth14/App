@@ -1,38 +1,249 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đường Lên Đỉnh Olympia & Ai Là Triệu Phú - Câu Hỏi Quiz</title>
+    <title>Đường Lên Đỉnh Olympia & Ai Là Triệu Phú - 1500+ Câu Hỏi Quiz</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        /* ==================== COLORFUL OLYMPIA THEME ==================== */
+
+        /* === Global text color fixes (override styles.css global button/input rules) === */
+        .container label,
+        .container strong,
+        .container p,
+        .container div,
+        .container span {
+            color: inherit;
+        }
+        .container select,
+        .container input[type="text"] {
+            color: #2d3748 !important;
+            min-width: auto;
+        }
+        .container button {
+            min-width: auto;
+        }
+
+        .container {
+            position: relative;
+        }
+        .container::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 10% 20%, rgba(255,107,107,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 80%, rgba(78,205,196,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(134,168,231,0.06) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .quiz-container {
             max-width: 900px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
-        .category-header {
-            background: #1e293b;
+        /* ===== TITLE ===== */
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24, #ffc107, #00b894, #0984e3, #6c5ce7);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 6s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6c5ce7;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* ===== STATS BAR ===== */
+        .stats {
+            background: linear-gradient(135deg, #6c5ce7 0%, #0984e3 25%, #00b894 50%, #fdcb6e 75%, #e17055 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite;
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(108,92,231,0.3);
+        }
+
+        .stats span {
+            display: inline-block;
+            margin: 0 20px;
+            font-size: 1.1rem;
+        }
+
+        /* ===== SEARCH ===== */
+        .search-container .search-box input {
+            color: #2d3748;
+            background: #fff;
+        }
+        .search-container .search-box input:focus {
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 3px rgba(108,92,231,0.2);
+        }
+
+        /* ===== CATEGORY FILTER ===== */
+        .category-filter {
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(240,243,255,0.95));
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(108,92,231,0.1);
+            border: 1px solid rgba(108,92,231,0.1);
+        }
+        .category-filter h3 {
+            margin: 0 0 15px;
+            background: linear-gradient(135deg, #6c5ce7, #0984e3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            background: #f8fafc;
+            color: #2d3748;
+            cursor: pointer;
+            font-size: 0.9rem;
+            min-width: auto;
+            box-shadow: none;
+            transition: all 0.3s;
+        }
+        .filter-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-color: #6c5ce7; }
+        .filter-btn.active { color: white; border-color: transparent; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        /* Category-specific filter colors set via JS */
+
+        /* ===== QUIZ MODE BAR ===== */
+        .quiz-mode-bar {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe, #0984e3);
+            background-size: 200% 200%;
+            animation: gradientShift 6s ease infinite;
             color: white;
             padding: 15px 20px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: 0 6px 20px rgba(108,92,231,0.3);
+        }
+        .quiz-mode-bar button {
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
             border-radius: 10px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            min-width: auto;
+            box-shadow: none;
+            transition: all 0.3s;
+        }
+        .quiz-mode-bar button:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+        .quiz-mode-bar .score { font-size: 1.2rem; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+        /* ===== CATEGORY HEADERS (colorful) ===== */
+        .category-header {
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
             margin: 30px 0 20px;
             font-size: 1.3rem;
             font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
         }
-
-        .category-header:first-of-type {
-            margin-top: 0;
+        .category-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20px;
+            width: 100px;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(15deg);
         }
+        .category-header:first-of-type { margin-top: 0; }
 
+        /* Category color classes */
+        .cat-ls_vn  { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .cat-ls_tg  { background: linear-gradient(135deg, #e67e22, #d35400); }
+        .cat-dl_vn  { background: linear-gradient(135deg, #27ae60, #219a52); }
+        .cat-dl_tg  { background: linear-gradient(135deg, #2ecc71, #1abc9c); }
+        .cat-vatly  { background: linear-gradient(135deg, #f39c12, #f1c40f); }
+        .cat-hoahoc { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .cat-sinhhoc{ background: linear-gradient(135deg, #00b894, #00cec9); }
+        .cat-toan   { background: linear-gradient(135deg, #0984e3, #74b9ff); }
+        .cat-vanhoc { background: linear-gradient(135deg, #fd79a8, #e84393); }
+        .cat-tienganh{background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
+        .cat-thethao{ background: linear-gradient(135deg, #00b894, #55efc4); }
+        .cat-amnhac { background: linear-gradient(135deg, #e17055, #fab1a0); }
+        .cat-congnghe{background: linear-gradient(135deg, #636e72, #2d3436); }
+        .cat-thienvan{background: linear-gradient(135deg, #2c3e50, #3498db); }
+        .cat-tongquat{background: linear-gradient(135deg, #6c5ce7, #fd79a8); }
+
+        /* ===== QUIZ ITEMS ===== */
         .quiz-item {
             background: #fff;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 20px;
             margin-bottom: 15px;
             border: 1px solid #e2e8f0;
+            border-left: 5px solid #6c5ce7;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
         }
+        .quiz-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Category-specific left borders */
+        .quiz-item[data-cat="ls_vn"]  { border-left-color: #e74c3c; }
+        .quiz-item[data-cat="ls_tg"]  { border-left-color: #e67e22; }
+        .quiz-item[data-cat="dl_vn"]  { border-left-color: #27ae60; }
+        .quiz-item[data-cat="dl_tg"]  { border-left-color: #2ecc71; }
+        .quiz-item[data-cat="vatly"]  { border-left-color: #f39c12; }
+        .quiz-item[data-cat="hoahoc"] { border-left-color: #9b59b6; }
+        .quiz-item[data-cat="sinhhoc"]{ border-left-color: #00b894; }
+        .quiz-item[data-cat="toan"]   { border-left-color: #0984e3; }
+        .quiz-item[data-cat="vanhoc"] { border-left-color: #fd79a8; }
+        .quiz-item[data-cat="tienganh"]{ border-left-color: #6c5ce7; }
+        .quiz-item[data-cat="thethao"]{ border-left-color: #00b894; }
+        .quiz-item[data-cat="amnhac"] { border-left-color: #e17055; }
+        .quiz-item[data-cat="congnghe"]{ border-left-color: #636e72; }
+        .quiz-item[data-cat="thienvan"]{ border-left-color: #2c3e50; }
+        .quiz-item[data-cat="tongquat"]{ border-left-color: #6c5ce7; }
 
         .quiz-item .question {
             color: #2d3748;
@@ -46,6 +257,7 @@
             content: '❓ ';
         }
 
+        /* ===== OPTIONS ===== */
         .options {
             list-style: none;
             padding: 0;
@@ -55,32 +267,36 @@
         .options li {
             padding: 12px 15px;
             margin: 8px 0;
-            background: #f8fafc;
-            border-radius: 8px;
+            background: linear-gradient(135deg, #f8f9ff, #f0f4ff);
+            border-radius: 10px;
             border: 2px solid #e2e8f0;
+            color: #2d3748;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
 
         .options li:hover {
-            background: #edf2f7;
-            border-color: #3b82f6;
+            background: linear-gradient(135deg, #e8ecff, #dbeafe);
+            border-color: #6c5ce7;
+            transform: translateX(5px);
         }
 
         .options li.selected-correct {
-            background: #dcfce7;
-            border-color: #16a34a;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border-color: #28a745;
             font-weight: 600;
+            animation: correctPop 0.5s ease;
         }
 
         .options li.selected-wrong {
-            background: #fee2e2;
-            border-color: #dc2626;
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            border-color: #dc3545;
+            animation: wrongShake 0.5s ease;
         }
 
         .options li.show-correct {
-            background: #dcfce7;
-            border-color: #16a34a;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border-color: #28a745;
             font-weight: 600;
             animation: pulse 0.5s;
         }
@@ -88,13 +304,30 @@
         .options li.disabled {
             cursor: not-allowed;
         }
+        .options li.disabled:hover {
+            transform: none;
+        }
 
+        @keyframes correctPop {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            50% { transform: translateX(8px); }
+            75% { transform: translateX(-4px); }
+        }
+
+        /* ===== ANSWER BOX ===== */
         .answer-box {
-            background: #ecfdf5;
-            border-left: 4px solid #28a745;
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border-left: 4px solid #10b981;
             padding: 15px;
             margin-top: 15px;
-            border-radius: 0 8px 8px 0;
+            border-radius: 0 12px 12px 0;
             display: none;
         }
 
@@ -104,76 +337,539 @@
         }
 
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-                box-shadow: 0 0 15px rgba(22, 163, 74, 0.5);
-            }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); box-shadow: 0 0 20px rgba(16,185,129,0.4); }
         }
 
         .answer-box strong {
-            color: #155724;
+            color: #065f46;
             font-size: 1.1rem;
         }
 
         .answer-box .explanation {
-            color: #155724;
+            color: #047857;
             margin-top: 8px;
             font-size: 0.95rem;
         }
 
+        /* ===== DIFFICULTY BADGES ===== */
         .difficulty {
             display: inline-block;
-            padding: 4px 10px;
-            border-radius: 15px;
+            padding: 4px 12px;
+            border-radius: 20px;
             font-size: 0.8rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .difficulty.easy { background: #d4edda; color: #155724; }
-        .difficulty.medium { background: #fff3cd; color: #856404; }
-        .difficulty.hard { background: #f8d7da; color: #721c24; }
-
-        h1 {
-            text-align: center;
-            color: #0f172a;
-            margin-bottom: 10px;
+        .difficulty.easy {
+            background: linear-gradient(135deg, #00b894, #55efc4);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0,184,148,0.3);
+        }
+        .difficulty.medium {
+            background: linear-gradient(135deg, #fdcb6e, #f39c12);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(243,156,18,0.3);
+        }
+        .difficulty.hard {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(238,90,36,0.3);
         }
 
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
-        }
-
-        .stats {
-            background: #1e293b;
+        /* ===== Q NUMBER (colorful per category) ===== */
+        .q-number {
+            display: inline-block;
             color: white;
-            padding: 20px;
+            width: 34px;
+            height: 34px;
+            line-height: 34px;
+            text-align: center;
+            border-radius: 50%;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-right: 8px;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            box-shadow: 0 3px 8px rgba(108,92,231,0.3);
+        }
+
+        /* ===== PAGINATION ===== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .pagination button {
+            padding: 10px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: white;
+            color: #2d3748;
+            cursor: pointer;
+            font-size: 0.95rem;
+            min-width: auto;
+            box-shadow: none;
+            transition: all 0.3s;
+        }
+        .pagination button:hover { border-color: #6c5ce7; background: #f0edff; color: #2d3748; transform: translateY(-2px); }
+        .pagination button.active {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white !important;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(108,92,231,0.3);
+        }
+        .pagination button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; color: #999; }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-container {
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(240,243,255,0.95));
+            border: 1px solid rgba(108,92,231,0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(108,92,231,0.08);
+        }
+        .progress-container h3 {
+            background: linear-gradient(135deg, #6c5ce7, #e84393);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #6c5ce7, #0984e3, #00b894, #fdcb6e, #e17055) !important;
+            background-size: 200% 100%;
+            animation: progressGlow 3s ease infinite;
+            border-radius: 20px;
+            transition: width 0.5s ease;
+        }
+        @keyframes progressGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ===== EXPORT/MANAGEMENT BOX ===== */
+        .management-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(253,245,255,0.95));
+            border: 1px solid rgba(108,92,231,0.1);
+        }
+
+        /* ===== PAGE NAVIGATION ===== */
+        .page-navigation {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe) !important;
+            color: white;
+            border: none !important;
+        }
+        .page-navigation strong,
+        .page-navigation span {
+            color: white !important;
+        }
+
+        /* ===== CONFETTI DECORATION (subtle) ===== */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        /* ===== BOOKMARK STAR ===== */
+        .bookmark-btn {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 2px 6px;
+            min-width: auto;
+            box-shadow: none;
+            transition: transform 0.2s;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            opacity: 0.4;
+        }
+        .bookmark-btn:hover { transform: scale(1.3); opacity: 1; }
+        .bookmark-btn.bookmarked { opacity: 1; }
+        .quiz-item { position: relative; }
+
+        /* ===== EXAM TIMER ===== */
+        .exam-timer {
+            display: none;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 12px 20px;
             border-radius: 12px;
             text-align: center;
-            margin-bottom: 30px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(238,90,36,0.3);
+            letter-spacing: 1px;
+        }
+        .exam-timer.warning { animation: timerPulse 1s infinite; }
+        @keyframes timerPulse {
+            0%,100% { box-shadow: 0 4px 15px rgba(238,90,36,0.3); }
+            50% { box-shadow: 0 4px 25px rgba(238,90,36,0.6); transform: scale(1.02); }
+        }
+        .exam-timer.active { display: block; }
+
+        /* ===== CUSTOM COUNT INPUT ===== */
+        .custom-count-input {
+            width: 55px;
+            padding: 6px 8px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: auto !important;
+        }
+        .custom-count-input::placeholder { color: rgba(255,255,255,0.5); }
+
+        /* ===== STATISTICS DASHBOARD ===== */
+        .stats-dashboard {
+            background: linear-gradient(135deg, rgba(255,255,255,0.97), rgba(240,243,255,0.97));
+            border: 1px solid rgba(108,92,231,0.1);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(108,92,231,0.08);
+        }
+        .stats-dashboard h3 {
+            background: linear-gradient(135deg, #6c5ce7, #0984e3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0 0 15px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #6c5ce7;
+            transition: transform 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-card .stat-val {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6c5ce7;
+        }
+        .stat-card .stat-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        .cat-accuracy-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 4px 0;
+            font-size: 0.85rem;
+            color: #2d3748;
+        }
+        .cat-accuracy-bar .bar-bg {
+            flex: 1;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .cat-accuracy-bar .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s;
         }
 
-        .stats span {
-            display: inline-block;
-            margin: 0 20px;
-            font-size: 1.1rem;
+        /* ===== KEYBOARD SHORTCUTS PANEL ===== */
+        .shortcut-hints {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: rgba(30,41,59,0.95);
+            color: white;
+            padding: 18px 22px;
+            border-radius: 14px;
+            font-size: 0.88rem;
+            line-height: 2;
+            z-index: 9999;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            max-width: 320px;
+        }
+        .shortcut-hints.show { display: block; animation: slideDown 0.2s ease-out; }
+        .shortcut-hints kbd {
+            background: rgba(255,255,255,0.15);
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* ===== DARK MODE ===== */
+        body.dark-mode .container {
+            background: rgba(30,41,59,0.95) !important;
+            color: #e2e8f0;
+        }
+        body.dark-mode .quiz-item {
+            background: #1e293b;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+        body.dark-mode .quiz-item .question { color: #e2e8f0; }
+        body.dark-mode .options li {
+            background: linear-gradient(135deg, #1e293b, #263043);
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+        body.dark-mode .options li:hover {
+            background: linear-gradient(135deg, #263043, #2d3a50);
+            border-color: #6c5ce7;
+        }
+        body.dark-mode .category-filter,
+        body.dark-mode .stats-dashboard,
+        body.dark-mode .progress-container,
+        body.dark-mode .search-container {
+            background: rgba(30,41,59,0.95) !important;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+        body.dark-mode .stat-card {
+            background: #263043;
+            color: #e2e8f0;
+        }
+        body.dark-mode .pagination button {
+            background: #1e293b;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+        body.dark-mode .pagination button:hover { background: #263043; }
+        body.dark-mode .answer-box { background: linear-gradient(135deg, #1a332b, #1e3a30); }
+        body.dark-mode .answer-box strong { color: #6ee7b7; }
+        body.dark-mode .answer-box .explanation { color: #a7f3d0; }
+        body.dark-mode select,
+        body.dark-mode input[type="text"] { background: #1e293b !important; color: #e2e8f0 !important; border-color: #334155; }
+        body.dark-mode .filter-btn { background: #1e293b; color: #e2e8f0; border-color: #334155; }
+        body.dark-mode label, body.dark-mode strong { color: #e2e8f0; }
+        body.dark-mode .management-box,
+        body.dark-mode .exam-review-modal .modal-content { background: #1e293b; color: #e2e8f0; }
+        body.dark-mode .leaderboard-entry { background: #263043; color: #e2e8f0; }
+        body.dark-mode .toast { background: #1e293b; color: #e2e8f0; border-color: #334155; }
+
+        /* ===== SMOOTH TRANSITIONS ===== */
+        body { transition: background 0.3s ease, color 0.3s ease; }
+        .container, .quiz-item, .options li, .category-filter, .stats-dashboard,
+        .progress-container, .search-container, .stat-card, .pagination button,
+        .filter-btn, .answer-box, select, input[type="text"] {
+            transition: all 0.3s ease;
+        }
+
+        /* ===== TOAST NOTIFICATIONS ===== */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .toast {
+            pointer-events: auto;
+            background: white;
+            border-left: 4px solid #6c5ce7;
+            border-radius: 12px;
+            padding: 14px 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: toastIn 0.4s ease-out;
+            min-width: 280px;
+            max-width: 380px;
+        }
+        .toast.success { border-left-color: #10b981; }
+        .toast.error { border-left-color: #ef4444; }
+        .toast.info { border-left-color: #0984e3; }
+        .toast.warning { border-left-color: #f59e0b; }
+        .toast.removing { animation: toastOut 0.3s ease-in forwards; }
+        .toast-icon { font-size: 1.3rem; flex-shrink: 0; }
+        @keyframes toastIn { from { opacity:0; transform:translateX(80px); } to { opacity:1; transform:translateX(0); } }
+        @keyframes toastOut { from { opacity:1; transform:translateX(0); } to { opacity:0; transform:translateX(80px); } }
+
+        /* ===== CONFETTI ===== */
+        .confetti-container {
+            position:fixed; top:0; left:0; width:100%; height:100%;
+            pointer-events:none; z-index:99998; overflow:hidden;
+        }
+        .confetti-piece {
+            position:absolute; top:-20px;
+            width:10px; height:10px;
+            animation: confettiFall 3s ease-out forwards;
+        }
+        @keyframes confettiFall {
+            0% { transform:translateY(0) rotate(0deg); opacity:1; }
+            100% { transform:translateY(100vh) rotate(720deg); opacity:0; }
+        }
+
+        /* ===== STREAK BADGE ===== */
+        .streak-badge {
+            display:inline-flex; align-items:center; gap:6px;
+            background:linear-gradient(135deg,#f59e0b,#ef4444);
+            color:white; padding:6px 14px; border-radius:20px;
+            font-weight:700; font-size:0.95rem;
+            box-shadow:0 3px 10px rgba(245,158,11,0.3);
+            animation: streakPulse 2s ease infinite;
+        }
+        @keyframes streakPulse {
+            0%,100% { box-shadow:0 3px 10px rgba(245,158,11,0.3); }
+            50% { box-shadow:0 3px 20px rgba(245,158,11,0.5); }
+        }
+
+        /* ===== EXAM REVIEW MODAL ===== */
+        .exam-review-modal {
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.6); z-index:99997;
+            justify-content:center; align-items:center; padding:20px;
+            backdrop-filter:blur(4px);
+        }
+        .exam-review-modal.show { display:flex; animation:slideDown 0.3s ease-out; }
+        .exam-review-modal .modal-content {
+            background:white; border-radius:20px; padding:30px;
+            max-width:600px; width:100%; max-height:80vh; overflow-y:auto;
+            box-shadow:0 20px 60px rgba(0,0,0,0.3);
+        }
+        .exam-review-modal h2 {
+            text-align:center; margin:0 0 5px;
+            background:linear-gradient(135deg,#6c5ce7,#0984e3);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+        }
+        .review-score { text-align:center; font-size:2.5rem; font-weight:800; margin:10px 0; }
+        .review-score.good { color:#10b981; }
+        .review-score.ok { color:#f59e0b; }
+        .review-score.bad { color:#ef4444; }
+        .review-item {
+            padding:12px; margin:8px 0; border-radius:10px;
+            border-left:4px solid #e2e8f0; font-size:0.9rem;
+        }
+        .review-item.correct { border-left-color:#10b981; background:#f0fdf4; }
+        .review-item.wrong { border-left-color:#ef4444; background:#fef2f2; }
+        .review-item .review-q { font-weight:600; margin-bottom:4px; }
+        .review-item .review-a { font-size:0.85rem; color:#64748b; }
+        .review-close {
+            display:block; margin:20px auto 0; padding:12px 30px;
+            background:linear-gradient(135deg,#6c5ce7,#a29bfe);
+            color:white; border:none; border-radius:10px;
+            font-size:1rem; font-weight:600; cursor:pointer; min-width:auto;
+        }
+        .review-close:hover { transform:translateY(-2px); box-shadow:0 4px 15px rgba(108,92,231,0.3); }
+
+        /* ===== LEADERBOARD ===== */
+        .leaderboard { margin-top:15px; }
+        .leaderboard h4 { margin:0 0 10px; color:#6c5ce7; }
+        .leaderboard-entry {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:10px 14px; margin:4px 0; border-radius:10px;
+            background:#f8f9ff; font-size:0.9rem;
+        }
+        .leaderboard-entry:first-child { background:linear-gradient(135deg,#fef3c7,#fde68a); font-weight:700; }
+        .leaderboard-entry .rank { width:30px; font-weight:700; color:#6c5ce7; }
+        .leaderboard-entry .lb-score { font-weight:700; color:#10b981; }
+
+        /* ===== SHARE BUTTON ===== */
+        .share-btn {
+            background:none; border:none; cursor:pointer;
+            font-size:1rem; opacity:0.4; position:absolute;
+            top:12px; right:44px; padding:2px 6px;
+            min-width:auto; box-shadow:none; transition:all 0.2s;
+        }
+        .share-btn:hover { opacity:1; transform:scale(1.2); }
+
+        /* ===== DARK MODE TOGGLE BUTTON ===== */
+        .dark-mode-fab {
+            position:fixed; bottom:20px; right:20px; z-index:9998;
+            width:50px; height:50px; border-radius:50%;
+            background:linear-gradient(135deg,#6c5ce7,#a29bfe);
+            color:white; border:none; font-size:1.4rem;
+            cursor:pointer; box-shadow:0 4px 15px rgba(108,92,231,0.4);
+            display:flex; align-items:center; justify-content:center;
+            transition:all 0.3s;
+        }
+        .dark-mode-fab:hover { transform:scale(1.1) rotate(15deg); }
+        body.dark-mode .dark-mode-fab { background:linear-gradient(135deg,#f59e0b,#fbbf24); }
+
+        /* ===== CATEGORY PROGRESS ON FILTER BUTTONS ===== */
+        .filter-btn { position:relative; overflow:hidden; }
+        .filter-btn .cat-prog {
+            position:absolute; bottom:0; left:0; height:3px;
+            background:rgba(255,255,255,0.6); border-radius:0 0 20px 20px;
+            transition:width 0.5s;
+        }
+        .filter-btn:not(.active) .cat-prog {
+            background:rgba(108,92,231,0.3);
+        }
+
+        /* ===== MULTI-SELECT CATEGORY ===== */
+        .filter-btn.multi-active {
+            color:white !important; border-color:transparent !important;
+            transform:translateY(-2px); box-shadow:0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        /* ===== MOBILE RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            h1 { font-size:1.4rem; }
+            .subtitle { font-size:0.9rem; }
+            .stats { padding:12px; flex-wrap:wrap; }
+            .stats span { margin:4px 10px; font-size:0.9rem; }
+            .quiz-mode-bar { flex-direction:column; padding:12px; gap:8px; }
+            .quiz-mode-bar > div:first-child { display:flex; flex-wrap:wrap; gap:6px; }
+            .quiz-mode-bar button { padding:8px 12px; font-size:0.85rem; }
+            .custom-count-input { width:42px; padding:4px 6px; font-size:0.85rem; }
+            .category-filter { padding:12px; }
+            .filter-btn { padding:6px 10px; font-size:0.8rem; }
+            .quiz-item { padding:14px; }
+            .quiz-item .question { font-size:1rem; }
+            .options li { padding:10px 12px; font-size:0.9rem; }
+            .pagination { gap:4px; }
+            .pagination button { padding:8px 12px; font-size:0.85rem; }
+            .stats-grid { grid-template-columns:repeat(2,1fr); }
+            .stat-card { padding:10px; }
+            .stat-card .stat-val { font-size:1.2rem; }
+            .shortcut-hints { display:none !important; }
+            .bookmark-btn { font-size:1.1rem; top:8px; right:8px; }
+            .share-btn { top:8px; right:36px; }
+            .toast { min-width:240px; max-width:calc(100vw - 40px); font-size:0.88rem; padding:10px 14px; }
+            .exam-review-modal .modal-content { padding:20px; }
+            .review-score { font-size:2rem; }
+            .exam-timer { font-size:1.1rem; padding:10px 15px; }
+        }
+        @media (max-width: 480px) {
+            h1 { font-size:1.2rem; }
+            .stats span { display:block; margin:4px 0; }
+            .quiz-mode-bar button { padding:7px 10px; font-size:0.8rem; }
+            .stats-grid { grid-template-columns:1fr 1fr; gap:8px; }
+            .pagination button { padding:6px 10px; font-size:0.8rem; }
+            .cat-accuracy-bar span:first-child { width:80px !important; font-size:0.7rem !important; }
         }
     </style>
 </head>
@@ -193,10 +889,31 @@
                 <li><a href="split.html"><span class="sidebar-icon">🧾</span> Split Money</a></li>
                 <li><a href="c-interview.html"><span class="sidebar-icon">💻</span> C Q&A</a></li>
                 <li><a href="embedded-interview.html"><span class="sidebar-icon">🔧</span> Embedded</a></li>
-                <li><a href="linux-interview.html"><span class="sidebar-icon">🐧</span> Linux/Driver</a></li>
+                <li class="has-submenu">
+                    <a href="linux-interview.html#knowledge"><span class="sidebar-icon">🐧</span> Linux/Driver <span class="submenu-arrow">▾</span></a>
+                    <ul class="sidebar-submenu">
+                        <li><a href="linux-interview.html#knowledge">📖 Knowledge</a></li>
+                        <li><a href="linux-interview.html#quiz">🎯 Quiz</a></li>
+                    </ul>
+                </li>
                 <li><a href="olympia-quiz.html" class="active"><span class="sidebar-icon">🏆</span> Olympia Quiz</a></li>
+                <li><a href="millionaire.html"><span class="sidebar-icon">💰</span> Ai Là Triệu Phú</a></li>
                 <li><a href="cpp-challenge.html"><span class="sidebar-icon">🚀</span> C/C++ Challenge</a></li>
                 <li><a href="rust.html"><span class="sidebar-icon">🦀</span> Rust</a></li>
+            <li class="has-submenu">
+                <a href="countries.html"><span class="sidebar-icon">🌍</span> World Countries <span class="submenu-arrow">▾</span></a>
+                <ul class="sidebar-submenu">
+                    <li><a href="countries.html#info">📋 Information</a></li>
+                    <li><a href="countries.html#quiz">🎯 Quiz</a></li>
+                </ul>
+            </li>
+            <li class="has-submenu">
+                <a href="vietnam-unesco.html"><span class="sidebar-icon">🇻🇳</span> VN &amp; UNESCO <span class="submenu-arrow">▾</span></a>
+                <ul class="sidebar-submenu">
+                    <li><a href="vietnam-unesco.html#info">📋 Thông tin</a></li>
+                    <li><a href="vietnam-unesco.html#quiz">🎯 Quiz</a></li>
+                </ul>
+            </li>
             </ul>
         </aside>
 
@@ -220,21 +937,69 @@
 
     <div class="container">
         <h1>🏆 Đường Lên Đỉnh Olympia & Ai Là Triệu Phú</h1>
-        <p class="subtitle">Tổng hợp câu hỏi kiến thức tổng hợp - Lịch sử, Địa lý, Khoa học, Văn học, và nhiều hơn nữa!</p>
+        <p class="subtitle">Tổng hợp 1500+ câu hỏi kiến thức tổng hợp - Cập nhật đến 2026!</p>
 
-        <div class="stats">
-            <span>📚 200+ Câu hỏi</span>
-            <span>🎯 Nhiều chủ đề</span>
+        <div class="stats" id="mainStats">
+            <span>📚 <strong id="totalQCount">1500</strong> Câu hỏi</span>
+            <span>🎯 <strong id="catCount">15</strong> Chủ đề</span>
             <span>⭐ Đáp án chi tiết</span>
+            <span>✅ <strong id="answeredCount">0</strong> Đã trả lời</span>
+            <span id="streakDisplay"></span>
         </div>
 
         <!-- Search Container -->
         <div class="search-container">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm câu hỏi... (Press Ctrl+K or Cmd+K)">
+                <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm câu hỏi... (Ctrl+K)">
                 <span class="search-icon">🔍</span>
             </div>
             <div class="search-stats" id="searchStats"></div>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="category-filter">
+            <h3>📂 Lọc theo Chủ đề</h3>
+            <div class="filter-buttons" id="filterButtons">
+                <button class="filter-btn active" data-cat="all">Tất cả</button>
+            </div>
+        </div>
+
+        <!-- Quiz Mode -->
+        <div class="quiz-mode-bar">
+            <div>
+                <strong>🎮 Chế độ:</strong>
+                <button id="btnBrowse" onclick="setMode('browse')" style="background:rgba(255,255,255,0.35)">📖 Duyệt</button>
+                <button id="btnRandom" onclick="setMode('random')">🎲 Ngẫu nhiên <input type="number" class="custom-count-input" id="randomCount" value="50" min="5" max="500" onclick="event.stopPropagation()"></button>
+                <button id="btnExam" onclick="setMode('exam')">📝 Thi thử <input type="number" class="custom-count-input" id="examCount" value="30" min="5" max="100" onclick="event.stopPropagation()"></button>
+                <button id="btnFavorites" onclick="setMode('favorites')">⭐ Yêu thích</button>
+                <button id="btnWrong" onclick="setMode('wrong')">❌ Làm lại sai</button>
+                <button id="btnUnanswered" onclick="setMode('unanswered')">🆕 Chưa trả lời</button>
+            </div>
+            <div class="score" id="scoreDisplay"></div>
+        </div>
+
+        <!-- Exam Timer -->
+        <div class="exam-timer" id="examTimer">⏱️ <span id="timerDisplay">00:00</span></div>
+
+        <!-- Page Size and Difficulty Filter -->
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px">
+            <div>
+                <label><strong>Độ khó:</strong></label>
+                <select id="diffFilter" onchange="applyFilters()" style="padding:8px 12px;border-radius:8px;border:2px solid #e2e8f0;color:#2d3748;background:#fff;min-width:auto">
+                    <option value="all">Tất cả</option>
+                    <option value="easy">Dễ</option>
+                    <option value="medium">Trung bình</option>
+                    <option value="hard">Khó</option>
+                </select>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+                <label><strong>Hiển thị:</strong></label>
+                <select id="pageSize" onchange="applyFilters()" style="padding:8px 12px;border-radius:8px;border:2px solid #e2e8f0;color:#2d3748;background:#fff;min-width:auto">
+                    <option value="25">25 câu/trang</option>
+                    <option value="50" selected>50 câu/trang</option>
+                    <option value="100">100 câu/trang</option>
+                </select>
+            </div>
         </div>
 
         <!-- Progress Tracking -->
@@ -257,859 +1022,839 @@
                     <div class="progress-stat-label">Hoàn Thành</div>
                 </div>
             </div>
-            <button onclick="window.progressTracker?.reset()" style="margin-top: 10px; padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">Đặt Lại Tiến Độ</button>
+            <button onclick="resetProgress()" style="margin-top:10px;padding:8px 16px;background:#ef4444;color:white;border:none;border-radius:6px;cursor:pointer;min-width:auto">Đặt Lại Tiến Độ</button>
+        </div>
+
+        <!-- Statistics Dashboard -->
+        <div class="stats-dashboard" id="statsDashboard">
+            <h3>📈 Thống Kê Chi Tiết</h3>
+            <div class="stats-grid" id="statsGrid"></div>
+            <div style="margin-top:15px">
+                <strong style="font-size:0.95rem">📊 Độ chính xác theo chủ đề:</strong>
+                <div id="catAccuracyBars" style="margin-top:8px"></div>
+            </div>
         </div>
 
         <!-- Export/Import Buttons -->
-        <div style="background: white; padding: 15px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); text-align: center;">
+        <div style="background:white;padding:15px;border-radius:12px;margin-bottom:25px;box-shadow:0 4px 12px rgba(0,0,0,0.08);text-align:center;">
             <h3>💾 Quản Lý</h3>
-            <button onclick="window.print()" style="margin: 5px; padding: 10px 20px; background: #8b5cf6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">🖨️ In Trang</button>
+            <button onclick="window.print()" style="margin:5px;padding:10px 20px;background:#8b5cf6;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;min-width:auto">🖨️ In Trang</button>
+            <button onclick="exportStats()" style="margin:5px;padding:10px 20px;background:#0984e3;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;min-width:auto">📊 Xuất Thống Kê</button>
+            <div class="leaderboard" id="leaderboardSection">
+                <h4>🏅 Bảng Xếp Hạng Thi Thử</h4>
+                <div id="leaderboardList"><em style="color:#94a3b8">Chưa có kết quả nào.</em></div>
+            </div>
         </div>
 
-        <div class="quiz-container">
+        <!-- Top Pagination -->
+        <div class="pagination" id="topPagination"></div>
 
-            <!-- LỊCH SỬ VIỆT NAM -->
-            <div class="category-header">🇻🇳 Lịch Sử Việt Nam</div>
+        <!-- Quiz Container - dynamically filled -->
+        <div class="quiz-container" id="quizContainer"></div>
 
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Ai là vị vua đầu tiên của nhà Lý?</div>
-                <ul class="options">
-                    <li>A. Lý Thái Tổ</li>
-                    <li class="correct">B. Lý Công Uẩn</li>
-                    <li>C. Lý Thái Tông</li>
-                    <li>D. Lý Thánh Tông</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Lý Công Uẩn</strong>
-                    <div class="explanation">Lý Công Uẩn (974-1028) là người sáng lập ra nhà Lý, lên ngôi năm 1009, sau đó đổi tên thành Lý Thái Tổ. Ông cũng là người dời đô từ Hoa Lư về Thăng Long (Hà Nội ngày nay).</div>
-                </div>
-            </div>
+        <!-- Bottom Pagination -->
+        <div class="pagination" id="bottomPagination"></div>
 
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">Chiến thắng Bạch Đằng năm 938 do ai lãnh đạo?</div>
-                <ul class="options">
-                    <li>A. Trần Hưng Đạo</li>
-                    <li>B. Lê Hoàn</li>
-                    <li class="correct">C. Ngô Quyền</li>
-                    <li>D. Đinh Bộ Lĩnh</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: C - Ngô Quyền</strong>
-                    <div class="explanation">Ngô Quyền đã lãnh đạo chiến thắng Bạch Đằng năm 938, đánh bại quân Nam Hán, chấm dứt hơn 1000 năm Bắc thuộc, mở ra thời kỳ độc lập tự chủ của dân tộc Việt Nam.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Thủ đô đầu tiên của nước Việt Nam Dân chủ Cộng hòa là thành phố nào?</div>
-                <ul class="options">
-                    <li class="correct">A. Hà Nội</li>
-                    <li>B. Huế</li>
-                    <li>C. Sài Gòn</li>
-                    <li>D. Hải Phòng</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: A - Hà Nội</strong>
-                    <div class="explanation">Ngày 2/9/1945, Chủ tịch Hồ Chí Minh đọc Tuyên ngôn Độc lập tại Quảng trường Ba Đình, Hà Nội, khai sinh nước Việt Nam Dân chủ Cộng hòa với thủ đô là Hà Nội.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">Cuộc khởi nghĩa Lam Sơn do ai lãnh đạo?</div>
-                <ul class="options">
-                    <li>A. Trần Hưng Đạo</li>
-                    <li class="correct">B. Lê Lợi</li>
-                    <li>C. Quang Trung</li>
-                    <li>D. Nguyễn Huệ</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Lê Lợi</strong>
-                    <div class="explanation">Cuộc khởi nghĩa Lam Sơn (1418-1427) do Lê Lợi lãnh đạo đã đánh đuổi quân Minh xâm lược, giành lại độc lập cho dân tộc. Sau đó, Lê Lợi lên ngôi vua, lấy hiệu là Lê Thái Tổ.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty hard">Khó</span>
-                <div class="question">Nhà Trần tồn tại trong khoảng thời gian nào?</div>
-                <ul class="options">
-                    <li>A. 1010-1225</li>
-                    <li class="correct">B. 1225-1400</li>
-                    <li>C. 1400-1428</li>
-                    <li>D. 1428-1527</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - 1225-1400</strong>
-                    <div class="explanation">Nhà Trần được thành lập năm 1225 khi Trần Cảnh lên ngôi và tồn tại đến năm 1400 khi Hồ Quý Ly cướp ngôi lập ra nhà Hồ. Đây là thời kỳ hoàng kim với 3 lần đánh thắng quân Nguyên-Mông.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">Trận Điện Biên Phủ diễn ra vào năm nào?</div>
-                <ul class="options">
-                    <li>A. 1953</li>
-                    <li class="correct">B. 1954</li>
-                    <li>C. 1955</li>
-                    <li>D. 1956</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - 1954</strong>
-                    <div class="explanation">Chiến dịch Điện Biên Phủ diễn ra từ 13/3 đến 7/5/1954, kết thúc bằng chiến thắng lịch sử của quân đội Việt Nam, buộc Pháp phải ký Hiệp định Genève.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Vua Quang Trung tên thật là gì?</div>
-                <ul class="options">
-                    <li>A. Nguyễn Nhạc</li>
-                    <li class="correct">B. Nguyễn Huệ</li>
-                    <li>C. Nguyễn Lữ</li>
-                    <li>D. Nguyễn Ánh</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Nguyễn Huệ</strong>
-                    <div class="explanation">Nguyễn Huệ (1753-1792) là anh hùng dân tộc, lãnh đạo phong trào Tây Sơn. Sau khi đánh thắng quân Thanh năm 1789, ông lên ngôi vua lấy hiệu là Quang Trung.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty hard">Khó</span>
-                <div class="question">Trần Hưng Đạo viết bộ binh thư nào nổi tiếng?</div>
-                <ul class="options">
-                    <li>A. Bình Ngô đại cáo</li>
-                    <li class="correct">B. Binh thư yếu lược</li>
-                    <li>C. Hịch tướng sĩ</li>
-                    <li>D. Cả B và C</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: D - Cả B và C</strong>
-                    <div class="explanation">Trần Hưng Đạo viết "Binh thư yếu lược" là bộ sách về quân sự và "Hịch tướng sĩ" là bài hịch kêu gọi tướng sĩ đánh giặc. Bình Ngô đại cáo là của Nguyễn Trãi.</div>
-                </div>
-            </div>
-
-            <!-- ĐỊA LÝ VIỆT NAM -->
-            <div class="category-header">🗺️ Địa Lý Việt Nam</div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Việt Nam có bao nhiêu tỉnh thành?</div>
-                <ul class="options">
-                    <li>A. 58</li>
-                    <li>B. 61</li>
-                    <li class="correct">C. 63</li>
-                    <li>D. 65</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: C - 63</strong>
-                    <div class="explanation">Việt Nam có 63 tỉnh thành, bao gồm 58 tỉnh và 5 thành phố trực thuộc Trung ương (Hà Nội, TP.HCM, Hải Phòng, Đà Nẵng, Cần Thơ).</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Đỉnh núi cao nhất Việt Nam là đỉnh nào?</div>
-                <ul class="options">
-                    <li class="correct">A. Fansipan</li>
-                    <li>B. Phu Si Lung</li>
-                    <li>C. Ngọc Linh</li>
-                    <li>D. Tây Côn Lĩnh</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: A - Fansipan</strong>
-                    <div class="explanation">Fansipan cao 3.143m, nằm ở dãy Hoàng Liên Sơn, tỉnh Lào Cai. Đây được mệnh danh là "Nóc nhà Đông Dương".</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">Sông nào dài nhất Việt Nam?</div>
-                <ul class="options">
-                    <li>A. Sông Hồng</li>
-                    <li>B. Sông Đà</li>
-                    <li class="correct">C. Sông Đồng Nai</li>
-                    <li>D. Sông Mã</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: C - Sông Đồng Nai</strong>
-                    <div class="explanation">Sông Đồng Nai dài khoảng 586km, bắt nguồn từ cao nguyên Lâm Viên, là con sông dài nhất chảy hoàn toàn trong lãnh thổ Việt Nam.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Vịnh Hạ Long thuộc tỉnh nào?</div>
-                <ul class="options">
-                    <li>A. Hải Phòng</li>
-                    <li class="correct">B. Quảng Ninh</li>
-                    <li>C. Thanh Hóa</li>
-                    <li>D. Nghệ An</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Quảng Ninh</strong>
-                    <div class="explanation">Vịnh Hạ Long thuộc tỉnh Quảng Ninh, là Di sản Thiên nhiên Thế giới được UNESCO công nhận với hơn 1.600 hòn đảo đá vôi.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">Đồng bằng sông Cửu Long gồm bao nhiêu tỉnh thành?</div>
-                <ul class="options">
-                    <li>A. 10</li>
-                    <li>B. 11</li>
-                    <li>C. 12</li>
-                    <li class="correct">D. 13</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: D - 13</strong>
-                    <div class="explanation">Đồng bằng sông Cửu Long gồm 13 tỉnh thành: Long An, Tiền Giang, Bến Tre, Vĩnh Long, Trà Vinh, Đồng Tháp, An Giang, Kiên Giang, Cần Thơ, Hậu Giang, Sóc Trăng, Bạc Liêu, Cà Mau.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty hard">Khó</span>
-                <div class="question">Diện tích Việt Nam là bao nhiêu km²?</div>
-                <ul class="options">
-                    <li>A. 310.000 km²</li>
-                    <li>B. 320.000 km²</li>
-                    <li class="correct">C. 331.212 km²</li>
-                    <li>D. 340.000 km²</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: C - 331.212 km²</strong>
-                    <div class="explanation">Việt Nam có diện tích khoảng 331.212 km², đứng thứ 66 trên thế giới về diện tích. Đường bờ biển dài 3.260 km.</div>
-                </div>
-            </div>
-
-            <!-- KHOA HỌC TỰ NHIÊN -->
-            <div class="category-header">🔬 Khoa Học Tự Nhiên</div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Công thức hóa học của nước là gì?</div>
-                <ul class="options">
-                    <li>A. CO₂</li>
-                    <li class="correct">B. H₂O</li>
-                    <li>C. NaCl</li>
-                    <li>D. O₂</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - H₂O</strong>
-                    <div class="explanation">Nước có công thức hóa học H₂O, gồm 2 nguyên tử Hydro và 1 nguyên tử Oxy liên kết với nhau.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Hành tinh nào lớn nhất trong Hệ Mặt Trời?</div>
-                <ul class="options">
-                    <li>A. Sao Thổ</li>
-                    <li class="correct">B. Sao Mộc</li>
-                    <li>C. Sao Thiên Vương</li>
-                    <li>D. Sao Hải Vương</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Sao Mộc (Jupiter)</strong>
-                    <div class="explanation">Sao Mộc là hành tinh lớn nhất, có đường kính gấp 11 lần Trái Đất và khối lượng bằng 318 lần Trái Đất.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">Đơn vị đo cường độ dòng điện là gì?</div>
-                <ul class="options">
-                    <li>A. Volt (V)</li>
-                    <li class="correct">B. Ampe (A)</li>
-                    <li>C. Ohm (Ω)</li>
-                    <li>D. Watt (W)</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Ampe (A)</strong>
-                    <div class="explanation">Ampe (ký hiệu A) là đơn vị đo cường độ dòng điện trong hệ SI. Volt đo điện áp, Ohm đo điện trở, Watt đo công suất.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">DNA viết tắt của cụm từ nào?</div>
-                <ul class="options">
-                    <li class="correct">A. Deoxyribonucleic Acid</li>
-                    <li>B. Deoxynucleic Acid</li>
-                    <li>C. Diribonucleic Acid</li>
-                    <li>D. Dioxynucleic Acid</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: A - Deoxyribonucleic Acid</strong>
-                    <div class="explanation">DNA (Deoxyribonucleic Acid - Axit deoxyribonucleic) là phân tử mang thông tin di truyền của sinh vật, có cấu trúc xoắn kép.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Ánh sáng Mặt Trời mất bao lâu để đến Trái Đất?</div>
-                <ul class="options">
-                    <li>A. 1 phút</li>
-                    <li>B. 5 phút</li>
-                    <li class="correct">C. 8 phút 20 giây</li>
-                    <li>D. 15 phút</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: C - 8 phút 20 giây</strong>
-                    <div class="explanation">Khoảng cách từ Mặt Trời đến Trái Đất khoảng 150 triệu km. Ánh sáng di chuyển với vận tốc 300.000 km/s, mất khoảng 8 phút 20 giây.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty hard">Khó</span>
-                <div class="question">Số Avogadro có giá trị xấp xỉ bao nhiêu?</div>
-                <ul class="options">
-                    <li>A. 3.14 × 10²³</li>
-                    <li class="correct">B. 6.022 × 10²³</li>
-                    <li>C. 9.8 × 10²³</li>
-                    <li>D. 1.38 × 10²³</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - 6.022 × 10²³</strong>
-                    <div class="explanation">Số Avogadro (NA ≈ 6.022 × 10²³ mol⁻¹) là số hạt có trong 1 mol chất, được đặt theo tên nhà khoa học Amedeo Avogadro.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">Nguyên tố nào chiếm tỷ lệ lớn nhất trong khí quyển Trái Đất?</div>
-                <ul class="options">
-                    <li>A. Oxy</li>
-                    <li class="correct">B. Nitơ</li>
-                    <li>C. Carbon dioxide</li>
-                    <li>D. Argon</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Nitơ</strong>
-                    <div class="explanation">Khí quyển Trái Đất chứa khoảng 78% Nitơ, 21% Oxy, và 1% các khí khác (Argon, CO₂, hơi nước...).</div>
-                </div>
-            </div>
-
-            <!-- VĂN HỌC -->
-            <div class="category-header">📚 Văn Học</div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Tác giả của "Truyện Kiều" là ai?</div>
-                <ul class="options">
-                    <li class="correct">A. Nguyễn Du</li>
-                    <li>B. Nguyễn Trãi</li>
-                    <li>C. Hồ Xuân Hương</li>
-                    <li>D. Nguyễn Đình Chiểu</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: A - Nguyễn Du</strong>
-                    <div class="explanation">Nguyễn Du (1766-1820) là đại thi hào dân tộc, tác giả của "Truyện Kiều" - kiệt tác văn học Việt Nam với 3.254 câu thơ lục bát.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">"Lục Vân Tiên" là tác phẩm của ai?</div>
-                <ul class="options">
-                    <li>A. Nguyễn Du</li>
-                    <li>B. Nguyễn Trãi</li>
-                    <li class="correct">C. Nguyễn Đình Chiểu</li>
-                    <li>D. Cao Bá Quát</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: C - Nguyễn Đình Chiểu</strong>
-                    <div class="explanation">Nguyễn Đình Chiểu (1822-1888) là nhà thơ mù yêu nước, tác giả của "Lục Vân Tiên" - truyện thơ nổi tiếng về lòng hiếu nghĩa, trung trinh.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Tác phẩm "Chí Phèo" của nhà văn nào?</div>
-                <ul class="options">
-                    <li>A. Nguyễn Tuân</li>
-                    <li class="correct">B. Nam Cao</li>
-                    <li>C. Vũ Trọng Phụng</li>
-                    <li>D. Nguyên Hồng</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Nam Cao</strong>
-                    <div class="explanation">Nam Cao (1917-1951) là nhà văn hiện thực xuất sắc, tác giả của "Chí Phèo", "Lão Hạc", "Đời thừa" - những tác phẩm phản ánh số phận người nông dân nghèo.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">"Số đỏ" là tác phẩm của ai?</div>
-                <ul class="options">
-                    <li class="correct">A. Vũ Trọng Phụng</li>
-                    <li>B. Nam Cao</li>
-                    <li>C. Ngô Tất Tố</li>
-                    <li>D. Nguyễn Công Hoan</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: A - Vũ Trọng Phụng</strong>
-                    <div class="explanation">Vũ Trọng Phụng (1912-1939) là nhà văn hiện thực phê phán, tác giả của "Số đỏ" - tiểu thuyết châm biếm xã hội Việt Nam những năm 1930.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty hard">Khó</span>
-                <div class="question">"Bình Ngô đại cáo" được viết vào năm nào?</div>
-                <ul class="options">
-                    <li>A. 1418</li>
-                    <li class="correct">B. 1428</li>
-                    <li>C. 1438</li>
-                    <li>D. 1448</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - 1428</strong>
-                    <div class="explanation">"Bình Ngô đại cáo" do Nguyễn Trãi viết năm 1428, sau khi khởi nghĩa Lam Sơn thắng lợi, được coi là bản tuyên ngôn độc lập thứ hai của Việt Nam.</div>
-                </div>
-            </div>
-
-            <!-- TOÁN HỌC -->
-            <div class="category-header">🔢 Toán Học</div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Số Pi (π) có giá trị xấp xỉ bao nhiêu?</div>
-                <ul class="options">
-                    <li>A. 2.14</li>
-                    <li class="correct">B. 3.14</li>
-                    <li>C. 4.14</li>
-                    <li>D. 1.14</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - 3.14</strong>
-                    <div class="explanation">Số Pi (π ≈ 3.14159...) là tỷ số giữa chu vi và đường kính của đường tròn, là một số vô tỷ không tuần hoàn.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">Trong tam giác vuông, tổng bình phương hai cạnh góc vuông bằng gì?</div>
-                <ul class="options">
-                    <li>A. Cạnh huyền</li>
-                    <li class="correct">B. Bình phương cạnh huyền</li>
-                    <li>C. Hai lần cạnh huyền</li>
-                    <li>D. Nửa cạnh huyền</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Bình phương cạnh huyền</strong>
-                    <div class="explanation">Đây là định lý Pythagoras: a² + b² = c², trong đó a, b là hai cạnh góc vuông và c là cạnh huyền.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">1 + 2 + 3 + ... + 100 = ?</div>
-                <ul class="options">
-                    <li>A. 4950</li>
-                    <li class="correct">B. 5050</li>
-                    <li>C. 5150</li>
-                    <li>D. 5000</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - 5050</strong>
-                    <div class="explanation">Sử dụng công thức tổng dãy số cấp số cộng: S = n(n+1)/2 = 100 × 101 / 2 = 5050. Đây là bài toán nổi tiếng của Gauss.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty hard">Khó</span>
-                <div class="question">Số Fibonacci thứ 10 là bao nhiêu?</div>
-                <ul class="options">
-                    <li>A. 34</li>
-                    <li class="correct">B. 55</li>
-                    <li>C. 89</li>
-                    <li>D. 144</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - 55</strong>
-                    <div class="explanation">Dãy Fibonacci: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55... Số thứ 10 là 55. Mỗi số bằng tổng hai số liền trước.</div>
-                </div>
-            </div>
-
-            <!-- TIẾNG ANH -->
-            <div class="category-header">🌍 Tiếng Anh</div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">"Hello" trong tiếng Việt nghĩa là gì?</div>
-                <ul class="options">
-                    <li>A. Tạm biệt</li>
-                    <li class="correct">B. Xin chào</li>
-                    <li>C. Cảm ơn</li>
-                    <li>D. Xin lỗi</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Xin chào</strong>
-                    <div class="explanation">"Hello" là lời chào phổ biến trong tiếng Anh, tương đương với "Xin chào" trong tiếng Việt.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">Thì quá khứ đơn của động từ "go" là gì?</div>
-                <ul class="options">
-                    <li>A. Goes</li>
-                    <li>B. Going</li>
-                    <li class="correct">C. Went</li>
-                    <li>D. Gone</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: C - Went</strong>
-                    <div class="explanation">"Go" là động từ bất quy tắc: go - went - gone. "Went" là thì quá khứ đơn, "gone" là quá khứ phân từ.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">"Serendipity" có nghĩa là gì?</div>
-                <ul class="options">
-                    <li>A. Buồn bã</li>
-                    <li class="correct">B. May mắn bất ngờ</li>
-                    <li>C. Tức giận</li>
-                    <li>D. Bối rối</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - May mắn bất ngờ</strong>
-                    <div class="explanation">"Serendipity" là sự may mắn bất ngờ khi tìm thấy điều gì đó tốt đẹp mà không hề tìm kiếm.</div>
-                </div>
-            </div>
-
-            <!-- THỂ THAO -->
-            <div class="category-header">⚽ Thể Thao</div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">World Cup bóng đá được tổ chức mấy năm một lần?</div>
-                <ul class="options">
-                    <li>A. 2 năm</li>
-                    <li>B. 3 năm</li>
-                    <li class="correct">C. 4 năm</li>
-                    <li>D. 5 năm</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: C - 4 năm</strong>
-                    <div class="explanation">FIFA World Cup được tổ chức 4 năm một lần từ năm 1930. Đây là giải đấu bóng đá lớn nhất hành tinh.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">Thế vận hội Olympic mùa hè 2024 được tổ chức ở đâu?</div>
-                <ul class="options">
-                    <li>A. Tokyo</li>
-                    <li class="correct">B. Paris</li>
-                    <li>C. Los Angeles</li>
-                    <li>D. London</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Paris</strong>
-                    <div class="explanation">Thế vận hội Olympic mùa hè 2024 được tổ chức tại Paris, Pháp. Đây là lần thứ 3 Paris đăng cai Olympic (sau 1900 và 1924).</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Trong bóng đá, mỗi đội có bao nhiêu cầu thủ trên sân?</div>
-                <ul class="options">
-                    <li>A. 9</li>
-                    <li>B. 10</li>
-                    <li class="correct">C. 11</li>
-                    <li>D. 12</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: C - 11</strong>
-                    <div class="explanation">Mỗi đội bóng đá có 11 cầu thủ trên sân, bao gồm 1 thủ môn và 10 cầu thủ ngoài sân.</div>
-                </div>
-            </div>
-
-            <!-- ÂM NHẠC & NGHỆ THUẬT -->
-            <div class="category-header">🎵 Âm Nhạc & Nghệ Thuật</div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Nhạc sĩ nào sáng tác bài "Quốc ca Việt Nam"?</div>
-                <ul class="options">
-                    <li class="correct">A. Văn Cao</li>
-                    <li>B. Phạm Tuyên</li>
-                    <li>C. Trịnh Công Sơn</li>
-                    <li>D. Hoàng Việt</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: A - Văn Cao</strong>
-                    <div class="explanation">Nhạc sĩ Văn Cao (1923-1995) sáng tác bài "Tiến quân ca" năm 1944, sau này trở thành Quốc ca Việt Nam.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">Beethoven là nhà soạn nhạc thuộc quốc gia nào?</div>
-                <ul class="options">
-                    <li>A. Áo</li>
-                    <li class="correct">B. Đức</li>
-                    <li>C. Ý</li>
-                    <li>D. Pháp</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Đức</strong>
-                    <div class="explanation">Ludwig van Beethoven (1770-1827) là nhà soạn nhạc người Đức, một trong những nhạc sĩ vĩ đại nhất mọi thời đại.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">Bức tranh "Mona Lisa" của họa sĩ nào?</div>
-                <ul class="options">
-                    <li class="correct">A. Leonardo da Vinci</li>
-                    <li>B. Michelangelo</li>
-                    <li>C. Van Gogh</li>
-                    <li>D. Picasso</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: A - Leonardo da Vinci</strong>
-                    <div class="explanation">Mona Lisa được Leonardo da Vinci vẽ khoảng 1503-1519, hiện đang trưng bày tại Bảo tàng Louvre, Paris.</div>
-                </div>
-            </div>
-
-            <!-- KHOA HỌC XÃ HỘI -->
-            <div class="category-header">🌐 Kiến Thức Tổng Hợp</div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Quốc gia nào có dân số đông nhất thế giới?</div>
-                <ul class="options">
-                    <li class="correct">A. Ấn Độ</li>
-                    <li>B. Trung Quốc</li>
-                    <li>C. Mỹ</li>
-                    <li>D. Indonesia</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: A - Ấn Độ</strong>
-                    <div class="explanation">Từ năm 2023, Ấn Độ đã vượt qua Trung Quốc trở thành quốc gia đông dân nhất thế giới với hơn 1.4 tỷ người.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Đơn vị tiền tệ của Nhật Bản là gì?</div>
-                <ul class="options">
-                    <li>A. Won</li>
-                    <li>B. Yuan</li>
-                    <li class="correct">C. Yen</li>
-                    <li>D. Dollar</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: C - Yen</strong>
-                    <div class="explanation">Đồng Yen (¥) là đơn vị tiền tệ chính thức của Nhật Bản. Won là của Hàn Quốc, Yuan là của Trung Quốc.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">Ai là người phát minh ra bóng đèn điện?</div>
-                <ul class="options">
-                    <li>A. Alexander Graham Bell</li>
-                    <li class="correct">B. Thomas Edison</li>
-                    <li>C. Nikola Tesla</li>
-                    <li>D. Benjamin Franklin</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Thomas Edison</strong>
-                    <div class="explanation">Thomas Edison (1847-1931) được công nhận là người phát minh ra bóng đèn điện thực dụng năm 1879, mặc dù nhiều người đã góp phần phát triển.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty hard">Khó</span>
-                <div class="question">Liên Hợp Quốc được thành lập năm nào?</div>
-                <ul class="options">
-                    <li>A. 1944</li>
-                    <li class="correct">B. 1945</li>
-                    <li>C. 1946</li>
-                    <li>D. 1950</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - 1945</strong>
-                    <div class="explanation">Liên Hợp Quốc được thành lập ngày 24/10/1945 sau Thế chiến II, với mục đích duy trì hòa bình và an ninh quốc tế.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">Kim tự tháp Giza nằm ở quốc gia nào?</div>
-                <ul class="options">
-                    <li class="correct">A. Ai Cập</li>
-                    <li>B. Mexico</li>
-                    <li>C. Peru</li>
-                    <li>D. Ấn Độ</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: A - Ai Cập</strong>
-                    <div class="explanation">Kim tự tháp Giza nằm ở ngoại ô Cairo, Ai Cập, được xây dựng cách đây hơn 4.500 năm và là một trong 7 kỳ quan thế giới cổ đại còn tồn tại.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">Internet được viết tắt từ cụm từ nào?</div>
-                <ul class="options">
-                    <li>A. Internal Network</li>
-                    <li class="correct">B. Interconnected Network</li>
-                    <li>C. International Network</li>
-                    <li>D. Interactive Network</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Interconnected Network</strong>
-                    <div class="explanation">Internet là viết tắt của "Interconnected Network" - mạng lưới kết nối các mạng máy tính trên toàn thế giới.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty hard">Khó</span>
-                <div class="question">Albert Einstein nhận giải Nobel về lĩnh vực nào?</div>
-                <ul class="options">
-                    <li>A. Thuyết tương đối</li>
-                    <li class="correct">B. Hiệu ứng quang điện</li>
-                    <li>C. Vật lý hạt nhân</li>
-                    <li>D. Cơ học lượng tử</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Hiệu ứng quang điện</strong>
-                    <div class="explanation">Einstein nhận giải Nobel Vật lý năm 1921 cho công trình về hiệu ứng quang điện, không phải thuyết tương đối như nhiều người nghĩ.</div>
-                </div>
-            </div>
-
-            <!-- CÔNG NGHỆ -->
-            <div class="category-header">💻 Công Nghệ</div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">CPU là viết tắt của từ gì?</div>
-                <ul class="options">
-                    <li>A. Computer Processing Unit</li>
-                    <li class="correct">B. Central Processing Unit</li>
-                    <li>C. Core Processing Unit</li>
-                    <li>D. Central Program Unit</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Central Processing Unit</strong>
-                    <div class="explanation">CPU (Central Processing Unit - Bộ xử lý trung tâm) là bộ não của máy tính, thực hiện các phép tính và điều khiển hoạt động.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">Ai là người sáng lập Microsoft?</div>
-                <ul class="options">
-                    <li>A. Steve Jobs</li>
-                    <li class="correct">B. Bill Gates và Paul Allen</li>
-                    <li>C. Mark Zuckerberg</li>
-                    <li>D. Elon Musk</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - Bill Gates và Paul Allen</strong>
-                    <div class="explanation">Microsoft được thành lập năm 1975 bởi Bill Gates và Paul Allen, hiện là một trong những công ty công nghệ lớn nhất thế giới.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty medium">Trung bình</span>
-                <div class="question">HTML là viết tắt của gì?</div>
-                <ul class="options">
-                    <li>A. High Text Markup Language</li>
-                    <li class="correct">B. HyperText Markup Language</li>
-                    <li>C. HyperText Machine Language</li>
-                    <li>D. High Tech Modern Language</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: B - HyperText Markup Language</strong>
-                    <div class="explanation">HTML (HyperText Markup Language) là ngôn ngữ đánh dấu siêu văn bản, được sử dụng để tạo cấu trúc trang web.</div>
-                </div>
-            </div>
-
-            <div class="quiz-item">
-                <span class="difficulty easy">Dễ</span>
-                <div class="question">1 Gigabyte bằng bao nhiêu Megabyte?</div>
-                <ul class="options">
-                    <li>A. 100 MB</li>
-                    <li>B. 500 MB</li>
-                    <li class="correct">C. 1024 MB</li>
-                    <li>D. 2048 MB</li>
-                </ul>
-                <div class="answer-box">
-                    <strong>Đáp án: C - 1024 MB</strong>
-                    <div class="explanation">1 GB = 1024 MB = 1024 × 1024 KB = 1024 × 1024 × 1024 bytes (trong hệ nhị phân).</div>
-                </div>
-            </div>
-
-        </div>
     </div>
 
     <div class="page-navigation">
         <a href="linux-interview.html" class="page-nav-btn">Previous</a>
         <div class="page-nav-center">
             <strong>Olympia Quiz</strong>
-            Page 6 of 6
+            <span id="pageInfo">1500+ câu hỏi</span>
         </div>
         <a href="home.html" class="page-nav-btn next">Back to Home</a>
     </div>
 
-            </div><!-- End content-area -->
+            </div>
 
-        </div><!-- End main-content -->
-    </div><!-- End page-wrapper -->
+        </div>
+    </div>
+
+    <!-- Quiz Data -->
+    <script src="quiz-data.js"></script>
 
     <script>
-        // MCQ functionality for Olympia Quiz
-        document.querySelectorAll('.options').forEach(optionList => {
-            optionList.addEventListener('click', function(e) {
-                if (e.target.tagName === 'LI' && !optionList.classList.contains('answered')) {
-                    const clickedOption = e.target;
-                    const allOptions = optionList.querySelectorAll('li');
-                    const answerDiv = optionList.nextElementSibling;
-                    
-                    // Mark as answered
-                    optionList.classList.add('answered');
-                    
-                    // Disable all options
-                    allOptions.forEach(opt => opt.classList.add('disabled'));
-                    
-                    if (clickedOption.classList.contains('correct')) {
-                        // Correct answer clicked - turn green and show explanation
-                        clickedOption.classList.add('selected-correct');
-                        if (answerDiv && answerDiv.classList.contains('answer-box')) {
-                            answerDiv.classList.add('show');
-                        }
-                    } else {
-                        // Wrong answer clicked - turn red
-                        clickedOption.classList.add('selected-wrong');
-                        // Show the correct answer in green
-                        const correctOption = optionList.querySelector('li.correct');
-                        if (correctOption) {
-                            setTimeout(() => {
-                                correctOption.classList.add('show-correct');
-                            }, 300);
-                        }
-                        // Show answer explanation even for wrong answers
-                        if (answerDiv && answerDiv.classList.contains('answer-box')) {
-                            setTimeout(() => {
-                                answerDiv.classList.add('show');
-                            }, 600);
-                        }
-                    }
-                }
-            });
+    const CATEGORY_NAMES = {
+        "ls_vn": "\u{1F1FB}\u{1F1F3} Lịch Sử Việt Nam",
+        "ls_tg": "\uD83C\uDF0D Lịch Sử Thế Giới",
+        "dl_vn": "\uD83D\uDDFA\uFE0F Địa Lý Việt Nam",
+        "dl_tg": "\uD83C\uDF10 Địa Lý Thế Giới",
+        "vatly": "\u26A1 Vật Lý",
+        "hoahoc": "\uD83E\uDDEA Hóa Học",
+        "sinhhoc": "\uD83E\uDDEC Sinh Học",
+        "toan": "\uD83D\uDD22 Toán Học",
+        "vanhoc": "\uD83D\uDCDA Văn Học",
+        "tienganh": "\uD83D\uDD24 Tiếng Anh",
+        "thethao": "\u26BD Thể Thao",
+        "amnhac": "\uD83C\uDFB5 Âm Nhạc & Nghệ Thuật",
+        "congnghe": "\uD83D\uDCBB Công Nghệ",
+        "thienvan": "\uD83D\uDD2D Thiên Văn & Vũ Trụ",
+        "tongquat": "\uD83D\uDCD6 Kiến Thức Tổng Hợp"
+    };
+    const DIFF_LABELS = {"easy":"Dễ","medium":"Trung bình","hard":"Khó"};
+
+    const CAT_COLORS = {
+        "ls_vn":   {bg:"linear-gradient(135deg,#e74c3c,#c0392b)", solid:"#e74c3c"},
+        "ls_tg":   {bg:"linear-gradient(135deg,#e67e22,#d35400)", solid:"#e67e22"},
+        "dl_vn":   {bg:"linear-gradient(135deg,#27ae60,#219a52)", solid:"#27ae60"},
+        "dl_tg":   {bg:"linear-gradient(135deg,#2ecc71,#1abc9c)", solid:"#2ecc71"},
+        "vatly":   {bg:"linear-gradient(135deg,#f39c12,#f1c40f)", solid:"#f39c12"},
+        "hoahoc":  {bg:"linear-gradient(135deg,#9b59b6,#8e44ad)", solid:"#9b59b6"},
+        "sinhhoc": {bg:"linear-gradient(135deg,#00b894,#00cec9)", solid:"#00b894"},
+        "toan":    {bg:"linear-gradient(135deg,#0984e3,#74b9ff)", solid:"#0984e3"},
+        "vanhoc":  {bg:"linear-gradient(135deg,#fd79a8,#e84393)", solid:"#fd79a8"},
+        "tienganh":{bg:"linear-gradient(135deg,#6c5ce7,#a29bfe)", solid:"#6c5ce7"},
+        "thethao": {bg:"linear-gradient(135deg,#00b894,#55efc4)", solid:"#00b894"},
+        "amnhac":  {bg:"linear-gradient(135deg,#e17055,#fab1a0)", solid:"#e17055"},
+        "congnghe":{bg:"linear-gradient(135deg,#636e72,#2d3436)", solid:"#636e72"},
+        "thienvan":{bg:"linear-gradient(135deg,#2c3e50,#3498db)", solid:"#2c3e50"},
+        "tongquat":{bg:"linear-gradient(135deg,#6c5ce7,#fd79a8)", solid:"#6c5ce7"}
+    };
+
+    // ==================== STATE ====================
+    let currentPage = 1, filteredData = [], currentCategory = "all";
+    let currentMode = "browse", examScore = 0, examTotal = 0;
+    let answeredSet = new Set();
+    let bookmarkSet = new Set();
+    let wrongSet = new Set();
+    let correctSet = new Set();
+    let examTimerInterval = null;
+    let examTimeLeft = 0;
+    let examAnswers = []; // track per-question results for review
+    let multiSelectCats = new Set(); // multi-select category mode
+    let multiSelectMode = false;
+    let soundEnabled = true;
+
+    // Load persisted state
+    try { const s = localStorage.getItem('olympia_answered'); if (s) answeredSet = new Set(JSON.parse(s)); } catch(e) {}
+    try { const s = localStorage.getItem('olympia_bookmarks'); if (s) bookmarkSet = new Set(JSON.parse(s)); } catch(e) {}
+    try { const s = localStorage.getItem('olympia_wrong'); if (s) wrongSet = new Set(JSON.parse(s)); } catch(e) {}
+    try { const s = localStorage.getItem('olympia_correct'); if (s) correctSet = new Set(JSON.parse(s)); } catch(e) {}
+    try { const v = localStorage.getItem('olympia_sound'); if (v !== null) soundEnabled = v === 'true'; } catch(e) {}
+
+    function saveAnswered() { try { localStorage.setItem('olympia_answered', JSON.stringify([...answeredSet])); } catch(e) {} }
+    function saveBookmarks() { try { localStorage.setItem('olympia_bookmarks', JSON.stringify([...bookmarkSet])); } catch(e) {} }
+    function saveWrong() { try { localStorage.setItem('olympia_wrong', JSON.stringify([...wrongSet])); } catch(e) {} }
+    function saveCorrect() { try { localStorage.setItem('olympia_correct', JSON.stringify([...correctSet])); } catch(e) {} }
+
+    // ==================== TOAST NOTIFICATIONS ====================
+    function showToast(message, type='info', duration=2500) {
+        const container = document.getElementById('toastContainer');
+        const icons = {success:'✅',error:'❌',info:'💡',warning:'⚠️'};
+        const toast = document.createElement('div');
+        toast.className = 'toast ' + type;
+        toast.innerHTML = '<span class="toast-icon">' + (icons[type]||'💡') + '</span><span>' + message + '</span>';
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.classList.add('removing');
+            setTimeout(() => toast.remove(), 300);
+        }, duration);
+    }
+
+    // ==================== SOUND EFFECTS ====================
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+    function playSound(type) {
+        if (!soundEnabled) return;
+        try {
+            if (!audioCtx) audioCtx = new AudioCtx();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            gain.gain.value = 0.08;
+            if (type === 'correct') {
+                osc.type = 'sine'; osc.frequency.value = 523;
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'wrong') {
+                osc.type = 'square'; osc.frequency.value = 200;
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+            }
+        } catch(e) {}
+    }
+
+    // ==================== CONFETTI ====================
+    function showConfetti() {
+        const container = document.getElementById('confettiContainer');
+        const colors = ['#ff6b6b','#ffc107','#00b894','#0984e3','#6c5ce7','#fd79a8','#e17055','#00cec9'];
+        for (let i = 0; i < 80; i++) {
+            const p = document.createElement('div');
+            p.className = 'confetti-piece';
+            p.style.left = Math.random()*100+'%';
+            p.style.background = colors[Math.floor(Math.random()*colors.length)];
+            p.style.width = (5+Math.random()*10)+'px';
+            p.style.height = (5+Math.random()*10)+'px';
+            p.style.borderRadius = Math.random()>0.5?'50%':'2px';
+            p.style.animationDuration = (2+Math.random()*2)+'s';
+            p.style.animationDelay = Math.random()*0.5+'s';
+            container.appendChild(p);
+        }
+        setTimeout(()=>container.innerHTML='', 4000);
+    }
+
+    // ==================== STREAK ====================
+    function getStreak() {
+        try {
+            const data = JSON.parse(localStorage.getItem('olympia_streak')||'{}');
+            return {count: data.count||0, lastDate: data.lastDate||''};
+        } catch(e) { return {count:0, lastDate:''}; }
+    }
+    function updateStreak() {
+        const today = new Date().toISOString().slice(0,10);
+        const s = getStreak();
+        if (s.lastDate === today) return s.count; // already counted today
+        const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+        let newCount;
+        if (s.lastDate === yesterday) newCount = s.count + 1;
+        else newCount = 1;
+        localStorage.setItem('olympia_streak', JSON.stringify({count:newCount, lastDate:today}));
+        return newCount;
+    }
+    function renderStreak() {
+        const el = document.getElementById('streakDisplay');
+        const s = getStreak();
+        if (s.count > 0) {
+            el.innerHTML = '<span class="streak-badge">🔥 ' + s.count + ' ngày</span>';
+        } else {
+            el.innerHTML = '';
+        }
+    }
+
+    // ==================== LEADERBOARD ====================
+    function getLeaderboard() {
+        try { return JSON.parse(localStorage.getItem('olympia_leaderboard')||'[]'); } catch(e) { return []; }
+    }
+    function addToLeaderboard(score, total, timeUsed) {
+        const lb = getLeaderboard();
+        const pct = Math.round(score/total*100);
+        lb.push({score, total, pct, timeUsed, date: new Date().toLocaleDateString('vi-VN')});
+        lb.sort((a,b) => b.pct - a.pct || a.timeUsed - b.timeUsed);
+        if (lb.length > 10) lb.length = 10;
+        localStorage.setItem('olympia_leaderboard', JSON.stringify(lb));
+        renderLeaderboard();
+    }
+    function renderLeaderboard() {
+        const lb = getLeaderboard();
+        const el = document.getElementById('leaderboardList');
+        if (!el) return;
+        if (lb.length === 0) { el.innerHTML = '<em style="color:#94a3b8">Chưa có kết quả nào.</em>'; return; }
+        const medals = ['🥇','🥈','🥉'];
+        el.innerHTML = lb.map((e,i) => {
+            const rank = medals[i] || '#'+(i+1);
+            const m = Math.floor(e.timeUsed/60);
+            const s = e.timeUsed%60;
+            return '<div class="leaderboard-entry"><span class="rank">'+rank+'</span><span>'+e.score+'/'+e.total+' ('+e.pct+'%)</span><span>⏱️ '+m+'p'+String(s).padStart(2,'0')+'s</span><span style="color:#94a3b8;font-size:0.8rem">'+e.date+'</span></div>';
+        }).join('');
+    }
+
+    // ==================== SHARE QUESTION ====================
+    function shareQuestion(origIdx) {
+        const q = QUIZ_DATA[origIdx];
+        const letters = ['A','B','C','D'];
+        let text = '📝 ' + q.q + '\n';
+        q.o.forEach((opt,i) => text += letters[i] + '. ' + opt + '\n');
+        text += '\n✅ Đáp án: ' + letters[q.a] + '. ' + q.o[q.a];
+        text += '\n💡 ' + q.e;
+        text += '\n\n— Olympia Quiz 🏆';
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('Đã sao chép câu hỏi!', 'success');
+        }).catch(() => {
+            showToast('Không thể sao chép', 'error');
         });
+    }
+
+    // ==================== PROGRESS ====================
+    function resetProgress() {
+        if (!confirm('Bạn chắc chắn muốn đặt lại toàn bộ tiến độ?')) return;
+        answeredSet.clear(); wrongSet.clear(); correctSet.clear();
+        saveAnswered(); saveWrong(); saveCorrect();
+        updateProgressUI(); updateStatsDashboard(); applyFilters();
+        showToast('Đã đặt lại tiến độ!', 'info');
+    }
+
+    function updateProgressUI() {
+        const total = QUIZ_DATA.length;
+        const learned = answeredSet.size;
+        const pct = total > 0 ? Math.round(learned / total * 100) : 0;
+        const bar = document.getElementById('progressBar');
+        if (bar) { bar.style.width = pct + '%'; bar.textContent = pct + '%'; }
+        const el = (id, val) => { const e = document.getElementById(id); if(e) e.textContent = val; };
+        el('learnedCount', learned); el('totalCount', total);
+        el('percentComplete', pct + '%'); el('answeredCount', learned);
+        updateCatProgress();
+    }
+
+    // ==================== CATEGORY PROGRESS ON FILTER BUTTONS ====================
+    function updateCatProgress() {
+        document.querySelectorAll('.filter-btn[data-cat]').forEach(btn => {
+            const cat = btn.dataset.cat;
+            let prog = btn.querySelector('.cat-prog');
+            if (!prog) { prog = document.createElement('div'); prog.className = 'cat-prog'; btn.appendChild(prog); }
+            if (cat === 'all') {
+                const pct = QUIZ_DATA.length > 0 ? Math.round(answeredSet.size / QUIZ_DATA.length * 100) : 0;
+                prog.style.width = pct + '%';
+            } else {
+                const catQs = QUIZ_DATA.map((q,i)=>({...q,i})).filter(q=>q.c===cat);
+                const done = catQs.filter(q=>answeredSet.has(q.i)).length;
+                const pct = catQs.length > 0 ? Math.round(done / catQs.length * 100) : 0;
+                prog.style.width = pct + '%';
+            }
+        });
+    }
+
+    // ==================== STATISTICS DASHBOARD ====================
+    function updateStatsDashboard() {
+        const grid = document.getElementById('statsGrid');
+        const bars = document.getElementById('catAccuracyBars');
+        if (!grid) return;
+        const total = QUIZ_DATA.length;
+        const answered = answeredSet.size;
+        const correct = correctSet.size;
+        const wrong = wrongSet.size;
+        const fav = bookmarkSet.size;
+        const accuracy = answered > 0 ? Math.round(correct / answered * 100) : 0;
+        grid.innerHTML =
+            '<div class="stat-card"><div class="stat-val">'+answered+'</div><div class="stat-label">Đã trả lời</div></div>'+
+            '<div class="stat-card" style="border-left-color:#10b981"><div class="stat-val" style="color:#10b981">'+correct+'</div><div class="stat-label">Trả lời đúng</div></div>'+
+            '<div class="stat-card" style="border-left-color:#ef4444"><div class="stat-val" style="color:#ef4444">'+wrong+'</div><div class="stat-label">Trả lời sai</div></div>'+
+            '<div class="stat-card" style="border-left-color:#f59e0b"><div class="stat-val" style="color:#f59e0b">'+accuracy+'%</div><div class="stat-label">Độ chính xác</div></div>'+
+            '<div class="stat-card" style="border-left-color:#ec4899"><div class="stat-val" style="color:#ec4899">'+fav+'</div><div class="stat-label">Yêu thích</div></div>'+
+            '<div class="stat-card" style="border-left-color:#8b5cf6"><div class="stat-val" style="color:#8b5cf6">'+(total-answered)+'</div><div class="stat-label">Chưa trả lời</div></div>';
+        if (!bars) return;
+        let barsHtml = '';
+        const cats = [...new Set(QUIZ_DATA.map(q => q.c))];
+        cats.forEach(cat => {
+            const catQs = QUIZ_DATA.map((q,i)=>({...q,i})).filter(q=>q.c===cat);
+            const catAnswered = catQs.filter(q=>answeredSet.has(q.i)).length;
+            const catCorrect = catQs.filter(q=>correctSet.has(q.i)).length;
+            const catPct = catAnswered > 0 ? Math.round(catCorrect / catAnswered * 100) : 0;
+            const cc = CAT_COLORS[cat]||{solid:'#6c5ce7'};
+            const name = (CATEGORY_NAMES[cat]||cat).replace(/^[\uD800-\uDBFF][\uDC00-\uDFFF]\s*/,'').replace(/^.\s+/,'');
+            barsHtml += '<div class="cat-accuracy-bar"><span style="width:120px;flex-shrink:0;font-size:0.8rem">'+name+'</span><div class="bar-bg"><div class="bar-fill" style="width:'+catPct+'%;background:'+cc.solid+'"></div></div><span style="width:45px;text-align:right;flex-shrink:0;font-weight:600">'+catPct+'%</span></div>';
+        });
+        bars.innerHTML = barsHtml;
+    }
+
+    function exportStats() {
+        const total = QUIZ_DATA.length;
+        const correct = correctSet.size;
+        const wrong = wrongSet.size;
+        const accuracy = answeredSet.size > 0 ? Math.round(correct / answeredSet.size * 100) : 0;
+        let txt = '=== OLYMPIA QUIZ - THỐNG KÊ ===\n';
+        txt += 'Tổng câu hỏi: '+total+'\nĐã trả lời: '+answeredSet.size+'\n';
+        txt += 'Đúng: '+correct+' | Sai: '+wrong+'\nĐộ chính xác: '+accuracy+'%\n';
+        txt += 'Yêu thích: '+bookmarkSet.size+'\n\n--- Theo chủ đề ---\n';
+        [...new Set(QUIZ_DATA.map(q=>q.c))].forEach(cat => {
+            const catQs = QUIZ_DATA.map((q,i)=>({...q,i})).filter(q=>q.c===cat);
+            const a = catQs.filter(q=>answeredSet.has(q.i)).length;
+            const c = catQs.filter(q=>correctSet.has(q.i)).length;
+            txt += (CATEGORY_NAMES[cat]||cat)+': '+c+'/'+a+' đúng\n';
+        });
+        const blob = new Blob([txt], {type:'text/plain'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'olympia-quiz-stats.txt';
+        a.click();
+        showToast('Đã xuất thống kê!', 'success');
+    }
+
+    // ==================== TIMER (BUG FIX: no negative) ====================
+    let examStartTime = 0;
+    function startExamTimer(totalQuestions) {
+        stopExamTimer();
+        examTimeLeft = totalQuestions * 60;
+        examStartTime = Date.now();
+        const timerEl = document.getElementById('examTimer');
+        timerEl.classList.add('active');
+        timerEl.classList.remove('warning');
+        updateTimerDisplay();
+        examTimerInterval = setInterval(() => {
+            examTimeLeft--;
+            if (examTimeLeft <= 60 && examTimeLeft > 0) timerEl.classList.add('warning');
+            if (examTimeLeft <= 0) {
+                examTimeLeft = 0;
+                updateTimerDisplay();
+                stopExamTimer();
+                finishExam(true);
+                return;
+            }
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const t = Math.max(0, examTimeLeft);
+        const m = Math.floor(t / 60);
+        const s = t % 60;
+        document.getElementById('timerDisplay').textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    }
+
+    function stopExamTimer() {
+        if (examTimerInterval) { clearInterval(examTimerInterval); examTimerInterval = null; }
+        const el = document.getElementById('examTimer');
+        if (el) el.classList.remove('active','warning');
+    }
+
+    // ==================== EXAM REVIEW ====================
+    function finishExam(timeUp) {
+        stopExamTimer();
+        const timeUsed = Math.round((Date.now() - examStartTime) / 1000);
+        const pct = filteredData.length > 0 ? Math.round(examScore / filteredData.length * 100) : 0;
+        addToLeaderboard(examScore, filteredData.length, timeUsed);
+
+        // Build review modal
+        const scoreEl = document.getElementById('reviewScore');
+        scoreEl.textContent = examScore + '/' + filteredData.length + ' (' + pct + '%)';
+        scoreEl.className = 'review-score ' + (pct >= 80 ? 'good' : pct >= 50 ? 'ok' : 'bad');
+
+        const summary = document.getElementById('reviewSummary');
+        const m = Math.floor(timeUsed/60), s = timeUsed%60;
+        summary.textContent = (timeUp ? '⏰ Hết giờ! ' : '🎉 Hoàn thành! ') + 'Thời gian: ' + m + ' phút ' + s + ' giây';
+
+        const itemsEl = document.getElementById('reviewItems');
+        let html = '';
+        examAnswers.forEach((ea, i) => {
+            const q = QUIZ_DATA[ea.origIdx];
+            const letters = ['A','B','C','D'];
+            html += '<div class="review-item '+(ea.correct?'correct':'wrong')+'">';
+            html += '<div class="review-q">'+(i+1)+'. '+escHtml(q.q)+'</div>';
+            if (ea.correct) {
+                html += '<div class="review-a">✅ '+letters[ea.chosen]+'. '+escHtml(q.o[ea.chosen])+'</div>';
+            } else {
+                html += '<div class="review-a">❌ Bạn chọn: '+letters[ea.chosen]+'. '+escHtml(q.o[ea.chosen])+'</div>';
+                html += '<div class="review-a">✅ Đáp án: '+letters[q.a]+'. '+escHtml(q.o[q.a])+'</div>';
+            }
+            html += '</div>';
+        });
+        itemsEl.innerHTML = html;
+        document.getElementById('examReviewModal').classList.add('show');
+
+        if (pct >= 80) { showConfetti(); showToast('Xuất sắc! 🎉 '+pct+'% đúng!', 'success', 3500); }
+        else if (pct >= 50) showToast('Khá tốt! '+pct+'% đúng.', 'info', 3000);
+        else showToast('Cần cố gắng hơn! '+pct+'% đúng.', 'warning', 3000);
+    }
+
+    function closeExamReview() {
+        document.getElementById('examReviewModal').classList.remove('show');
+    }
+
+    // ==================== BOOKMARKS ====================
+    function toggleBookmark(origIdx) {
+        if (bookmarkSet.has(origIdx)) {
+            bookmarkSet.delete(origIdx);
+            showToast('Đã bỏ yêu thích', 'info', 1500);
+        } else {
+            bookmarkSet.add(origIdx);
+            showToast('⭐ Đã thêm yêu thích!', 'success', 1500);
+        }
+        saveBookmarks();
+        const btn = document.querySelector('.quiz-item[data-idx="'+origIdx+'"] .bookmark-btn');
+        if (btn) {
+            btn.textContent = bookmarkSet.has(origIdx) ? '⭐' : '☆';
+            btn.classList.toggle('bookmarked', bookmarkSet.has(origIdx));
+        }
+        updateStatsDashboard();
+    }
+
+    // ==================== DARK MODE ====================
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', isDark);
+        document.getElementById('darkModeFab').textContent = isDark ? '☀️' : '🌙';
+        showToast(isDark ? '🌙 Chế độ tối' : '☀️ Chế độ sáng', 'info', 1500);
+    }
+
+    // ==================== FILTERS & INIT ====================
+    function initFilters() {
+        const container = document.getElementById('filterButtons');
+        const cats = [...new Set(QUIZ_DATA.map(q => q.c))];
+        cats.forEach(cat => {
+            const count = QUIZ_DATA.filter(q => q.c === cat).length;
+            const btn = document.createElement('button');
+            btn.className = 'filter-btn';
+            btn.dataset.cat = cat;
+            btn.textContent = (CATEGORY_NAMES[cat]||cat) + ' (' + count + ')';
+            const cc = CAT_COLORS[cat];
+            btn.onclick = (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    // Multi-select mode
+                    e.preventDefault();
+                    if (multiSelectCats.has(cat)) { multiSelectCats.delete(cat); btn.classList.remove('multi-active'); btn.style.background=''; btn.style.color=''; }
+                    else { multiSelectCats.add(cat); btn.classList.add('multi-active'); if(cc){btn.style.background=cc.bg;btn.style.color='#fff';} }
+                    // Deselect "All"
+                    const allBtn = container.querySelector('[data-cat="all"]');
+                    allBtn.classList.remove('active'); allBtn.style.background=''; allBtn.style.color=''; allBtn.style.borderColor='';
+                    multiSelectMode = multiSelectCats.size > 0;
+                    currentCategory = multiSelectMode ? 'multi' : 'all';
+                    currentPage = 1;
+                    if (!multiSelectMode) {
+                        allBtn.classList.add('active'); allBtn.style.background='linear-gradient(135deg,#6c5ce7,#a29bfe)'; allBtn.style.color='#fff'; allBtn.style.borderColor='transparent';
+                    }
+                    applyFilters();
+                } else {
+                    // Single select
+                    multiSelectCats.clear(); multiSelectMode = false;
+                    document.querySelectorAll('.filter-btn').forEach(b => { b.classList.remove('active','multi-active'); b.style.background=''; b.style.color=''; b.style.borderColor=''; });
+                    btn.classList.add('active');
+                    if (cc) { btn.style.background = cc.bg; btn.style.color = '#fff'; btn.style.borderColor = 'transparent'; }
+                    currentCategory = cat; currentPage = 1; applyFilters();
+                }
+            };
+            container.appendChild(btn);
+        });
+        const allBtn = container.querySelector('[data-cat="all"]');
+        allBtn.textContent = 'Tất cả (' + QUIZ_DATA.length + ')';
+        allBtn.onclick = () => {
+            multiSelectCats.clear(); multiSelectMode = false;
+            document.querySelectorAll('.filter-btn').forEach(b => { b.classList.remove('active','multi-active'); b.style.background=''; b.style.color=''; b.style.borderColor=''; });
+            allBtn.classList.add('active');
+            allBtn.style.background = 'linear-gradient(135deg,#6c5ce7,#a29bfe)';
+            allBtn.style.color = '#fff'; allBtn.style.borderColor = 'transparent';
+            currentCategory = "all"; currentPage = 1; applyFilters();
+        };
+        allBtn.style.background = 'linear-gradient(135deg,#6c5ce7,#a29bfe)';
+        allBtn.style.color = '#fff'; allBtn.style.borderColor = 'transparent';
+        document.getElementById('totalQCount').textContent = QUIZ_DATA.length;
+        document.getElementById('catCount').textContent = cats.length;
+    }
+
+    function applyFilters() {
+        const searchTerm = (document.getElementById('searchInput').value||'').toLowerCase().trim();
+        const diffFilter = document.getElementById('diffFilter').value;
+        filteredData = [];
+        QUIZ_DATA.forEach((q, idx) => {
+            // Category filter
+            if (multiSelectMode) {
+                if (!multiSelectCats.has(q.c)) return;
+            } else if (currentCategory !== "all" && q.c !== currentCategory) return;
+            if (diffFilter !== "all" && q.d !== diffFilter) return;
+            if (searchTerm) {
+                const text = (q.q+' '+q.o.join(' ')+' '+q.e).toLowerCase();
+                if (!text.includes(searchTerm)) return;
+            }
+            filteredData.push({...q, _origIdx: idx});
+        });
+        const stats = document.getElementById('searchStats');
+        if (searchTerm || currentCategory !== "all" || diffFilter !== "all") {
+            stats.textContent = 'Tìm thấy ' + filteredData.length + ' câu hỏi';
+            stats.style.display = 'block';
+        } else { stats.style.display = 'none'; }
+        renderPage();
+        updateProgressUI();
+    }
+
+    // ==================== MODES ====================
+    function setMode(mode) {
+        currentMode = mode;
+        stopExamTimer();
+        examAnswers = [];
+        ['btnBrowse','btnRandom','btnExam','btnFavorites','btnWrong','btnUnanswered'].forEach(id => {
+            const el = document.getElementById(id); if(el) el.style.background='';
+        });
+        const btnMap = {browse:'btnBrowse',random:'btnRandom',exam:'btnExam',favorites:'btnFavorites',wrong:'btnWrong',unanswered:'btnUnanswered'};
+        document.getElementById(btnMap[mode]||'btnBrowse').style.background = 'rgba(255,255,255,0.35)';
+        document.getElementById('scoreDisplay').textContent = '';
+
+        if (mode === 'random') {
+            const countVal = parseInt(document.getElementById('randomCount').value) || 50;
+            const count = Math.max(5, Math.min(countVal, QUIZ_DATA.length));
+            document.getElementById('randomCount').value = count;
+            filteredData = [...QUIZ_DATA].map((q,i)=>({...q,_origIdx:i})).sort(()=>Math.random()-0.5).slice(0,count);
+            currentPage = 1; renderPage();
+            showToast('🎲 '+count+' câu ngẫu nhiên', 'info', 1500);
+        } else if (mode === 'exam') {
+            const countVal = parseInt(document.getElementById('examCount').value) || 30;
+            const count = Math.max(5, Math.min(countVal, QUIZ_DATA.length));
+            document.getElementById('examCount').value = count;
+            filteredData = [...QUIZ_DATA].map((q,i)=>({...q,_origIdx:i})).sort(()=>Math.random()-0.5).slice(0,count);
+            examScore = 0; examTotal = 0; examAnswers = []; currentPage = 1;
+            document.getElementById('scoreDisplay').textContent = 'Điểm: 0/' + count;
+            startExamTimer(count);
+            renderPage();
+            showToast('📝 Bắt đầu thi thử! '+count+' câu, '+(count)+' phút', 'info', 2500);
+        } else if (mode === 'favorites') {
+            filteredData = [...QUIZ_DATA].map((q,i)=>({...q,_origIdx:i})).filter(q=>bookmarkSet.has(q._origIdx));
+            currentPage = 1;
+            if (filteredData.length === 0) { document.getElementById('scoreDisplay').textContent = 'Chưa có câu hỏi yêu thích!'; showToast('Chưa có câu yêu thích!', 'warning'); }
+            renderPage();
+        } else if (mode === 'wrong') {
+            const wrongItems = [...QUIZ_DATA].map((q,i)=>({...q,_origIdx:i})).filter(q=>wrongSet.has(q._origIdx));
+            if (wrongItems.length === 0) {
+                filteredData = [];
+                document.getElementById('scoreDisplay').textContent = 'Chưa có câu trả lời sai!';
+                showToast('Không có câu sai nào!', 'success');
+                renderPage();
+            } else {
+                // Copy wrong items, then clear their answered/wrong status for retry
+                filteredData = wrongItems;
+                filteredData.forEach(q => { answeredSet.delete(q._origIdx); wrongSet.delete(q._origIdx); });
+                saveAnswered(); saveWrong();
+                currentPage = 1; renderPage();
+                showToast('❌ '+filteredData.length+' câu sai cần làm lại', 'warning', 2000);
+            }
+        } else if (mode === 'unanswered') {
+            filteredData = [...QUIZ_DATA].map((q,i)=>({...q,_origIdx:i})).filter(q=>!answeredSet.has(q._origIdx));
+            currentPage = 1;
+            if (filteredData.length === 0) { document.getElementById('scoreDisplay').textContent = 'Đã trả lời tất cả! 🎉'; showToast('Đã trả lời hết! 🎉', 'success'); showConfetti(); }
+            renderPage();
+        } else {
+            multiSelectCats.clear(); multiSelectMode = false;
+            currentCategory = "all";
+            document.querySelectorAll('.filter-btn').forEach(b => { b.classList.remove('active','multi-active'); b.style.background=''; b.style.color=''; b.style.borderColor=''; });
+            const allBtn = document.querySelector('[data-cat="all"]');
+            if (allBtn) { allBtn.classList.add('active'); allBtn.style.background='linear-gradient(135deg,#6c5ce7,#a29bfe)'; allBtn.style.color='#fff'; allBtn.style.borderColor='transparent'; }
+            applyFilters();
+        }
+    }
+
+    // ==================== RENDER ====================
+    function renderPage() {
+        const container = document.getElementById('quizContainer');
+        const pageSize = parseInt(document.getElementById('pageSize').value);
+        const totalPages = Math.ceil(filteredData.length / pageSize) || 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+        const start = (currentPage - 1) * pageSize;
+        const pageData = filteredData.slice(start, start + pageSize);
+        let html = '', lastCat = '';
+        pageData.forEach((q, idx) => {
+            const qNum = start + idx + 1;
+            const origIdx = q._origIdx;
+            const cc = CAT_COLORS[q.c]||{bg:'linear-gradient(135deg,#6c5ce7,#a29bfe)',solid:'#6c5ce7'};
+            if (currentMode === 'browse' && currentCategory === 'all' && q.c !== lastCat) {
+                lastCat = q.c;
+                html += '<div class="category-header cat-'+q.c+'">'+(CATEGORY_NAMES[q.c]||q.c)+'</div>';
+            }
+            const isAns = answeredSet.has(origIdx);
+            const isFav = bookmarkSet.has(origIdx);
+            html += '<div class="quiz-item" data-idx="'+origIdx+'" data-cat="'+q.c+'">';
+            html += '<button class="share-btn" onclick="shareQuestion('+origIdx+')" title="Sao chép câu hỏi">📋</button>';
+            html += '<button class="bookmark-btn'+(isFav?' bookmarked':'')+'" onclick="toggleBookmark('+origIdx+')" title="Yêu thích (F)">'+(isFav?'⭐':'☆')+'</button>';
+            html += '<span class="q-number" style="background:'+cc.bg+';box-shadow:0 3px 8px '+cc.solid+'44">'+qNum+'</span> ';
+            html += '<span class="difficulty '+q.d+'">'+(DIFF_LABELS[q.d]||q.d)+'</span>';
+            html += '<div class="question">'+escHtml(q.q)+'</div>';
+            html += '<ul class="options'+(isAns?' answered':'')+'">';
+            q.o.forEach((opt, oi) => {
+                const letter = String.fromCharCode(65+oi);
+                let cls = '';
+                if (isAns && oi === q.a) cls = ' class="show-correct disabled"';
+                else if (isAns) cls = ' class="disabled"';
+                html += '<li data-oi="'+oi+'"'+cls+'>'+letter+'. '+escHtml(opt)+'</li>';
+            });
+            html += '</ul>';
+            html += '<div class="answer-box'+(isAns?' show':'')+'">';
+            html += '<strong>Đáp án: '+String.fromCharCode(65+q.a)+' - '+escHtml(q.o[q.a])+'</strong>';
+            html += '<div class="explanation">'+escHtml(q.e)+'</div>';
+            html += '</div></div>';
+        });
+        container.innerHTML = html;
+        renderPagination(totalPages);
+        container.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+
+    function escHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+    function renderPagination(totalPages) {
+        const h = totalPages <= 1 ? '' : buildPagHtml(totalPages);
+        document.getElementById('topPagination').innerHTML = h;
+        document.getElementById('bottomPagination').innerHTML = h;
+    }
+
+    function buildPagHtml(tp) {
+        let h = '<button onclick="goPage(1)"'+(currentPage===1?' disabled':'')+'>&laquo;</button>';
+        h += '<button onclick="goPage('+(currentPage-1)+')"'+(currentPage===1?' disabled':'') +'>&#8249; Trước</button>';
+        const pages = [];
+        if (tp <= 7) { for(let i=1;i<=tp;i++) pages.push(i); }
+        else {
+            pages.push(1);
+            if (currentPage > 3) pages.push('...');
+            for (let i = Math.max(2,currentPage-1); i <= Math.min(tp-1,currentPage+1); i++) pages.push(i);
+            if (currentPage < tp-2) pages.push('...');
+            pages.push(tp);
+        }
+        pages.forEach(p => {
+            if (p === '...') h += '<span style="padding:0 5px;color:#94a3b8">…</span>';
+            else h += '<button onclick="goPage('+p+')" class="'+(p===currentPage?'active':'')+'">'+p+'</button>';
+        });
+        h += '<button onclick="goPage('+(currentPage+1)+')"'+(currentPage===tp?' disabled':'')+'>Sau &#8250;</button>';
+        h += '<button onclick="goPage('+tp+')"'+(currentPage===tp?' disabled':'')+   '>&raquo;</button>';
+        h += '<span style="margin-left:10px;color:#666">Trang '+currentPage+'/'+tp+' ('+filteredData.length+' câu)</span>';
+        return h;
+    }
+
+    function goPage(p) {
+        const ps = parseInt(document.getElementById('pageSize').value);
+        const tp = Math.ceil(filteredData.length/ps)||1;
+        if (p<1||p>tp) return;
+        currentPage = p; renderPage();
+    }
+
+    // ==================== ANSWER HANDLING ====================
+    document.getElementById('quizContainer').addEventListener('click', function(e) {
+        const li = e.target.closest('li[data-oi]');
+        if (!li) return;
+        const ol = li.closest('.options');
+        if (!ol || ol.classList.contains('answered')) return;
+        const qi = li.closest('.quiz-item');
+        const origIdx = parseInt(qi.dataset.idx);
+        const chosenIdx = parseInt(li.dataset.oi);
+        const q = QUIZ_DATA[origIdx];
+        const ad = ol.nextElementSibling;
+        ol.classList.add('answered');
+        ol.querySelectorAll('li').forEach(o => o.classList.add('disabled'));
+        answeredSet.add(origIdx); saveAnswered();
+
+        const isCorrect = chosenIdx === q.a;
+        if (isCorrect) {
+            li.classList.add('selected-correct');
+            if (ad) ad.classList.add('show');
+            correctSet.add(origIdx); wrongSet.delete(origIdx);
+            saveCorrect(); saveWrong();
+            playSound('correct');
+            if (currentMode==='exam') { examScore++; document.getElementById('scoreDisplay').textContent='Điểm: '+examScore+'/'+filteredData.length; }
+        } else {
+            li.classList.add('selected-wrong');
+            wrongSet.add(origIdx); correctSet.delete(origIdx);
+            saveWrong(); saveCorrect();
+            playSound('wrong');
+            const cl = ol.querySelector('li[data-oi="'+q.a+'"]');
+            if (cl) setTimeout(()=>cl.classList.add('show-correct'),300);
+            if (ad) setTimeout(()=>ad.classList.add('show'),600);
+            if (currentMode==='exam') document.getElementById('scoreDisplay').textContent='Điểm: '+examScore+'/'+filteredData.length;
+        }
+
+        // Track for exam review
+        if (currentMode === 'exam') {
+            examAnswers.push({origIdx, chosen:chosenIdx, correct:isCorrect});
+        }
+
+        // Streak update
+        updateStreak();
+        renderStreak();
+
+        updateProgressUI();
+        updateStatsDashboard();
+
+        // Check 100% completion
+        if (answeredSet.size === QUIZ_DATA.length) {
+            showConfetti();
+            showToast('🎉 Chúc mừng! Bạn đã hoàn thành tất cả câu hỏi!', 'success', 5000);
+        }
+
+        if (currentMode==='exam') {
+            examTotal++;
+            if (examTotal >= filteredData.length) {
+                setTimeout(()=>finishExam(false),800);
+            }
+        }
+    });
+
+    // ==================== KEYBOARD SHORTCUTS ====================
+    document.addEventListener('keydown', function(e) {
+        const tag = document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
+            if ((e.ctrlKey||e.metaKey) && e.key==='k') { e.preventDefault(); document.getElementById('searchInput').focus(); }
+            return;
+        }
+        switch(e.key) {
+            case '1': case '2': case '3': case '4': {
+                e.preventDefault();
+                const items = document.querySelectorAll('.quiz-item');
+                for (const item of items) {
+                    const opts = item.querySelector('.options:not(.answered)');
+                    if (opts) { const li = opts.querySelector('li[data-oi="'+(parseInt(e.key)-1)+'"]'); if(li) li.click(); break; }
+                }
+                break;
+            }
+            case 'j': case 'J': e.preventDefault(); goPage(currentPage+1); break;
+            case 'k': case 'K': e.preventDefault(); goPage(currentPage-1); break;
+            case 's': case 'S': e.preventDefault(); document.getElementById('searchInput').focus(); break;
+            case 'f': case 'F': {
+                e.preventDefault();
+                const fi = document.querySelector('.quiz-item');
+                if (fi) toggleBookmark(parseInt(fi.dataset.idx));
+                break;
+            }
+            case 'd': case 'D': e.preventDefault(); toggleDarkMode(); break;
+            case 'm': case 'M':
+                e.preventDefault();
+                soundEnabled = !soundEnabled;
+                localStorage.setItem('olympia_sound', soundEnabled);
+                showToast(soundEnabled?'🔊 Bật âm thanh':'🔇 Tắt âm thanh','info',1500);
+                break;
+            case '?': e.preventDefault(); document.getElementById('shortcutHints').classList.toggle('show'); break;
+            case 'Escape':
+                document.getElementById('shortcutHints').classList.remove('show');
+                closeExamReview();
+                break;
+        }
+        if ((e.ctrlKey||e.metaKey) && e.key==='k') { e.preventDefault(); document.getElementById('searchInput').focus(); }
+    });
+
+    // ==================== SEARCH ====================
+    let searchTimeout;
+    document.getElementById('searchInput').addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(()=>{currentPage=1;applyFilters();},300);
+    });
+
+    // ==================== DARK MODE INIT ====================
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+        const fab = document.getElementById('darkModeFab');
+        if (fab) fab.textContent = '☀️';
+    }
+
+    // ==================== DOM READY ====================
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof QUIZ_DATA !== 'undefined') {
+            initFilters();
+            filteredData = QUIZ_DATA.map((q,i)=>({...q,_origIdx:i}));
+            renderPage();
+            updateProgressUI();
+            updateStatsDashboard();
+            renderStreak();
+            renderLeaderboard();
+        }
+    });
     </script>
 
-    <!-- Enhanced Features -->
     <script src="features.js"></script>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Confetti Container -->
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <!-- Exam Review Modal -->
+    <div class="exam-review-modal" id="examReviewModal">
+        <div class="modal-content">
+            <h2>📝 Kết Quả Thi Thử</h2>
+            <div class="review-score" id="reviewScore"></div>
+            <div id="reviewSummary" style="text-align:center;color:#64748b;margin-bottom:15px"></div>
+            <div id="reviewItems"></div>
+            <button class="review-close" onclick="closeExamReview()">Đóng</button>
+        </div>
+    </div>
+
+    <!-- Dark Mode FAB -->
+    <button class="dark-mode-fab" id="darkModeFab" onclick="toggleDarkMode()" title="Chế độ tối (D)">🌙</button>
+
+    <!-- Keyboard Shortcuts Hints -->
+    <div class="shortcut-hints" id="shortcutHints">
+        <strong>⌨️ Phím tắt</strong><br>
+        <kbd>1</kbd>-<kbd>4</kbd> Chọn đáp án A-D<br>
+        <kbd>J</kbd> / <kbd>K</kbd> Trang sau / trước<br>
+        <kbd>S</kbd> Tìm kiếm<br>
+        <kbd>F</kbd> Đánh dấu yêu thích<br>
+        <kbd>D</kbd> Chế độ tối<br>
+        <kbd>?</kbd> Hiện/ẩn panel này<br>
+        <kbd>Esc</kbd> Đóng
+    </div>
 
 </body>
 </html>
+

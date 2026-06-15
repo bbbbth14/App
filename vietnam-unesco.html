@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Việt Nam & UNESCO</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ── PAGE HEADER ── */
+        .page-header {
+            background: linear-gradient(135deg, #c0392b 0%, #8B0000 60%, #1a0000 100%);
+            color: white; padding: 30px; border-radius: 16px;
+            margin-bottom: 25px; text-align: center; position: relative; overflow: hidden;
+        }
+        .page-header::before {
+            content: '⭐'; position: absolute; left: 50%; top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14rem; opacity: 0.05; pointer-events: none;
+        }
+        .page-header h1 {
+            font-size: 2rem; margin-bottom: 6px;
+            background: linear-gradient(135deg, #ffd700, #ffec8b, #ffd700);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .page-header p { color: #fca5a5; font-size: 0.95rem; }
+
+        /* ── STATS ── */
+        .vn-stats { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 22px; }
+        .vn-stat {
+            background: white; border-radius: 12px; padding: 14px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07); text-align: center;
+            flex: 1; min-width: 110px; border-top: 3px solid #c0392b;
+        }
+        .vn-stat .val { font-size: 1.6rem; font-weight: 700; color: #c0392b; }
+        .vn-stat .lbl { font-size: 0.76rem; color: #64748b; margin-top: 2px; }
+        body.dark-mode .vn-stat { background: #1e293b; }
+        body.dark-mode .vn-stat .lbl { color: #94a3b8; }
+
+        /* ── FILTER BAR ── */
+        .filter-bar {
+            display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;
+        }
+        .filter-btn {
+            padding: 8px 18px; border-radius: 20px; border: 2px solid #e2e8f0;
+            background: white; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+            color: #64748b; transition: all 0.2s; font-family: 'Inter', sans-serif;
+        }
+        .filter-btn:hover { border-color: #c0392b; color: #c0392b; }
+        .filter-btn.active { background: #c0392b; border-color: #c0392b; color: white; }
+        body.dark-mode .filter-btn { background: #1e293b; border-color: #334155; color: #94a3b8; }
+        body.dark-mode .filter-btn.active { background: #c0392b; color: white; }
+
+        /* ── CARDS GRID ── */
+        .heritage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px; margin-bottom: 30px;
+        }
+        .heritage-card {
+            background: white; border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer; display: flex; flex-direction: column;
+        }
+        .heritage-card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(0,0,0,0.14); }
+        .card-img-wrap {
+            height: 180px; background: #f1f5f9; overflow: hidden; position: relative;
+        }
+        .card-img-wrap img {
+            width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;
+        }
+        .card-img-wrap .img-shimmer {
+            position: absolute; inset: 0;
+            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+        }
+        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        body.dark-mode .card-img-wrap .img-shimmer {
+            background: linear-gradient(90deg, #263043 25%, #334155 50%, #263043 75%);
+            background-size: 200% 100%;
+        }
+        .heritage-card:hover .card-img-wrap img { transform: scale(1.06); }
+        .card-type-badge {
+            position: absolute; top: 10px; left: 10px;
+            background: rgba(0,0,0,0.65); color: white;
+            font-size: 0.7rem; font-weight: 700; padding: 4px 10px;
+            border-radius: 20px; letter-spacing: 0.5px; backdrop-filter: blur(4px);
+        }
+        .card-type-badge.cultural  { background: rgba(106,44,112,0.85); }
+        .card-type-badge.natural   { background: rgba(22,101,52,0.85); }
+        .card-type-badge.mixed     { background: rgba(180,83,9,0.85); }
+        .card-type-badge.intangible{ background: rgba(30,64,175,0.85); }
+        .card-year {
+            position: absolute; top: 10px; right: 10px;
+            background: rgba(192,57,43,0.9); color: white;
+            font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+        }
+        .card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+        .card-title { font-size: 1rem; font-weight: 700; color: #1e293b; line-height: 1.35; }
+        .card-location { font-size: 0.8rem; color: #64748b; display: flex; align-items: center; gap: 5px; }
+        .card-desc { font-size: 0.83rem; color: #475569; line-height: 1.55; flex: 1; }
+        body.dark-mode .heritage-card { background: #1e293b; }
+        body.dark-mode .card-title { color: #f1f5f9; }
+        body.dark-mode .card-location { color: #64748b; }
+        body.dark-mode .card-desc { color: #94a3b8; }
+        body.dark-mode .card-img-wrap { background: #263043; }
+
+        /* ── DETAIL MODAL ── */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            align-items: center; justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            background: white; border-radius: 20px; width: 680px; max-width: 95vw;
+            max-height: 88vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn { from { opacity:0; transform: scale(0.92) translateY(20px); } }
+        .modal-img { width: 100%; height: 220px; object-fit: cover; border-radius: 20px 20px 0 0; }
+        .modal-content { padding: 24px 28px; }
+        .modal-badges { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        .modal-badge {
+            font-size: 0.72rem; font-weight: 700; padding: 4px 12px;
+            border-radius: 20px; color: white; letter-spacing: 0.4px;
+        }
+        .modal-badge.cultural   { background: #6a2c70; }
+        .modal-badge.natural    { background: #166534; }
+        .modal-badge.mixed      { background: #b45309; }
+        .modal-badge.intangible { background: #1e40af; }
+        .modal-badge.year       { background: #c0392b; }
+        .modal-title { font-size: 1.4rem; font-weight: 700; color: #1e293b; margin-bottom: 6px; }
+        .modal-title-vn { font-size: 1rem; color: #c0392b; font-weight: 600; margin-bottom: 14px; }
+        .modal-section { font-size: 0.85rem; font-weight: 700; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; margin: 16px 0 6px; }
+        .modal-text { font-size: 0.9rem; color: #475569; line-height: 1.65; }
+        .modal-facts { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+        .modal-fact { display: flex; gap: 10px; align-items: flex-start; font-size: 0.88rem; color: #475569; }
+        .modal-fact .fi { font-size: 1.1rem; flex-shrink: 0; }
+        .modal-close {
+            position: sticky; top: 0; float: right; background: #f1f5f9;
+            border: none; border-radius: 50%; width: 34px; height: 34px;
+            font-size: 1.1rem; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; color: #64748b; margin: 12px 12px 0 0;
+            transition: background 0.15s;
+        }
+        .modal-close:hover { background: #e2e8f0; }
+        body.dark-mode .modal-box { background: #1e293b; }
+        body.dark-mode .modal-title { color: #f1f5f9; }
+        body.dark-mode .modal-text, body.dark-mode .modal-fact { color: #94a3b8; }
+        body.dark-mode .modal-close { background: #263043; color: #94a3b8; }
+        body.dark-mode .modal-close:hover { background: #334155; }
+
+        /* ── QUIZ ── */
+        .quiz-setup {
+            background: white; border-radius: 20px; padding: 36px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            max-width: 600px; margin: 0 auto; text-align: center;
+        }
+        .quiz-setup h2 { font-size: 1.6rem; color: #1e293b; margin-bottom: 6px; }
+        .quiz-setup p  { color: #64748b; margin-bottom: 28px; font-size: 0.92rem; }
+        .quiz-cat-grid { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px; }
+        .quiz-cat-btn {
+            padding: 10px 20px; border-radius: 12px; border: 2px solid #e2e8f0;
+            background: white; cursor: pointer; font-size: 0.9rem; font-weight: 600;
+            color: #475569; transition: all 0.2s; font-family: 'Inter', sans-serif;
+        }
+        .quiz-cat-btn:hover { border-color: #c0392b; color: #c0392b; }
+        .quiz-cat-btn.selected { background: #c0392b; border-color: #c0392b; color: white; }
+        .quiz-qcount-row { display: flex; align-items: center; gap: 12px; justify-content: center; margin-bottom: 24px; }
+        .quiz-qcount-row label { font-size: 0.9rem; font-weight: 600; color: #475569; }
+        .quiz-qcount-row select {
+            padding: 8px 14px; border-radius: 10px; border: 2px solid #e2e8f0;
+            font-family: 'Inter', sans-serif; font-size: 0.9rem; color: #1e293b;
+            outline: none; cursor: pointer;
+        }
+        .quiz-start-btn {
+            background: #c0392b; color: white; border: none; border-radius: 14px;
+            padding: 14px 40px; font-size: 1rem; font-weight: 700;
+            font-family: 'Inter', sans-serif; cursor: pointer; transition: background 0.2s;
+        }
+        .quiz-start-btn:hover { background: #a93226; }
+
+        /* Quiz game */
+        .quiz-game {
+            background: white; border-radius: 20px; padding: 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07); max-width: 640px; margin: 0 auto;
+        }
+        .quiz-meta {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 14px; font-size: 0.88rem; font-weight: 600; color: #64748b;
+        }
+        .q-timer {
+            background: #f0edff; color: #c0392b; padding: 4px 12px;
+            border-radius: 20px; font-size: 0.85rem; font-weight: 700;
+        }
+        .q-timer.urgent { background: #fef2f2; color: #dc2626; animation: pulse 0.5s infinite alternate; }
+        @keyframes pulse { from { opacity:1; } to { opacity:0.5; } }
+        .quiz-progress-bar-wrap { background: #f1f5f9; border-radius: 20px; height: 6px; margin-bottom: 20px; }
+        .quiz-progress-bar { height: 6px; border-radius: 20px; background: linear-gradient(90deg, #c0392b, #e74c3c); transition: width 0.4s; }
+        .q-category { font-size: 0.72rem; font-weight: 700; color: #c0392b; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+        .q-flag-display { display: none; margin: 10px auto; }
+        .q-flag-display img { height: 90px; border-radius: 6px; box-shadow: 0 3px 12px rgba(0,0,0,0.22); }
+        .q-text { font-size: 1.05rem; font-weight: 600; color: #1e293b; line-height: 1.45; margin-bottom: 18px; }
+        .quiz-img-display { display: none; margin: 12px auto; text-align: center; }
+        .quiz-img-display img { max-height: 160px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
+        .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+        .quiz-option {
+            padding: 14px 20px; border: 2px solid #e2e8f0; border-radius: 14px;
+            background: white; text-align: left; cursor: pointer;
+            font-size: 0.92rem; font-family: 'Inter', sans-serif;
+            color: #1e293b; transition: all 0.18s; font-weight: 500;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .quiz-option:hover:not(:disabled) { border-color: #c0392b; background: #fef0ee; color: #c0392b; }
+        .quiz-option.correct  { border-color: #22c55e; background: #f0fdf4; color: #166534; }
+        .quiz-option.wrong    { border-color: #ef4444; background: #fef2f2; color: #991b1b; }
+        .quiz-option.reveal   { border-color: #22c55e; background: #f0fdf4; color: #166534; }
+        .opt-letter {
+            width: 28px; height: 28px; border-radius: 50%; background: #f1f5f9;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 700; flex-shrink: 0; color: #64748b;
+        }
+        .quiz-feedback {
+            display: none; padding: 12px 18px; border-radius: 12px;
+            font-size: 0.9rem; font-weight: 600; margin-bottom: 12px;
+        }
+        .quiz-feedback.correct { background: #f0fdf4; color: #166534; }
+        .quiz-feedback.wrong   { background: #fef2f2; color: #991b1b; }
+        .quiz-explain {
+            margin-top: 10px; padding: 10px 14px; background: #f8fafc;
+            border-left: 3px solid #6c5ce7; border-radius: 0 10px 10px 0;
+            font-size: 0.83rem; color: #475569; line-height: 1.55; font-weight: 400;
+        }
+        body.dark-mode .quiz-explain { background: #1a2538; color: #94a3b8; border-left-color: #a29bfe; }
+        .diff-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .diff-btn {
+            padding: 8px 18px; border-radius: 20px; border: 2px solid #e2e8f0;
+            background: white; cursor: pointer; font-size: 0.85rem; font-weight: 700;
+            color: #64748b; transition: all 0.2s; font-family: 'Inter', sans-serif;
+        }
+        .diff-btn:hover { border-color: #c0392b; color: #c0392b; }
+        .diff-btn.selected { color: white; border-color: transparent; }
+        .diff-btn[data-diff="0"].selected  { background: #64748b; }
+        .diff-btn[data-diff="1"].selected  { background: #16a34a; }
+        .diff-btn[data-diff="2"].selected  { background: #d97706; }
+        .diff-btn[data-diff="3"].selected  { background: #dc2626; }
+        .setup-section-label {
+            font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+            color: #94a3b8; margin-bottom: 8px;
+        }
+        .q-diff-badge {
+            display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 2px 8px;
+            border-radius: 10px; margin-left: 8px; vertical-align: middle;
+        }
+        .q-diff-badge.d1 { background: #dcfce7; color: #16a34a; }
+        .q-diff-badge.d2 { background: #fef3c7; color: #d97706; }
+        .q-diff-badge.d3 { background: #fee2e2; color: #dc2626; }
+        body.dark-mode .diff-btn { background: #1e293b; border-color: #334155; color: #94a3b8; }
+        .auto-next-count {
+            display: inline-block; width: 22px; height: 22px; line-height: 22px;
+            background: rgba(0,0,0,0.12); border-radius: 50%;
+            font-size: 0.8rem; font-weight: 700; text-align: center; margin-left: 6px;
+        }
+
+        /* Results */
+        .quiz-results {
+            background: white; border-radius: 20px; padding: 40px 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07); max-width: 500px;
+            margin: 0 auto; text-align: center;
+        }
+        .score-circle {
+            width: 110px; height: 110px; border-radius: 50%;
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; margin: 0 auto 20px;
+            box-shadow: 0 8px 24px rgba(192,57,43,0.35);
+        }
+        .score-circle .big { font-size: 2.2rem; font-weight: 700; color: white; line-height: 1; }
+        .score-circle .denom { font-size: 0.85rem; color: rgba(255,255,255,0.8); }
+        .result-title { font-size: 1.5rem; font-weight: 700; color: #1e293b; margin-bottom: 8px; }
+        .result-msg { color: #64748b; margin-bottom: 28px; }
+        .result-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .quiz-btn-primary {
+            background: #c0392b; color: white; border: none; border-radius: 12px;
+            padding: 12px 28px; font-size: 0.95rem; font-weight: 700;
+            font-family: 'Inter', sans-serif; cursor: pointer; transition: background 0.2s;
+        }
+        .quiz-btn-primary:hover { background: #a93226; }
+        .quiz-btn-secondary {
+            background: #f1f5f9; color: #475569; border: none; border-radius: 12px;
+            padding: 12px 28px; font-size: 0.95rem; font-weight: 700;
+            font-family: 'Inter', sans-serif; cursor: pointer; transition: background 0.2s;
+        }
+        .quiz-btn-secondary:hover { background: #e2e8f0; }
+
+        /* Dark mode quiz */
+        body.dark-mode .quiz-setup,
+        body.dark-mode .quiz-game,
+        body.dark-mode .quiz-results { background: #1e293b; }
+        body.dark-mode .quiz-setup h2,
+        body.dark-mode .q-text,
+        body.dark-mode .result-title { color: #f1f5f9; }
+        body.dark-mode .quiz-setup p,
+        body.dark-mode .quiz-meta,
+        body.dark-mode .result-msg { color: #94a3b8; }
+        body.dark-mode .quiz-option { background: #263043; border-color: #334155; color: #e2e8f0; }
+        body.dark-mode .quiz-option:hover:not(:disabled) { border-color: #c0392b; background: #3a1a18; color: #fca5a5; }
+        body.dark-mode .quiz-cat-btn { background: #263043; border-color: #334155; color: #94a3b8; }
+        body.dark-mode .quiz-qcount-row select { background: #263043; border-color: #334155; color: #e2e8f0; }
+        body.dark-mode .quiz-progress-bar-wrap { background: #334155; }
+        body.dark-mode .quiz-btn-secondary { background: #263043; color: #94a3b8; }
+        body.dark-mode .opt-letter { background: #334155; color: #94a3b8; }
+        body.dark-mode .q-timer { background: #2d2050; }
+
+        /* Sidebar dark */
+        body.dark-mode .vn-stat .val { color: #f87171; }
+        body.dark-mode .vn-stat { border-top-color: #c0392b; }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">📚 Learning Hub</div>
+            <div class="sidebar-subtitle">Navigation Menu</div>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="home.html"><span class="sidebar-icon">🏠</span> Home</a></li>
+            <li><a href="index.html"><span class="sidebar-icon">💰</span> Finance</a></li>
+            <li><a href="gold-price.html"><span class="sidebar-icon">🥇</span> Gold Price</a></li>
+            <li><a href="split.html"><span class="sidebar-icon">🧾</span> Split Money</a></li>
+            <li><a href="c-interview.html"><span class="sidebar-icon">💻</span> C Q&A</a></li>
+            <li><a href="embedded-interview.html"><span class="sidebar-icon">🔧</span> Embedded</a></li>
+            <li class="has-submenu">
+                <a href="linux-interview.html#knowledge"><span class="sidebar-icon">🐧</span> Linux/Driver <span class="submenu-arrow">▾</span></a>
+                <ul class="sidebar-submenu">
+                    <li><a href="linux-interview.html#knowledge">📖 Knowledge</a></li>
+                    <li><a href="linux-interview.html#quiz">🎯 Quiz</a></li>
+                </ul>
+            </li>
+            <li><a href="olympia-quiz.html"><span class="sidebar-icon">🏆</span> Olympia Quiz</a></li>
+            <li><a href="millionaire.html"><span class="sidebar-icon">💰</span> Ai Là Triệu Phú</a></li>
+            <li><a href="cpp-challenge.html"><span class="sidebar-icon">🚀</span> C/C++ Challenge</a></li>
+            <li><a href="rust.html"><span class="sidebar-icon">🦀</span> Rust</a></li>
+            <li class="has-submenu">
+                <a href="countries.html"><span class="sidebar-icon">🌍</span> World Countries <span class="submenu-arrow">▾</span></a>
+                <ul class="sidebar-submenu">
+                    <li><a href="countries.html#info">📋 Information</a></li>
+                    <li><a href="countries.html#quiz">🎯 Quiz</a></li>
+                </ul>
+            </li>
+            <li class="has-submenu">
+                <a href="vietnam-unesco.html"><span class="sidebar-icon">🇻🇳</span> VN & UNESCO <span class="submenu-arrow">▾</span></a>
+                <ul class="sidebar-submenu">
+                    <li><a href="#info" id="submenu-info">📋 Thông tin</a></li>
+                    <li><a href="#quiz" id="submenu-quiz">🎯 Quiz</a></li>
+                </ul>
+            </li>
+        </ul>
+    </aside>
+
+    <div class="main-content">
+        <div class="content-area">
+
+            <!-- INFORMATION TAB -->
+            <div class="tab-panel active" id="tab-info">
+                <div class="page-header">
+                    <h1>🇻🇳 Việt Nam & UNESCO</h1>
+                    <p>Di sản văn hóa và thiên nhiên thế giới của Việt Nam</p>
+                </div>
+
+                <div class="vn-stats">
+                    <div class="vn-stat"><div class="val">9</div><div class="lbl">Di sản Thế giới</div></div>
+                    <div class="vn-stat"><div class="val">6</div><div class="lbl">Di sản Văn hóa</div></div>
+                    <div class="vn-stat"><div class="val">2</div><div class="lbl">Di sản Thiên nhiên</div></div>
+                    <div class="vn-stat"><div class="val">1</div><div class="lbl">Di sản Hỗn hợp</div></div>
+                    <div class="vn-stat"><div class="val">15</div><div class="lbl">Di sản Phi vật thể</div></div>
+                </div>
+
+                <div class="filter-bar" id="filterBar">
+                    <button class="filter-btn active" data-filter="all">🌐 Tất cả</button>
+                    <button class="filter-btn" data-filter="cultural">🏛️ Văn hóa</button>
+                    <button class="filter-btn" data-filter="natural">🌿 Thiên nhiên</button>
+                    <button class="filter-btn" data-filter="mixed">🌄 Hỗn hợp</button>
+                    <button class="filter-btn" data-filter="intangible">🎭 Phi vật thể</button>
+                </div>
+
+                <div class="heritage-grid" id="heritageGrid"></div>
+            </div>
+
+            <!-- QUIZ TAB -->
+            <div class="tab-panel" id="tab-quiz">
+                <!-- Setup -->
+                <div id="quiz-setup" class="quiz-setup">
+                    <h2>🎯 Quiz: VN & UNESCO</h2>
+                    <p>Kiểm tra kiến thức về di sản văn hóa và thiên nhiên Việt Nam!</p>
+
+                    <div class="setup-section-label">🎯 Chủ đề</div>
+                    <div class="quiz-cat-grid">
+                        <button class="quiz-cat-btn selected" data-cat="all">🌐 Tất cả</button>
+                        <button class="quiz-cat-btn" data-cat="year">📅 Năm công nhận</button>
+                        <button class="quiz-cat-btn" data-cat="location">📍 Vị trí</button>
+                        <button class="quiz-cat-btn" data-cat="fact">💡 Kiến thức chuyên sâu</button>
+                        <button class="quiz-cat-btn" data-cat="name">🏛️ Nhận biết di sản</button>
+                    </div>
+
+                    <div class="setup-section-label">⚡ Độ khó</div>
+                    <div class="diff-row">
+                        <button class="diff-btn selected" data-diff="0">🌐 Tất cả</button>
+                        <button class="diff-btn" data-diff="1">😊 Dễ</button>
+                        <button class="diff-btn" data-diff="2">🤔 Trung bình</button>
+                        <button class="diff-btn" data-diff="3">🔥 Khó</button>
+                    </div>
+
+                    <div class="quiz-qcount-row">
+                        <label>Số câu hỏi:</label>
+                        <select id="quiz-qcount">
+                            <option value="5">5 câu</option>
+                            <option value="10" selected>10 câu</option>
+                            <option value="15">15 câu</option>
+                            <option value="20">20 câu</option>
+                        </select>
+                    </div>
+                    <div id="quiz-bank-count" style="font-size:0.82rem;color:#94a3b8;margin-bottom:16px;"></div>
+                    <button class="quiz-start-btn" id="quiz-start-btn">▶ Bắt đầu!</button>
+                </div>
+
+                <!-- Game -->
+                <div id="quiz-game" class="quiz-game" style="display:none">
+                    <div class="quiz-meta">
+                        <span id="q-num">Câu 1 / 10</span>
+                        <span class="q-timer" id="q-timer">20</span>
+                        <span id="q-score">🏆 0</span>
+                    </div>
+                    <div class="quiz-progress-bar-wrap"><div class="quiz-progress-bar" id="quiz-progress-bar" style="width:0%"></div></div>
+                    <div class="q-category" id="q-category"></div>
+                    <div class="quiz-img-display" id="quiz-img-display"><img src="" alt="" id="quiz-img-el"></div>
+                    <div class="q-text" id="q-text"></div>
+                    <div class="quiz-options" id="quiz-options"></div>
+                    <div class="quiz-feedback" id="quiz-feedback"></div>
+                    <div class="quiz-explain" id="quiz-explain" style="display:none"></div>
+                </div>
+
+                <!-- Results -->
+                <div id="quiz-results" class="quiz-results" style="display:none">
+                    <div class="score-circle">
+                        <div class="big" id="result-score">0</div>
+                        <div class="denom" id="result-denom">/ 10</div>
+                    </div>
+                    <div class="result-title" id="result-title"></div>
+                    <div class="result-msg" id="result-msg"></div>
+                    <div class="result-btns">
+                        <button class="quiz-btn-primary" id="quiz-play-again">🔁 Chơi lại</button>
+                        <button class="quiz-btn-secondary" id="quiz-change-cat">⚙️ Đổi cài đặt</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal-box" id="modal-box">
+        <button class="modal-close" id="modal-close">✕</button>
+        <img class="modal-img" id="modal-img" src="" alt="">
+        <div class="modal-content">
+            <div class="modal-badges" id="modal-badges"></div>
+            <div class="modal-title" id="modal-title"></div>
+            <div class="modal-title-vn" id="modal-title-vn"></div>
+            <div class="modal-section">📖 Giới thiệu</div>
+            <div class="modal-text" id="modal-desc"></div>
+            <div class="modal-section">📌 Thông tin</div>
+            <div class="modal-facts" id="modal-facts"></div>
+        </div>
+    </div>
+</div>
+
+<button class="dark-mode-fab" id="darkToggle">🌙</button>
+
+<script>
+// ── DATA ───────────────────────────────────────────────────────────────────
+const HERITAGE = [
+    // WORLD HERITAGE SITES (tangible)
+    {
+        id: 'hue',
+        name: 'Quần thể Di tích Cố đô Huế',
+        nameEn: 'Complex of Hué Monuments',
+        type: 'cultural',
+        year: 1993,
+        location: 'Thừa Thiên Huế',
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Ngo_Mon_Gate%2C_Hue_Imperial_City.jpg/640px-Ngo_Mon_Gate%2C_Hue_Imperial_City.jpg',
+        desc: 'Cố đô Huế là trung tâm chính trị, văn hóa và tôn giáo của Việt Nam dưới triều Nguyễn (1802–1945). Quần thể bao gồm Kinh thành Huế, Đại Nội, lăng tẩm các vua Nguyễn và nhiều chùa chiền, đền đài lịch sử.',
+        facts: [
+            { icon: '📅', text: 'Công nhận UNESCO: 1993' },
+            { icon: '🏛️', text: 'Loại: Di sản Văn hóa' },
+            { icon: '📐', text: 'Diện tích: 520 ha vùng lõi' },
+            { icon: '👑', text: 'Kinh đô triều Nguyễn: 1802–1945' },
+            { icon: '🏯', text: 'Gồm hơn 100 công trình kiến trúc' },
+        ]
+    },
+    {
+        id: 'halong',
+        name: 'Vịnh Hạ Long – Quần đảo Cát Bà',
+        nameEn: 'Ha Long Bay – Cat Ba Archipelago',
+        type: 'natural',
+        year: 1994,
+        location: 'Quảng Ninh – Hải Phòng',
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Ha_Long_Bay_from_above.jpg/640px-Ha_Long_Bay_from_above.jpg',
+        desc: 'Vịnh Hạ Long là một trong những kỳ quan thiên nhiên đẹp nhất thế giới với hàng nghìn hòn đảo đá vôi nhô lên từ mặt biển xanh thẳm. Năm 2023 được mở rộng sang quần đảo Cát Bà, tạo thành di sản liên tỉnh đầu tiên của Việt Nam.',
+        facts: [
+            { icon: '📅', text: 'Công nhận UNESCO: 1994 (mở rộng 2023)' },
+            { icon: '🌿', text: 'Loại: Di sản Thiên nhiên' },
+            { icon: '🏝️', text: 'Hơn 1.600 hòn đảo đá vôi' },
+            { icon: '📐', text: 'Diện tích: 434 km²' },
+            { icon: '🦅', text: 'Nhà của nhiều loài động, thực vật quý hiếm' },
+        ]
+    },
+    {
+        id: 'hoian',
+        name: 'Đô thị cổ Hội An',
+        nameEn: 'Hoi An Ancient Town',
+        type: 'cultural',
+        year: 1999,
+        location: 'Quảng Nam',
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Japanese_Bridge%2C_Hoi_An.jpg/640px-Japanese_Bridge%2C_Hoi_An.jpg',
+        desc: 'Hội An từng là thương cảng quốc tế sầm uất nhất Đông Nam Á thế kỷ 16–17. Phố cổ Hội An bảo tồn gần như nguyên vẹn kiến trúc thương mại với sự giao thoa văn hóa Việt–Trung–Nhật–Châu Âu. Đèn lồng Hội An đã trở thành biểu tượng văn hóa Việt Nam.',
+        facts: [
+            { icon: '📅', text: 'Công nhận UNESCO: 1999' },
+            { icon: '🏛️', text: 'Loại: Di sản Văn hóa' },
+            { icon: '🏘️', text: 'Hơn 1.000 di tích được bảo tồn' },
+            { icon: '🌉', text: 'Chùa Cầu (Lai Viễn Kiều) – biểu tượng của Hội An' },
+            { icon: '🎑', text: 'Lễ hội đèn lồng vào ngày rằm hàng tháng' },
+        ]
+    },
+    {
+        id: 'myson',
+        name: 'Thánh địa Mỹ Sơn',
+        nameEn: 'My Son Sanctuary',
+        type: 'cultural',
+        year: 1999,
+        location: 'Quảng Nam',
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/My_Son_temple_complex%2C_Vietnam.jpg/640px-My_Son_temple_complex%2C_Vietnam.jpg',
+        desc: 'Mỹ Sơn là thánh địa Hindu giáo của vương quốc Chăm Pa, được xây dựng từ thế kỷ 4 đến thế kỷ 13. Quần thể đền tháp bằng gạch đỏ là minh chứng cho nền văn minh rực rỡ của dân tộc Chăm, thường được ví như "Angkor Wat thu nhỏ" của Việt Nam.',
+        facts: [
+            { icon: '📅', text: 'Công nhận UNESCO: 1999' },
+            { icon: '🏛️', text: 'Loại: Di sản Văn hóa' },
+            { icon: '⛩️', text: 'Hơn 70 đền tháp Chăm Pa (thế kỷ 4–13)' },
+            { icon: '🕌', text: 'Thờ thần Shiva theo đạo Hindu' },
+            { icon: '🔴', text: 'Kỹ thuật xây gạch không dùng vữa độc đáo' },
+        ]
+    },
+    {
+        id: 'phongnha',
+        name: 'Vườn quốc gia Phong Nha – Kẻ Bàng',
+        nameEn: 'Phong Nha-Ke Bang National Park',
+        type: 'natural',
+        year: 2003,
+        location: 'Quảng Bình',
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Son_Doong_cave_Vietnam.jpg/640px-Son_Doong_cave_Vietnam.jpg',
+        desc: 'Phong Nha – Kẻ Bàng là vùng núi đá vôi lớn nhất thế giới với hệ thống hang động khổng lồ. Hang Sơn Đoòng – nằm trong vườn quốc gia – là hang động lớn nhất thế giới, đủ chứa cả một tòa nhà 40 tầng bên trong. Năm 2025 được mở rộng cùng VQGHN Hin Nam No (Lào).',
+        facts: [
+            { icon: '📅', text: 'Công nhận UNESCO: 2003 (mở rộng 2015, 2025)' },
+            { icon: '🌿', text: 'Loại: Di sản Thiên nhiên' },
+            { icon: '🦇', text: 'Hơn 300 hang động được khám phá' },
+            { icon: '🏔️', text: 'Hang Sơn Đoòng – lớn nhất thế giới (chiều cao 200m, dài 9km)' },
+            { icon: '🌳', text: 'Đa dạng sinh học cực kỳ phong phú' },
+        ]
+    },
+    {
+        id: 'thanglong',
+        name: 'Khu Trung tâm Hoàng thành Thăng Long',
+        nameEn: 'Central Sector of the Imperial Citadel of Thang Long',
+        type: 'cultural',
+        year: 2010,
+        location: 'Hà Nội',
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Imperial_Citadel_of_Thang_Long_-_Gate_of_Doan_Mon.jpg/640px-Imperial_Citadel_of_Thang_Long_-_Gate_of_Doan_Mon.jpg',
+        desc: 'Hoàng thành Thăng Long là trung tâm quyền lực chính trị của Việt Nam suốt hơn 1.300 năm, từ thời Lý (1010) đến thời Nguyễn. Khu di tích này chứa đựng nhiều tầng văn hóa lịch sử quý giá từ thế kỷ 6 đến thế kỷ 20.',
+        facts: [
+            { icon: '📅', text: 'Công nhận UNESCO: 2010' },
+            { icon: '🏛️', text: 'Loại: Di sản Văn hóa' },
+            { icon: '🏯', text: 'Xây dựng từ thời Lý Thái Tổ năm 1010' },
+            { icon: '⛏️', text: 'Khai quật tìm thấy hơn 1 triệu hiện vật' },
+            { icon: '🗺️', text: 'Diện tích khu bảo tồn: 18,4 ha' },
+        ]
+    },
+    {
+        id: 'hodynamy',
+        name: 'Thành Nhà Hồ',
+        nameEn: 'Citadel of the Ho Dynasty',
+        type: 'cultural',
+        year: 2011,
+        location: 'Thanh Hóa',
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Ho_Dynasty_Citadel_main_gate.jpg/640px-Ho_Dynasty_Citadel_main_gate.jpg',
+        desc: 'Thành Nhà Hồ được xây dựng năm 1397 dưới triều đại nhà Hồ, là tòa thành đá duy nhất còn sót lại ở Đông Nam Á. Kỹ thuật xây đá khổng lồ không dùng vữa là bí ẩn kiến trúc vẫn chưa được giải mã hoàn toàn – những khối đá nặng tới 26 tấn được xếp khít không kẽ hở.',
+        facts: [
+            { icon: '📅', text: 'Công nhận UNESCO: 2011' },
+            { icon: '🏛️', text: 'Loại: Di sản Văn hóa' },
+            { icon: '🪨', text: 'Tường thành cao 6m, dài 3,5km – xây từ đá xanh khổng lồ' },
+            { icon: '🏗️', text: 'Xây dựng chỉ trong vòng 3 tháng (1397)' },
+            { icon: '🔍', text: 'Duy nhất ở Đông Nam Á còn nguyên bờ tường đá' },
+        ]
+    },
+    {
+        id: 'tranган',
+        name: 'Quần thể danh thắng Tràng An',
+        nameEn: 'Trang An Landscape Complex',
+        type: 'mixed',
+        year: 2014,
+        location: 'Ninh Bình',
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Trang_An_boat_tour.jpg/640px-Trang_An_boat_tour.jpg',
+        desc: 'Tràng An là di sản hỗn hợp đầu tiên của Việt Nam và Đông Nam Á, được ghi danh cả về giá trị thiên nhiên lẫn văn hóa. Vùng núi đá vôi, hang động, thung lũng ngập nước tạo nên cảnh quan hùng vĩ. Nơi đây cũng là Cố đô Hoa Lư của triều Đinh – Lê thế kỷ 10. Cảnh Tràng An đã xuất hiện trong phim bom tấn Kong: Skull Island (2017).',
+        facts: [
+            { icon: '📅', text: 'Công nhận UNESCO: 2014' },
+            { icon: '🌄', text: 'Loại: Di sản Hỗn hợp (thiên nhiên + văn hóa)' },
+            { icon: '🏛️', text: 'Kinh đô Hoa Lư (968–1010) – thủ đô đầu tiên của Đại Việt thống nhất' },
+            { icon: '🛶', text: 'Hơn 50 hang động, 47 thung lũng ngập nước' },
+            { icon: '🎬', text: 'Địa điểm quay phim Kong: Skull Island (2017)' },
+        ]
+    },
+    {
+        id: 'yentu',
+        name: 'Quần thể Yên Tử – Vĩnh Nghiêm – Côn Sơn, Kiếp Bạc',
+        nameEn: 'Yen Tu-Vinh Nghiem-Con Son, Kiep Bac Complex',
+        type: 'cultural',
+        year: 2025,
+        location: 'Quảng Ninh – Bắc Giang – Hải Dương',
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Yen_Tu_mountain_Vietnam.jpg/640px-Yen_Tu_mountain_Vietnam.jpg',
+        desc: 'Quần thể di tích liên tỉnh gắn liền với Thiền phái Trúc Lâm – dòng thiền do vua Trần Nhân Tông sáng lập, dòng thiền duy nhất của người Việt. Yên Tử là "đất tổ Phật giáo Trúc Lâm", nơi vua Trần Nhân Tông tu hành và viên tịch năm 1308 sau khi từ bỏ ngai vàng.',
+        facts: [
+            { icon: '📅', text: 'Công nhận UNESCO: 2025 (di sản mới nhất)' },
+            { icon: '🏛️', text: 'Loại: Di sản Văn hóa' },
+            { icon: '☸️', text: 'Gắn liền với Thiền phái Trúc Lâm – dòng thiền thuần Việt' },
+            { icon: '👑', text: 'Vua Trần Nhân Tông từ bỏ ngai vàng đi tu tại đây (1299)' },
+            { icon: '🗺️', text: 'Di sản trải dài trên 3 tỉnh thành' },
+        ]
+    },
+    // INTANGIBLE HERITAGE
+    {
+        id: 'nhang',
+        name: 'Nhã nhạc Cung đình Huế',
+        nameEn: 'Nha Nhac – Vietnamese Court Music',
+        type: 'intangible',
+        year: 2003,
+        location: 'Thừa Thiên Huế',
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Nha_nhac_Hue_court_music.jpg/640px-Nha_nhac_Hue_court_music.jpg',
+        desc: 'Nhã nhạc là âm nhạc cung đình Việt Nam, được trình diễn trong các nghi lễ hoàng gia triều Nguyễn. Với lịch sử hơn 700 năm, đây là loại hình âm nhạc cung đình duy nhất ở Đông Nam Á còn được bảo tồn đến ngày nay, bao gồm ca, múa, nhạc cụ truyền thống.',
+        facts: [
+            { icon: '📅', text: 'UNESCO Phi vật thể: 2003 (đầu tiên của VN)' },
+            { icon: '🎭', text: 'Loại: Di sản Phi vật thể' },
+            { icon: '🎶', text: 'Âm nhạc cung đình triều Nguyễn (1802–1945)' },
+            { icon: '🥁', text: 'Bao gồm: ca, múa, nhạc cụ truyền thống' },
+            { icon: '🏆', text: 'Di sản phi vật thể đầu tiên của Việt Nam được UNESCO công nhận' },
+        ]
+    },
+    {
+        id: 'quanho',
+        name: 'Dân ca Quan họ Bắc Ninh',
+        nameEn: 'Quan Ho Bac Ninh Folk Songs',
+        type: 'intangible',
+        year: 2009,
+        location: 'Bắc Ninh',
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Quan_ho_Bac_Ninh.jpg/640px-Quan_ho_Bac_Ninh.jpg',
+        desc: 'Quan họ là thể loại dân ca đối đáp giao duyên đặc trưng của vùng đồng bằng Bắc Bộ. Các liền anh, liền chị hát đối theo cặp, thể hiện tình cảm và trí tuệ qua những câu hát tinh tế. Lễ hội Quan họ tổ chức vào mùa xuân trên sông Cầu là một trong những lễ hội văn hóa đặc sắc nhất miền Bắc.',
+        facts: [
+            { icon: '📅', text: 'UNESCO Phi vật thể: 2009' },
+            { icon: '🎭', text: 'Loại: Di sản Phi vật thể' },
+            { icon: '🎤', text: 'Hát đối đáp giao duyên theo cặp nam – nữ' },
+            { icon: '👘', text: 'Trang phục: áo tứ thân, nón quai thao (liền chị); áo the, khăn xếp (liền anh)' },
+            { icon: '🌸', text: 'Lễ hội Quan họ: mùng 4–5 tháng Giêng âm lịch' },
+        ]
+    },
+    {
+        id: 'catru',
+        name: 'Ca trù',
+        nameEn: 'Ca Tru Singing',
+        type: 'intangible',
+        year: 2009,
+        location: 'Bắc và Trung Bộ',
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Ca_tru_performance_Hanoi.jpg/640px-Ca_tru_performance_Hanoi.jpg',
+        desc: 'Ca trù là nghệ thuật biểu diễn âm nhạc thính phòng tinh tế, kết hợp thơ ca, âm nhạc và vũ đạo. Đào nương hát với giọng tinh tế điêu luyện, đàn đáy và trống chầu. Ca trù từng là loại hình nghệ thuật được giới quý tộc, nho sĩ ưa chuộng trong cung đình và tư thất.',
+        facts: [
+            { icon: '📅', text: 'UNESCO Phi vật thể: 2009 (cần bảo vệ khẩn cấp)' },
+            { icon: '🎭', text: 'Loại: Di sản Phi vật thể' },
+            { icon: '🎼', text: 'Nhạc cụ: đàn đáy, trống chầu, phách' },
+            { icon: '🎤', text: 'Đào nương – nghệ nhân nữ hát ca trù' },
+            { icon: '📜', text: 'Gắn liền với thơ Nôm và Hán học' },
+        ]
+    },
+    {
+        id: 'gong',
+        name: 'Không gian văn hóa Cồng chiêng Tây Nguyên',
+        nameEn: 'Space of Gong Culture in the Central Highlands',
+        type: 'intangible',
+        year: 2005,
+        location: 'Tây Nguyên (5 tỉnh)',
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Gong_culture_central_highlands_vietnam.jpg/640px-Gong_culture_central_highlands_vietnam.jpg',
+        desc: 'Văn hóa Cồng chiêng Tây Nguyên là di sản của 17 dân tộc thiểu số ở cao nguyên trung bộ Việt Nam. Cồng chiêng không chỉ là nhạc cụ mà là vật thiêng, linh hồn của cộng đồng – được sử dụng trong mọi nghi lễ từ lễ hội mùa màng, ma chay đến lễ bỏ mả, lễ trưởng thành.',
+        facts: [
+            { icon: '📅', text: 'UNESCO Phi vật thể: 2005' },
+            { icon: '🎭', text: 'Loại: Di sản Phi vật thể' },
+            { icon: '🥁', text: 'Cồng chiêng = nhạc cụ linh thiêng của 17 dân tộc Tây Nguyên' },
+            { icon: '🌄', text: '5 tỉnh: Kon Tum, Gia Lai, Đắk Lắk, Đắk Nông, Lâm Đồng' },
+            { icon: '🎪', text: 'Gắn với lễ hội đâm trâu, lễ bỏ mả, lễ mừng lúa mới' },
+        ]
+    },
+    {
+        id: 'xoan',
+        name: 'Hát Xoan Phú Thọ',
+        nameEn: 'Xoan Singing of Phu Tho Province',
+        type: 'intangible',
+        year: 2011,
+        location: 'Phú Thọ',
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Xoan_singing_Phu_Tho.jpg/640px-Xoan_singing_Phu_Tho.jpg',
+        desc: 'Hát Xoan là dân ca nghi lễ cổ xưa gắn với tín ngưỡng thờ vua Hùng và đền Hùng. Theo truyền thuyết, Hát Xoan do vợ Vua Hùng sáng tạo. Năm 2017, Hát Xoan được đưa ra khỏi danh sách cần bảo vệ khẩn cấp – trở thành di sản phi vật thể đầu tiên thế giới "thoát khỏi nguy hiểm".',
+        facts: [
+            { icon: '📅', text: 'UNESCO Phi vật thể: 2011 (thoát nguy 2017)' },
+            { icon: '🎭', text: 'Loại: Di sản Phi vật thể' },
+            { icon: '⛩️', text: 'Gắn với tín ngưỡng thờ Hùng Vương' },
+            { icon: '🏆', text: 'Di sản đầu tiên trên thế giới "thoát khỏi danh sách nguy cấp" của UNESCO' },
+            { icon: '🎤', text: 'Bao gồm 3 chặng hát: hát thờ, hát nghi lễ, hát hội' },
+        ]
+    },
+    {
+        id: 'dongthap',
+        name: 'Đờn ca tài tử Nam Bộ',
+        nameEn: 'Don Ca Tai Tu Music and Song of South Vietnam',
+        type: 'intangible',
+        year: 2013,
+        location: 'Nam Bộ (21 tỉnh thành)',
+        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Don_ca_tai_tu_Nam_Bo.jpg/640px-Don_ca_tai_tu_Nam_Bo.jpg',
+        desc: 'Đờn ca tài tử là loại nhạc thính phòng của miền Nam, xuất hiện cuối thế kỷ 19. "Tài tử" có nghĩa là người có tài, không chuyên – âm nhạc để thưởng thức và giao lưu bạn bè, không phải biểu diễn trên sân khấu. Đây là nền tảng của nghệ thuật cải lương sau này.',
+        facts: [
+            { icon: '📅', text: 'UNESCO Phi vật thể: 2013' },
+            { icon: '🎭', text: 'Loại: Di sản Phi vật thể' },
+            { icon: '🎻', text: 'Nhạc cụ: đàn kìm, đàn cò, đàn tranh, guitar phím lõm' },
+            { icon: '🌴', text: 'Phổ biến tại 21 tỉnh thành Nam Bộ' },
+            { icon: '🎬', text: 'Là nền tảng của nghệ thuật cải lương' },
+        ]
+    },
+];
+
+// ── INFO TAB – RENDER CARDS ────────────────────────────────────────────────
+const TYPE_LABELS = {
+    cultural:   '🏛️ Văn hóa',
+    natural:    '🌿 Thiên nhiên',
+    mixed:      '🌄 Hỗn hợp',
+    intangible: '🎭 Phi vật thể',
+};
+let currentFilter = 'all';
+
+// ── WIKIPEDIA IMAGE CACHE + LOADER ───────────────────────────────────────
+const IMG_CACHE = {};
+const WIKI_KEYS = {
+    hue:       'Complex of Hué Monuments',
+    halong:    'Ha Long Bay',
+    hoian:     'Hoi An Ancient Town',
+    myson:     'My Son Sanctuary',
+    phongnha:  'Phong Nha-Ke Bang National Park',
+    thanglong: 'Imperial Citadel of Thang Long',
+    hodynamy:  'Citadel of the Ho Dynasty',
+    'tranган': 'Trang An Landscape Complex',
+    yentu:     'Yen Tu',
+    nhang:     'Nha nhac',
+    quanho:    'Quan ho Bac Ninh folk songs',
+    catru:     'Ca tru',
+    gong:      'Space of Gong Culture in the Central Highlands',
+    xoan:      'Xoan singing',
+    dongthap:  'Don ca tai tu',
+};
+
+async function fetchWikiImg(id) {
+    if (IMG_CACHE[id] !== undefined) return IMG_CACHE[id];
+    const keyword = WIKI_KEYS[id];
+    if (!keyword) return (IMG_CACHE[id] = null);
+    try {
+        const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(keyword)}?redirect=true`);
+        const d = await r.json();
+        const src = d.thumbnail?.source || null;
+        IMG_CACHE[id] = src;
+        return src;
+    } catch { return (IMG_CACHE[id] = null); }
+}
+
+async function loadCardImages(list) {
+    for (const h of list) {
+        const card = document.querySelector(`.heritage-card[data-id="${h.id}"]`);
+        if (!card) continue;
+        const img     = card.querySelector('img');
+        const shimmer = card.querySelector('.img-shimmer');
+        const src = await fetchWikiImg(h.id);
+        if (src) {
+            img.src = src;
+            img.style.display = 'block';
+            img.onload = () => { if (shimmer) shimmer.remove(); };
+            img.onerror = () => { img.style.display='none'; if (shimmer) shimmer.remove(); };
+        } else {
+            img.style.display = 'none';
+            if (shimmer) shimmer.remove();
+        }
+    }
+}
+
+function renderCards(filter) {
+    const grid = document.getElementById('heritageGrid');
+    const list = filter === 'all' ? HERITAGE : HERITAGE.filter(h => h.type === filter);
+    grid.innerHTML = list.map(h => `
+        <div class="heritage-card" data-id="${h.id}">
+            <div class="card-img-wrap">
+                <div class="img-shimmer"></div>
+                <img src="" alt="${h.name}" style="display:none">
+                <span class="card-type-badge ${h.type}">${TYPE_LABELS[h.type]}</span>
+                <span class="card-year">${h.year}</span>
+            </div>
+            <div class="card-body">
+                <div class="card-title">${h.name}</div>
+                <div class="card-location">📍 ${h.location}</div>
+                <div class="card-desc">${h.desc.slice(0, 140)}…</div>
+            </div>
+        </div>`).join('');
+    loadCardImages(list);
+}
+renderCards('all');
+
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderCards(currentFilter);
+    });
+});
+
+// ── DETAIL MODAL ───────────────────────────────────────────────────────────
+const overlay = document.getElementById('modal-overlay');
+document.getElementById('modal-close').addEventListener('click', () => overlay.classList.remove('open'));
+overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+
+document.getElementById('heritageGrid').addEventListener('click', e => {
+    const card = e.target.closest('.heritage-card');
+    if (!card) return;
+    const h = HERITAGE.find(x => x.id === card.dataset.id);
+    if (!h) return;
+    const mImg = document.getElementById('modal-img');
+    mImg.alt = h.name;
+    mImg.style.display = 'none';
+    fetchWikiImg(h.id).then(src => {
+        if (src) { mImg.src = src; mImg.style.display = 'block'; }
+    });
+    document.getElementById('modal-title').textContent = h.name;
+    document.getElementById('modal-title-vn').textContent = h.nameEn;
+    document.getElementById('modal-desc').textContent = h.desc;
+    document.getElementById('modal-badges').innerHTML =
+        `<span class="modal-badge ${h.type}">${TYPE_LABELS[h.type]}</span>
+         <span class="modal-badge year">${h.year}</span>`;
+    document.getElementById('modal-facts').innerHTML =
+        h.facts.map(f => `<div class="modal-fact"><span class="fi">${f.icon}</span><span>${f.text}</span></div>`).join('');
+    overlay.classList.add('open');
+});
+
+// ── DARK MODE ──────────────────────────────────────────────────────────────
+const darkToggle = document.getElementById('darkToggle');
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+    darkToggle.textContent = '☀️';
+}
+darkToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const on = document.body.classList.contains('dark-mode');
+    darkToggle.textContent = on ? '☀️' : '🌙';
+    localStorage.setItem('darkMode', on);
+});
+
+// ── TAB SWITCHING ──────────────────────────────────────────────────────────
+function activateTab(tab) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    const panel = document.getElementById('tab-' + tab);
+    if (panel) panel.classList.add('active');
+    document.querySelectorAll('.sidebar-submenu a').forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + tab);
+    });
+}
+(function () {
+    const h = (location.hash || '#info').replace('#', '');
+    activateTab(['info', 'quiz'].includes(h) ? h : 'info');
+}());
+window.addEventListener('hashchange', () => {
+    const h = (location.hash || '#info').replace('#', '');
+    activateTab(['info', 'quiz'].includes(h) ? h : 'info');
+});
+document.querySelectorAll('.sidebar-submenu a').forEach(a => {
+    a.addEventListener('click', e => {
+        const href = a.getAttribute('href');
+        if (href.startsWith('#')) {
+            e.preventDefault();
+            history.pushState(null, '', href);
+            activateTab(href.replace('#', ''));
+        }
+    });
+});
+
+// ── QUIZ BANK (handcrafted questions) ─────────────────────────────────────
+const QUIZ_BANK = [
+    // ── DỄ (diff: 1) ────────────────────────────────────────────────────────
+    {
+        q: 'Di sản UNESCO đầu tiên của Việt Nam được công nhận năm 1993 là gì?',
+        options: ['Quần thể Di tích Cố đô Huế', 'Vịnh Hạ Long', 'Phố cổ Hội An', 'Thánh địa Mỹ Sơn'],
+        ans: 0, cat: 'year', diff: 1,
+        explain: 'Cố đô Huế được công nhận năm 1993, là di sản UNESCO đầu tiên của Việt Nam, trước Vịnh Hạ Long (1994) một năm.',
+        wikiId: 'hue'
+    },
+    {
+        q: 'Vịnh Hạ Long nằm ở tỉnh nào của Việt Nam?',
+        options: ['Quảng Ninh', 'Hải Phòng', 'Ninh Bình', 'Đà Nẵng'],
+        ans: 0, cat: 'location', diff: 1,
+        explain: 'Vịnh Hạ Long thuộc tỉnh Quảng Ninh. Năm 2023 được mở rộng sang quần đảo Cát Bà (Hải Phòng).',
+        wikiId: 'halong'
+    },
+    {
+        q: 'Hang Sơn Đoòng – hang động lớn nhất thế giới – nằm trong vườn quốc gia nào?',
+        options: ['Phong Nha – Kẻ Bàng', 'Cúc Phương', 'Ba Bể', 'Yok Đôn'],
+        ans: 0, cat: 'name', diff: 1,
+        explain: 'Hang Sơn Đoòng nằm trong VQG Phong Nha – Kẻ Bàng (Quảng Bình), cao tới 200m – đủ chứa một tòa nhà 40 tầng.',
+        wikiId: 'phongnha'
+    },
+    {
+        q: 'Di sản phi vật thể đầu tiên của Việt Nam được UNESCO công nhận là gì?',
+        options: ['Nhã nhạc Cung đình Huế', 'Quan họ Bắc Ninh', 'Hát Xoan Phú Thọ', 'Ca Trù'],
+        ans: 0, cat: 'name', diff: 1,
+        explain: 'Nhã nhạc Cung đình Huế được công nhận năm 2003 – là di sản phi vật thể đầu tiên của Việt Nam và loại hình âm nhạc cung đình duy nhất còn tồn tại ở Đông Nam Á.',
+        wikiId: 'nhang'
+    },
+    {
+        q: 'Phố cổ Hội An nổi tiếng với biểu tượng kiến trúc nào?',
+        options: ['Chùa Cầu (Lai Viễn Kiều)', 'Tháp Chăm', 'Cổng Ngọ Môn', 'Đình làng cổ'],
+        ans: 0, cat: 'name', diff: 1,
+        explain: 'Chùa Cầu (Lai Viễn Kiều) xây năm 1593 do thương nhân Nhật Bản xây dựng, là biểu tượng của Hội An và hình ảnh trên tờ tiền 20.000 đồng.',
+        wikiId: 'hoian'
+    },
+    {
+        q: 'Cồng chiêng Tây Nguyên là di sản chung của bao nhiêu dân tộc thiểu số?',
+        options: ['17 dân tộc', '5 dân tộc', '10 dân tộc', '54 dân tộc'],
+        ans: 0, cat: 'fact', diff: 1,
+        explain: 'Cồng chiêng Tây Nguyên là di sản chung của 17 dân tộc thiểu số sinh sống trên cao nguyên trung bộ, trải dài 5 tỉnh.',
+        wikiId: 'gong'
+    },
+    {
+        q: 'Tràng An thuộc tỉnh nào?',
+        options: ['Ninh Bình', 'Hà Nam', 'Nam Định', 'Thanh Hóa'],
+        ans: 0, cat: 'location', diff: 1,
+        explain: 'Quần thể danh thắng Tràng An nằm ở tỉnh Ninh Bình – là di sản hỗn hợp đầu tiên của Việt Nam và Đông Nam Á.',
+        wikiId: 'tranган'
+    },
+    {
+        q: 'Di sản UNESCO mới nhất của Việt Nam (2025) là gì?',
+        options: ['Quần thể Yên Tử – Vĩnh Nghiêm – Côn Sơn, Kiếp Bạc', 'Hát Xoan Phú Thọ', 'Đờn ca tài tử Nam Bộ', 'Tràng An'],
+        ans: 0, cat: 'year', diff: 1,
+        explain: 'Quần thể Yên Tử được UNESCO công nhận năm 2025, gắn liền với Thiền phái Trúc Lâm – dòng thiền thuần Việt do vua Trần Nhân Tông sáng lập.',
+        wikiId: 'yentu'
+    },
+    {
+        q: 'Thánh địa Mỹ Sơn là thánh địa của tôn giáo nào?',
+        options: ['Hindu giáo (Ấn Độ giáo)', 'Phật giáo', 'Thiên Chúa giáo', 'Đạo giáo'],
+        ans: 0, cat: 'fact', diff: 1,
+        explain: 'Mỹ Sơn là thánh địa Hindu giáo của vương quốc Chăm Pa, thờ thần Shiva. Thường được ví như "Angkor Wat thu nhỏ" của Việt Nam.',
+        wikiId: 'myson'
+    },
+    {
+        q: 'Quan họ Bắc Ninh là thể loại âm nhạc nào?',
+        options: ['Dân ca đối đáp giao duyên', 'Âm nhạc cung đình', 'Dân ca nghi lễ thờ cúng', 'Nhạc thính phòng bác học'],
+        ans: 0, cat: 'fact', diff: 1,
+        explain: 'Quan họ là dân ca đối đáp giao duyên – liền anh và liền chị hát đối theo cặp, thể hiện tình cảm và trí tuệ.',
+        wikiId: 'quanho'
+    },
+    {
+        q: 'Hoàng thành Thăng Long nằm ở thành phố nào?',
+        options: ['Hà Nội', 'Huế', 'Đà Nẵng', 'Hồ Chí Minh'],
+        ans: 0, cat: 'location', diff: 1,
+        explain: 'Hoàng thành Thăng Long nằm tại Hà Nội, là trung tâm quyền lực chính trị của Việt Nam suốt hơn 1.300 năm.',
+        wikiId: 'thanglong'
+    },
+    {
+        q: 'Thành Nhà Hồ nằm ở tỉnh nào?',
+        options: ['Thanh Hóa', 'Nghệ An', 'Hà Tĩnh', 'Ninh Bình'],
+        ans: 0, cat: 'location', diff: 1,
+        explain: 'Thành Nhà Hồ nằm ở huyện Vĩnh Lộc, tỉnh Thanh Hóa – là tòa thành đá duy nhất còn sót lại ở Đông Nam Á.',
+        wikiId: 'hodynamy'
+    },
+    // ── TRUNG BÌNH (diff: 2) ─────────────────────────────────────────────────
+    {
+        q: 'Năm nào Phố cổ Hội An và Thánh địa Mỹ Sơn cùng được UNESCO công nhận?',
+        options: ['1999', '2000', '2003', '2001'],
+        ans: 0, cat: 'year', diff: 2,
+        explain: 'Cả Hội An và Mỹ Sơn đều được công nhận vào năm 1999 – cùng năm với nhau, cùng ở tỉnh Quảng Nam.',
+        wikiId: null
+    },
+    {
+        q: 'Hoàng thành Thăng Long được xây dựng từ năm nào?',
+        options: ['1010', '938', '1428', '1802'],
+        ans: 0, cat: 'year', diff: 2,
+        explain: 'Vua Lý Thái Tổ dời đô về Thăng Long năm 1010 và bắt đầu xây dựng Hoàng thành. Khu vực này là trung tâm quyền lực suốt 13 thế kỷ.',
+        wikiId: 'thanglong'
+    },
+    {
+        q: 'Thành Nhà Hồ được xây dựng trong thời gian kỷ lục bao lâu?',
+        options: ['3 tháng', '1 năm', '6 tháng', '5 năm'],
+        ans: 0, cat: 'fact', diff: 2,
+        explain: 'Thành Nhà Hồ được xây dựng chỉ trong 3 tháng năm 1397 – một kỷ lục kiến trúc đáng kinh ngạc với những khối đá nặng tới 26 tấn.',
+        wikiId: 'hodynamy'
+    },
+    {
+        q: 'Di sản nào của Việt Nam là di sản hỗn hợp (vừa thiên nhiên vừa văn hóa) đầu tiên ở Đông Nam Á?',
+        options: ['Tràng An', 'Vịnh Hạ Long', 'Phong Nha – Kẻ Bàng', 'Hội An'],
+        ans: 0, cat: 'fact', diff: 2,
+        explain: 'Tràng An (2014) là di sản hỗn hợp đầu tiên của Việt Nam và toàn bộ Đông Nam Á, được công nhận cả về giá trị thiên nhiên lẫn văn hóa.',
+        wikiId: 'tranган'
+    },
+    {
+        q: 'Vua nào đã từ bỏ ngai vàng để lên Yên Tử tu hành và sáng lập Thiền phái Trúc Lâm?',
+        options: ['Trần Nhân Tông', 'Lý Thái Tổ', 'Lê Lợi', 'Đinh Tiên Hoàng'],
+        ans: 0, cat: 'fact', diff: 2,
+        explain: 'Vua Trần Nhân Tông (1258–1308) – người hai lần đánh thắng quân Nguyên – từ bỏ ngai vàng năm 1299, lên Yên Tử tu hành và lập Thiền phái Trúc Lâm.',
+        wikiId: 'yentu'
+    },
+    {
+        q: 'Hát Xoan đạt được thành tích đặc biệt gì tại UNESCO năm 2017?',
+        options: [
+            'Di sản đầu tiên trên thế giới thoát khỏi "danh sách cần bảo vệ khẩn cấp"',
+            'Được bầu chọn là di sản phi vật thể đặc sắc nhất châu Á',
+            'Được UNESCO trao giải thưởng bảo tồn xuất sắc',
+            'Được mở rộng công nhận sang các nước Đông Nam Á'
+        ],
+        ans: 0, cat: 'fact', diff: 2,
+        explain: 'Năm 2017, Hát Xoan Phú Thọ trở thành di sản phi vật thể đầu tiên trên toàn thế giới được UNESCO đưa ra khỏi "Danh sách cần bảo vệ khẩn cấp".',
+        wikiId: 'xoan'
+    },
+    {
+        q: 'Tràng An từng là kinh đô của triều đại nào trước khi vua Lý Thái Tổ dời đô?',
+        options: ['Nhà Đinh và Tiền Lê (968–1010)', 'Nhà Lý (1010–1225)', 'Nhà Trần (1225–1400)', 'Nhà Nguyễn (1802–1945)'],
+        ans: 0, cat: 'fact', diff: 2,
+        explain: 'Hoa Lư (thuộc Tràng An) là kinh đô của triều Đinh (968) và Tiền Lê (980–1010) – thủ đô đầu tiên của Đại Việt thống nhất.',
+        wikiId: 'tranган'
+    },
+    {
+        q: 'Đờn ca tài tử phổ biến ở bao nhiêu tỉnh thành Nam Bộ?',
+        options: ['21 tỉnh thành', '13 tỉnh thành', '6 tỉnh thành', '19 tỉnh thành'],
+        ans: 0, cat: 'fact', diff: 2,
+        explain: 'Đờn ca tài tử phổ biến ở 21 tỉnh thành Nam Bộ. "Tài tử" nghĩa là người có tài – âm nhạc để giao lưu bạn bè, không phải biểu diễn.',
+        wikiId: 'dongthap'
+    },
+    {
+        q: 'Khu Trung tâm Hoàng thành Thăng Long được UNESCO công nhận năm nào?',
+        options: ['2010', '2008', '2012', '2014'],
+        ans: 0, cat: 'year', diff: 2,
+        explain: 'Hoàng thành Thăng Long được UNESCO công nhận Di sản Văn hóa Thế giới năm 2010, sau khi phát hiện hàng triệu hiện vật qua khai quật.',
+        wikiId: 'thanglong'
+    },
+    {
+        q: 'Nhạc cụ nào là đặc trưng của Ca Trù?',
+        options: ['Đàn đáy', 'Đàn bầu', 'Đàn nguyệt', 'Đàn tranh'],
+        ans: 0, cat: 'fact', diff: 2,
+        explain: 'Đàn đáy là nhạc cụ đặc trưng chỉ dùng trong Ca Trù, kết hợp với trống chầu và phách (sênh). Nghệ nhân nữ biểu diễn được gọi là "đào nương".',
+        wikiId: 'catru'
+    },
+    {
+        q: 'Vịnh Hạ Long có khoảng bao nhiêu hòn đảo đá vôi?',
+        options: ['Hơn 1.600 hòn đảo', 'Khoảng 500 hòn đảo', 'Hơn 3.000 hòn đảo', 'Khoảng 100 hòn đảo'],
+        ans: 0, cat: 'fact', diff: 2,
+        explain: 'Vịnh Hạ Long có hơn 1.600 hòn đảo đá vôi, phần lớn không có người ở và có những hình dạng kỳ thú từ sự phong hóa hàng triệu năm.',
+        wikiId: 'halong'
+    },
+    {
+        q: 'Ca Trù được UNESCO xếp vào danh sách nào khi công nhận năm 2009?',
+        options: ['Di sản cần bảo vệ khẩn cấp', 'Di sản phi vật thể tiêu biểu của nhân loại', 'Di sản xuất sắc nhất châu Á', 'Di sản đặc biệt quan trọng'],
+        ans: 0, cat: 'fact', diff: 2,
+        explain: 'Ca Trù được đưa vào "Danh sách Di sản Văn hóa phi vật thể cần bảo vệ khẩn cấp" năm 2009 vì số lượng nghệ nhân biết hát Ca Trù ngày càng ít.',
+        wikiId: 'catru'
+    },
+    {
+        q: 'Nhã nhạc Cung đình Huế có lịch sử tồn tại khoảng bao nhiêu năm?',
+        options: ['Hơn 700 năm', 'Khoảng 200 năm', 'Hơn 1.000 năm', 'Khoảng 400 năm'],
+        ans: 0, cat: 'fact', diff: 2,
+        explain: 'Nhã nhạc có lịch sử hơn 700 năm tại Việt Nam, phát triển rực rỡ nhất dưới triều Nguyễn (1802–1945).',
+        wikiId: 'nhang'
+    },
+    {
+        q: 'Hội An từng là thương cảng sầm uất nhất Đông Nam Á vào thế kỷ nào?',
+        options: ['Thế kỷ 16–17', 'Thế kỷ 10–11', 'Thế kỷ 18–19', 'Thế kỷ 13–14'],
+        ans: 0, cat: 'fact', diff: 2,
+        explain: 'Hội An là thương cảng quốc tế phồn thịnh nhất Đông Nam Á vào thế kỷ 16–17, với sự giao thương của thương nhân Nhật, Trung, Bồ Đào Nha, Hà Lan.',
+        wikiId: 'hoian'
+    },
+    // ── KHÓ (diff: 3) ────────────────────────────────────────────────────────
+    {
+        q: 'Hang Sơn Đoòng có chiều cao tối đa là bao nhiêu mét?',
+        options: ['200 mét', '100 mét', '150 mét', '300 mét'],
+        ans: 0, cat: 'fact', diff: 3,
+        explain: 'Hang Sơn Đoòng cao tối đa 200m, dài 9km – đủ chứa một tòa nhà 40 tầng. Được khám phá bởi Hồ Khanh năm 1991 và công bố với thế giới năm 2009.',
+        wikiId: 'phongnha'
+    },
+    {
+        q: 'Diện tích vùng lõi của Khu Trung tâm Hoàng thành Thăng Long là bao nhiêu?',
+        options: ['18,4 ha', '50 ha', '100 ha', '5 ha'],
+        ans: 0, cat: 'fact', diff: 3,
+        explain: 'Khu vực bảo tồn cốt lõi của Hoàng thành Thăng Long có diện tích 18,4 ha, trong đó chứa đựng 13 thế kỷ lịch sử từ thế kỷ 6 đến thế kỷ 20.',
+        wikiId: 'thanglong'
+    },
+    {
+        q: 'Thành Nhà Hồ là công trình đặc biệt vì điều gì?',
+        options: [
+            'Tòa thành đá duy nhất còn sót lại ở Đông Nam Á, xây không dùng vữa',
+            'Tòa thành lớn nhất Đông Nam Á về diện tích',
+            'Tòa thành cổ nhất Việt Nam còn được bảo tồn nguyên vẹn',
+            'Tòa thành duy nhất ở Việt Nam có hào nước bao quanh'
+        ],
+        ans: 0, cat: 'fact', diff: 3,
+        explain: 'Thành Nhà Hồ là tòa thành đá duy nhất ở Đông Nam Á, xây từ đá xanh khổng lồ (nặng tới 26 tấn) không dùng vữa – bí ẩn kỹ thuật thế kỷ 14 chưa được giải mã hoàn toàn.',
+        wikiId: 'hodynamy'
+    },
+    {
+        q: 'Khai quật Hoàng thành Thăng Long (2002–2004) tìm thấy bao nhiêu hiện vật?',
+        options: ['Hơn 1 triệu hiện vật', 'Khoảng 10.000 hiện vật', 'Hơn 500.000 hiện vật', 'Khoảng 100.000 hiện vật'],
+        ans: 0, cat: 'fact', diff: 3,
+        explain: 'Cuộc khai quật năm 2002–2004 tại 18 Hoàng Diệu đã tìm thấy hơn 1 triệu hiện vật, phản ánh liên tục 13 thế kỷ lịch sử từ Đại La đến Hà Nội.',
+        wikiId: 'thanglong'
+    },
+    {
+        q: 'Phong Nha – Kẻ Bàng có tổng bao nhiêu hang động được khám phá?',
+        options: ['Hơn 300 hang động', 'Khoảng 50 hang động', 'Hơn 1.000 hang động', 'Khoảng 150 hang động'],
+        ans: 0, cat: 'fact', diff: 3,
+        explain: 'VQG Phong Nha – Kẻ Bàng có hơn 300 hang động, trong đó Hang Sơn Đoòng là lớn nhất thế giới và Phong Nha là hang có sông ngầm dài nhất thế giới.',
+        wikiId: 'phongnha'
+    },
+    {
+        q: 'Quần thể Yên Tử – Vĩnh Nghiêm – Côn Sơn, Kiếp Bạc trải dài trên mấy tỉnh?',
+        options: ['3 tỉnh: Quảng Ninh, Bắc Giang, Hải Dương', '2 tỉnh: Quảng Ninh, Bắc Giang', '4 tỉnh', '1 tỉnh: Quảng Ninh'],
+        ans: 0, cat: 'location', diff: 3,
+        explain: 'Quần thể Yên Tử trải dài trên 3 tỉnh: Quảng Ninh (Yên Tử), Bắc Giang (Vĩnh Nghiêm) và Hải Dương (Côn Sơn, Kiếp Bạc).',
+        wikiId: 'yentu'
+    },
+    {
+        q: 'Diện tích vùng lõi của Vịnh Hạ Long là bao nhiêu km²?',
+        options: ['434 km²', '1.553 km²', '200 km²', '2.000 km²'],
+        ans: 0, cat: 'fact', diff: 3,
+        explain: 'Vùng lõi Vịnh Hạ Long có diện tích 434 km² – đây là phần đặc biệt được bảo vệ nghiêm ngặt nhất. Toàn bộ vịnh (gồm vùng đệm) rộng hơn 1.500 km².',
+        wikiId: 'halong'
+    },
+    {
+        q: 'Phim bom tấn Hollywood nào đã chọn Tràng An làm địa điểm quay phim chính?',
+        options: ['Kong: Skull Island (2017)', 'Avengers: Endgame (2019)', 'The Jungle Book (2016)', 'Godzilla (2014)'],
+        ans: 0, cat: 'fact', diff: 3,
+        explain: 'Phim Kong: Skull Island (2017) của Warner Bros đã chọn Tràng An làm địa điểm quay chính, quảng bá cảnh đẹp Việt Nam tới khán giả toàn cầu.',
+        wikiId: 'tranган'
+    },
+    {
+        q: 'Thánh địa Mỹ Sơn được xây dựng từ thế kỷ mấy đến thế kỷ mấy?',
+        options: ['Thế kỷ 4 đến thế kỷ 13', 'Thế kỷ 1 đến thế kỷ 10', 'Thế kỷ 7 đến thế kỷ 15', 'Thế kỷ 10 đến thế kỷ 17'],
+        ans: 0, cat: 'year', diff: 3,
+        explain: 'Thánh địa Mỹ Sơn được xây dựng liên tục từ thế kỷ 4 đến thế kỷ 13 qua nhiều triều đại vua Chăm Pa. Kỹ thuật xây gạch không dùng vữa vẫn là bí ẩn.',
+        wikiId: 'myson'
+    },
+    {
+        q: 'Nhạc cụ đặc trưng nào của Đờn ca tài tử KHÔNG có trong các thể loại nhạc dân tộc khác?',
+        options: ['Guitar phím lõm (guitar cải biên)', 'Đàn tranh', 'Đàn nhị', 'Sáo trúc'],
+        ans: 0, cat: 'fact', diff: 3,
+        explain: 'Guitar phím lõm là nhạc cụ độc đáo chỉ có trong Đờn ca tài tử – chiếc guitar phương Tây được cải biên, có các phím bị lõm xuống để tạo âm thanh rung đặc trưng của nhạc dân tộc.',
+        wikiId: 'dongthap'
+    },
+    {
+        q: 'Theo truyền thống Quan họ, điều gì được quy định nghiêm ngặt giữa liền anh và liền chị?',
+        options: [
+            'Liền anh và liền chị cùng làng Quan họ không được lấy nhau',
+            'Liền chị phải lớn tuổi hơn liền anh',
+            'Chỉ được hát vào ban đêm khi có trăng',
+            'Liền anh phải biết chơi đàn nhị'
+        ],
+        ans: 0, cat: 'fact', diff: 3,
+        explain: 'Theo truyền thống, các liền anh và liền chị trong cùng một làng Quan họ không được lấy nhau – họ chỉ là "bạn kết" (bạn hát). Đây là nét văn hóa đặc sắc tạo nên sự tinh tế của Quan họ.',
+        wikiId: 'quanho'
+    },
+    {
+        q: 'Quần thể Di tích Cố đô Huế có khoảng bao nhiêu công trình kiến trúc?',
+        options: ['Hơn 100 công trình', 'Khoảng 30 công trình', 'Hơn 500 công trình', 'Khoảng 70 công trình'],
+        ans: 0, cat: 'fact', diff: 3,
+        explain: 'Quần thể Di tích Cố đô Huế bao gồm hơn 100 công trình kiến trúc, trong đó có Kinh thành Huế, Đại Nội, 7 lăng tẩm vua Nguyễn và nhiều đền chùa.',
+        wikiId: 'hue'
+    },
+];
+
+// ── QUIZ ENGINE ────────────────────────────────────────────────────────────
+(function () {
+    const LETTERS = ['A', 'B', 'C', 'D'];
+    const DIFF_LABELS = { 1: ['d1', '😊 Dễ'], 2: ['d2', '🤔 TB'], 3: ['d3', '🔥 Khó'] };
+    let questions = [], current = 0, score = 0;
+    let answered = false, timerInterval = null, timeLeft = 20;
+    let selectedCat = 'all', selectedDiff = 0, totalQ = 10;
+
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function getFiltered() {
+        return QUIZ_BANK.filter(q =>
+            (selectedCat === 'all' || q.cat === selectedCat) &&
+            (selectedDiff === 0 || q.diff === selectedDiff)
+        );
+    }
+
+    function updateBankCount() {
+        const n = getFiltered().length;
+        document.getElementById('quiz-bank-count').textContent =
+            n > 0 ? `📚 ${n} câu hỏi phù hợp` : '⚠️ Không có câu hỏi – hãy chọn lại bộ lọc!';
+    }
+
+    // Category buttons
+    document.querySelectorAll('.quiz-cat-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.quiz-cat-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedCat = btn.dataset.cat;
+            updateBankCount();
+        });
+    });
+
+    // Difficulty buttons
+    document.querySelectorAll('.diff-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedDiff = parseInt(btn.dataset.diff);
+            updateBankCount();
+        });
+    });
+
+    updateBankCount();
+
+    function startQuiz() {
+        const pool = shuffle(getFiltered());
+        totalQ = Math.min(parseInt(document.getElementById('quiz-qcount').value), pool.length);
+        if (totalQ === 0) { alert('Không có câu hỏi! Hãy chọn bộ lọc khác.'); return; }
+        questions = pool.slice(0, totalQ);
+        current = 0; score = 0;
+        document.getElementById('quiz-setup').style.display   = 'none';
+        document.getElementById('quiz-results').style.display = 'none';
+        document.getElementById('quiz-game').style.display    = 'block';
+        showQuestion();
+    }
+
+    function showQuestion() {
+        answered = false;
+        const q = questions[current];
+        document.getElementById('quiz-progress-bar').style.width = (current / totalQ * 100) + '%';
+        document.getElementById('q-num').textContent   = `Câu ${current + 1} / ${totalQ}`;
+        document.getElementById('q-score').textContent = `🏆 ${score}`;
+
+        const [cls, label] = DIFF_LABELS[q.diff] || ['d1', '?'];
+        document.getElementById('q-category').innerHTML =
+            `${q.cat === 'year' ? '📅 NĂM' : q.cat === 'location' ? '📍 VỊ TRÍ' : q.cat === 'fact' ? '💡 KIẾN THỨC' : '🏛️ NHẬN BIẾT'} <span class="q-diff-badge ${cls}">${label}</span>`;
+
+        document.getElementById('q-text').innerHTML = q.question || q.q;
+
+        // Image
+        const imgWrap = document.getElementById('quiz-img-display');
+        const imgEl   = document.getElementById('quiz-img-el');
+        imgWrap.style.display = 'none'; imgEl.src = '';
+        if (q.wikiId) {
+            fetchWikiImg(q.wikiId).then(src => {
+                if (src && answered === false) { imgEl.src = src; imgWrap.style.display = 'block'; }
+            });
+        }
+
+        // Options – shuffle option order but track correct answer by value
+        const shuffledOpts = shuffle(q.options.map((text, i) => ({ text, isCorrect: i === q.ans })));
+        const correctText = q.options[q.ans];
+
+        const optContainer = document.getElementById('quiz-options');
+        optContainer.innerHTML = shuffledOpts.map((opt, i) => `
+            <button class="quiz-option" data-opt="${opt.text.replace(/"/g,'&quot;')}">
+                <span class="opt-letter">${LETTERS[i]}</span>${opt.text}
+            </button>`).join('');
+        optContainer.querySelectorAll('.quiz-option').forEach(btn => {
+            btn.addEventListener('click', () => selectAnswer(btn, correctText, q.explain));
+        });
+
+        document.getElementById('quiz-feedback').style.display = 'none';
+        document.getElementById('quiz-feedback').className     = 'quiz-feedback';
+        document.getElementById('quiz-explain').style.display  = 'none';
+        startTimer();
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        timeLeft = 20;
+        const timerEl = document.getElementById('q-timer');
+        timerEl.textContent = timeLeft;
+        timerEl.classList.remove('urgent');
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            timerEl.textContent = timeLeft;
+            if (timeLeft <= 5) timerEl.classList.add('urgent');
+            if (timeLeft <= 0) { clearInterval(timerInterval); if (!answered) timeUp(); }
+        }, 1000);
+    }
+
+    function timeUp() {
+        const correctText = questions[current].options[questions[current].ans];
+        answered = true;
+        document.querySelectorAll('.quiz-option').forEach(btn => {
+            btn.disabled = true;
+            if (btn.dataset.opt === correctText) btn.classList.add('reveal');
+        });
+        showFeedback(false, `⏰ Hết giờ! Đáp án: <b>${correctText}</b>`, questions[current].explain);
+        autoAdvance();
+    }
+
+    function selectAnswer(btn, correctText, explain) {
+        if (answered) return;
+        answered = true;
+        clearInterval(timerInterval);
+        const chosen = btn.dataset.opt;
+        const isCorrect = chosen === correctText;
+        document.querySelectorAll('.quiz-option').forEach(b => {
+            b.disabled = true;
+            if (b.dataset.opt === correctText) b.classList.add(isCorrect ? 'correct' : 'reveal');
+        });
+        if (!isCorrect) btn.classList.add('wrong');
+        if (isCorrect) {
+            score++;
+            document.getElementById('q-score').textContent = `🏆 ${score}`;
+            showFeedback(true, '✅ Chính xác!', explain);
+        } else {
+            showFeedback(false, `❌ Sai! Đáp án đúng: <b>${correctText}</b>`, explain);
+        }
+        autoAdvance();
+    }
+
+    function showFeedback(correct, msg, explain) {
+        const fb = document.getElementById('quiz-feedback');
+        fb.innerHTML = msg;
+        fb.className = 'quiz-feedback ' + (correct ? 'correct' : 'wrong');
+        fb.style.display = 'block';
+        if (explain) {
+            const ex = document.getElementById('quiz-explain');
+            ex.innerHTML = '💡 ' + explain;
+            ex.style.display = 'block';
+        }
+    }
+
+    function autoAdvance() {
+        const fb = document.getElementById('quiz-feedback');
+        let sec = 3;
+        fb.innerHTML += ` <span class="auto-next-count">${sec}</span>`;
+        const countEl = fb.querySelector('.auto-next-count');
+        const iv = setInterval(() => {
+            sec--;
+            if (countEl) countEl.textContent = sec;
+            if (sec <= 0) { clearInterval(iv); nextQuestion(); }
+        }, 1000);
+    }
+
+    function nextQuestion() {
+        current++;
+        if (current >= totalQ) { showResults(); return; }
+        showQuestion();
+    }
+
+    function showResults() {
+        clearInterval(timerInterval);
+        document.getElementById('quiz-game').style.display    = 'none';
+        document.getElementById('quiz-results').style.display = 'block';
+        document.getElementById('result-score').textContent = score;
+        document.getElementById('result-denom').textContent = `/ ${totalQ}`;
+        const pct = score / totalQ;
+        let title, msg;
+        if      (pct === 1)   { title = '🎉 Hoàn hảo!';           msg = 'Bạn là chuyên gia di sản Việt Nam thực thụ!'; }
+        else if (pct >= 0.8)  { title = '🌟 Xuất sắc!';           msg = 'Kiến thức văn hóa rất tốt – đất nước tự hào về bạn!'; }
+        else if (pct >= 0.6)  { title = '👍 Khá tốt!';            msg = 'Bạn hiểu khá nhiều. Hãy đọc thêm ở tab Thông tin!'; }
+        else if (pct >= 0.4)  { title = '📚 Cố gắng thêm!';      msg = 'Mỗi câu sai là một cơ hội học mới. Thử lại nhé!'; }
+        else                  { title = '🇻🇳 Khám phá thêm!';    msg = '15 di sản đang chờ bạn khám phá ở tab Thông tin!'; }
+        document.getElementById('result-title').textContent = title;
+        document.getElementById('result-msg').textContent   = msg;
+    }
+
+    document.getElementById('quiz-start-btn').addEventListener('click', startQuiz);
+    document.getElementById('quiz-play-again').addEventListener('click', startQuiz);
+    document.getElementById('quiz-change-cat').addEventListener('click', () => {
+        clearInterval(timerInterval);
+        document.getElementById('quiz-game').style.display    = 'none';
+        document.getElementById('quiz-results').style.display = 'none';
+        document.getElementById('quiz-setup').style.display   = 'block';
+    });
+}());
+</script>
+</body>
+</html>

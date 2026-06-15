@@ -5,6 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linux & Device Driver Interview Questions & Answers</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ── TAB NAV ─────────────────────────────────────────────── */
+        .tab-nav { display:flex; gap:8px; margin-bottom:24px; border-bottom:2px solid #e2e8f0; padding-bottom:0; }
+        .tab-btn { padding:11px 28px; border:none; border-bottom:3px solid transparent; background:none; color:#64748b; font-size:0.95rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.2s; margin-bottom:-2px; border-radius:0; }
+        .tab-btn:hover { color:#6c5ce7; }
+        .tab-btn.active { color:#6c5ce7; border-bottom-color:#6c5ce7; }
+        .tab-panel { display:none; }
+        .tab-panel.active { display:block; }
+        body.dark-mode .tab-nav { border-bottom-color:#334155; }
+        body.dark-mode .tab-btn { color:#64748b; }
+        body.dark-mode .tab-btn.active { color:#a29bfe; border-bottom-color:#a29bfe; }
+
+        /* ── QUIZ SETUP ─────────────────────────────────────────── */
+        .quiz-cat-btn { padding:10px 18px; border:2px solid #e2e8f0; border-radius:12px; background:#f8fafc; color:#475569; cursor:pointer; font-size:0.88rem; font-weight:600; font-family:inherit; transition:all 0.2s; }
+        .quiz-cat-btn:hover, .quiz-cat-btn.selected { border-color:#6c5ce7; background:#f0edff; color:#6c5ce7; }
+        .quiz-start-btn { display:inline-block; padding:14px 40px; background:linear-gradient(135deg,#6c5ce7,#a29bfe); color:white; border:none; border-radius:14px; font-size:1rem; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s; box-shadow:0 4px 14px rgba(108,92,231,0.35); }
+        .quiz-start-btn:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(108,92,231,0.4); }
+
+        /* ── QUIZ GAME ──────────────────────────────────────────── */
+        .quiz-progress-bar-wrap { background:#e2e8f0; border-radius:10px; height:8px; margin-bottom:18px; overflow:hidden; }
+        .quiz-progress-bar { height:100%; background:linear-gradient(90deg,#6c5ce7,#a29bfe); border-radius:10px; transition:width 0.4s ease; }
+        .quiz-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-size:0.85rem; color:#64748b; }
+        .quiz-meta .q-num { font-weight:700; color:#1e293b; }
+        .quiz-meta .q-score { font-weight:700; color:#6c5ce7; }
+        .quiz-question-card { background:white; border-radius:20px; box-shadow:0 4px 20px rgba(0,0,0,0.08); padding:28px; margin-bottom:18px; text-align:center; }
+        .quiz-question-card .q-category { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#a29bfe; margin-bottom:12px; }
+        .quiz-question-card .q-text { font-size:1.08rem; font-weight:700; color:#1e293b; line-height:1.45; }
+        .quiz-options { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+        .quiz-option { padding:14px 20px; border:2px solid #e2e8f0; border-radius:14px; background:white; text-align:left; cursor:pointer; font-size:0.92rem; font-family:inherit; color:#1e293b; transition:all 0.18s; font-weight:500; display:flex; align-items:center; gap:12px; }
+        .quiz-option:hover:not(:disabled) { border-color:#6c5ce7; background:#f0edff; color:#6c5ce7; }
+        .quiz-option .opt-letter { width:28px; height:28px; border-radius:50%; flex-shrink:0; background:#f1f5f9; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; color:#64748b; }
+        .quiz-option.correct { border-color:#22c55e; background:#f0fdf4; color:#16a34a; }
+        .quiz-option.correct .opt-letter { background:#22c55e; color:white; }
+        .quiz-option.wrong { border-color:#ef4444; background:#fef2f2; color:#dc2626; }
+        .quiz-option.wrong .opt-letter { background:#ef4444; color:white; }
+        .quiz-option:disabled { cursor:default; }
+        .quiz-feedback { text-align:center; padding:12px 16px; border-radius:12px; font-size:0.88rem; font-weight:600; margin-bottom:12px; display:none; }
+        .quiz-feedback.correct { background:#f0fdf4; color:#16a34a; }
+        .quiz-feedback.wrong { background:#fef2f2; color:#dc2626; }
+        .quiz-next-btn { width:100%; padding:13px; background:#6c5ce7; color:white; border:none; border-radius:14px; font-size:0.95rem; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s; display:none; }
+        .quiz-next-btn:hover { background:#5b4bd5; }
+
+        /* ── QUIZ RESULTS ───────────────────────────────────────── */
+        .quiz-results { background:white; border-radius:20px; padding:40px 32px; box-shadow:0 4px 20px rgba(0,0,0,0.08); max-width:520px; margin:0 auto; text-align:center; display:none; }
+        .quiz-results .score-circle { width:110px; height:110px; border-radius:50%; background:linear-gradient(135deg,#6c5ce7,#a29bfe); display:flex; flex-direction:column; align-items:center; justify-content:center; margin:0 auto 20px; box-shadow:0 8px 24px rgba(108,92,231,0.35); }
+        .quiz-results .score-circle .sc-num { font-size:2rem; font-weight:800; color:white; line-height:1; }
+        .quiz-results .score-circle .sc-denom { font-size:0.85rem; color:rgba(255,255,255,0.8); }
+        .quiz-results h3 { font-size:1.4rem; color:#1e293b; margin-bottom:6px; }
+        .quiz-results p { color:#64748b; font-size:0.9rem; margin-bottom:24px; }
+        .quiz-results-btns { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+        .quiz-btn-secondary { padding:11px 24px; border:2px solid #6c5ce7; border-radius:12px; background:white; color:#6c5ce7; font-size:0.9rem; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+        .quiz-btn-secondary:hover { background:#f0edff; }
+
+        /* ── DARK MODE for quiz ─────────────────────────────────── */
+        body.dark-mode .quiz-question-card, body.dark-mode .quiz-results, body.dark-mode .quiz-option { background:#1e293b; }
+        body.dark-mode .quiz-question-card .q-text, body.dark-mode .quiz-results h3, body.dark-mode .quiz-meta .q-num { color:#f1f5f9; }
+        body.dark-mode .quiz-option { border-color:#334155; color:#e2e8f0; }
+        body.dark-mode .quiz-option .opt-letter { background:#334155; color:#94a3b8; }
+        body.dark-mode .quiz-option:hover:not(:disabled) { border-color:#6c5ce7; background:#2d2050; color:#a29bfe; }
+        body.dark-mode .quiz-progress-bar-wrap { background:#334155; }
+        body.dark-mode .quiz-results p { color:#94a3b8; }
+        body.dark-mode .quiz-btn-secondary { background:#1e293b; }
+        body.dark-mode .quiz-cat-btn { background:#263043; border-color:#334155; color:#94a3b8; }
+        body.dark-mode .quiz-cat-btn.selected, body.dark-mode .quiz-cat-btn:hover { border-color:#6c5ce7; background:#2d2050; color:#a29bfe; }
+    </style>
 </head>
 <body>
 
@@ -22,10 +87,31 @@
                 <li><a href="split.html"><span class="sidebar-icon">🧾</span> Split Money</a></li>
                 <li><a href="c-interview.html"><span class="sidebar-icon">💻</span> C Q&A</a></li>
                 <li><a href="embedded-interview.html"><span class="sidebar-icon">🔧</span> Embedded</a></li>
-                <li><a href="linux-interview.html" class="active"><span class="sidebar-icon">🐧</span> Linux/Driver</a></li>
+                <li class="has-submenu">
+                    <a href="linux-interview.html#knowledge"><span class="sidebar-icon">🐧</span> Linux/Driver <span class="submenu-arrow">▾</span></a>
+                    <ul class="sidebar-submenu">
+                        <li><a href="#knowledge" id="sidelink-knowledge">📖 Knowledge</a></li>
+                        <li><a href="#quiz" id="sidelink-quiz">🎯 Quiz</a></li>
+                    </ul>
+                </li>
                 <li><a href="olympia-quiz.html"><span class="sidebar-icon">🏆</span> Olympia Quiz</a></li>
+                <li><a href="millionaire.html"><span class="sidebar-icon">💰</span> Ai Là Triệu Phú</a></li>
                 <li><a href="cpp-challenge.html"><span class="sidebar-icon">🚀</span> C/C++ Challenge</a></li>
                 <li><a href="rust.html"><span class="sidebar-icon">🦀</span> Rust</a></li>
+            <li class="has-submenu">
+                <a href="countries.html"><span class="sidebar-icon">🌍</span> World Countries <span class="submenu-arrow">▾</span></a>
+                <ul class="sidebar-submenu">
+                    <li><a href="countries.html#info">📋 Information</a></li>
+                    <li><a href="countries.html#quiz">🎯 Quiz</a></li>
+                </ul>
+            </li>
+            <li class="has-submenu">
+                <a href="vietnam-unesco.html"><span class="sidebar-icon">🇻🇳</span> VN &amp; UNESCO <span class="submenu-arrow">▾</span></a>
+                <ul class="sidebar-submenu">
+                    <li><a href="vietnam-unesco.html#info">📋 Thông tin</a></li>
+                    <li><a href="vietnam-unesco.html#quiz">🎯 Quiz</a></li>
+                </ul>
+            </li>
             </ul>
         </aside>
 
@@ -47,6 +133,15 @@
                     <a href="rust.html">🦀 Rust</a>
                 </div>    <div class="container">
         <h1>Linux & Device Driver Interview Questions</h1>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav" id="lx-tab-nav">
+            <button class="tab-btn" id="tab-btn-knowledge" data-tab="knowledge" onclick="lxActivateTab('knowledge')">📖 Knowledge</button>
+            <button class="tab-btn" id="tab-btn-quiz" data-tab="quiz" onclick="lxActivateTab('quiz')">🎯 Quiz</button>
+        </div>
+
+        <!-- Knowledge Panel -->
+        <div id="tab-knowledge" class="tab-panel">
 
         <!-- Add Custom Question Section -->
         <div class="add-question-section">
@@ -1147,6 +1242,8 @@ module_i2c_driver(my_driver);</pre>
         }
     </script>
 
+        </div><!-- /tab-knowledge -->
+
     <div class="page-navigation">
         <a href="embedded-interview.html" class="page-nav-btn">Previous</a>
         <div class="page-nav-center">
@@ -1155,6 +1252,79 @@ module_i2c_driver(my_driver);</pre>
         </div>
         <a href="#" class="page-nav-btn next disabled">Next</a>
     </div>
+
+        <!-- Quiz Panel -->
+        <div id="tab-quiz" class="tab-panel" style="display:none">
+            <div style="max-width:700px; margin:0 auto; padding:20px 0;">
+                <!-- Setup Screen -->
+                <div id="lq-setup">
+                    <h2 style="text-align:center; margin-bottom:8px; color:#1e293b;">🐧 Linux &amp; Driver Quiz</h2>
+                    <p style="text-align:center; color:#64748b; margin-bottom:24px; font-size:0.92rem;">Test your knowledge of Linux kernel, device drivers, and embedded systems.</p>
+                    <div style="background:white; border-radius:16px; padding:28px; box-shadow:0 4px 20px rgba(0,0,0,0.08); margin-bottom:20px;">
+                        <h4 style="margin:0 0 14px; color:#1e293b;">📂 Category</h4>
+                        <div style="display:flex; flex-wrap:wrap; gap:8px;" id="lq-cat-btns">
+                            <button class="quiz-cat-btn selected" data-cat="all" style="padding:9px 16px; font-size:0.85rem;">🌐 All Topics</button>
+                            <button class="quiz-cat-btn" data-cat="kernel-basics" style="padding:9px 16px; font-size:0.85rem;">🐧 Kernel Basics</button>
+                            <button class="quiz-cat-btn" data-cat="kernel-modules" style="padding:9px 16px; font-size:0.85rem;">📦 Modules</button>
+                            <button class="quiz-cat-btn" data-cat="char-driver" style="padding:9px 16px; font-size:0.85rem;">📟 Char Drivers</button>
+                            <button class="quiz-cat-btn" data-cat="memory" style="padding:9px 16px; font-size:0.85rem;">💾 Memory</button>
+                            <button class="quiz-cat-btn" data-cat="interrupts" style="padding:9px 16px; font-size:0.85rem;">⚡ Interrupts</button>
+                            <button class="quiz-cat-btn" data-cat="peripheral" style="padding:9px 16px; font-size:0.85rem;">🔌 Peripherals</button>
+                            <button class="quiz-cat-btn" data-cat="debugging" style="padding:9px 16px; font-size:0.85rem;">🔍 Debugging</button>
+                            <button class="quiz-cat-btn" data-cat="platform" style="padding:9px 16px; font-size:0.85rem;">🏗️ Platform</button>
+                            <button class="quiz-cat-btn" data-cat="yocto" style="padding:9px 16px; font-size:0.85rem;">🍫 Yocto</button>
+                        </div>
+                    </div>
+                    <div style="background:white; border-radius:16px; padding:20px 28px; box-shadow:0 4px 20px rgba(0,0,0,0.08); margin-bottom:20px;">
+                        <h4 style="margin:0 0 12px; color:#1e293b;">⚙️ Difficulty</h4>
+                        <div style="display:flex; gap:8px;" id="lq-diff-btns">
+                            <button class="quiz-cat-btn selected" data-diff="all" style="padding:9px 18px; font-size:0.85rem;">⭐ All</button>
+                            <button class="quiz-cat-btn" data-diff="1" style="padding:9px 18px; font-size:0.85rem;">🟢 Easy</button>
+                            <button class="quiz-cat-btn" data-diff="2" style="padding:9px 18px; font-size:0.85rem;">🟡 Medium</button>
+                            <button class="quiz-cat-btn" data-diff="3" style="padding:9px 18px; font-size:0.85rem;">🔴 Hard</button>
+                        </div>
+                    </div>
+                    <p style="text-align:center; color:#6c5ce7; font-weight:600; margin-bottom:20px;" id="lq-count-display"></p>
+                    <div style="text-align:center;">
+                        <button class="quiz-start-btn" onclick="lqStartQuiz()">🚀 Start Quiz</button>
+                    </div>
+                </div>
+
+                <!-- Game Screen -->
+                <div id="lq-game" style="display:none">
+                    <div class="quiz-progress-bar-wrap">
+                        <div class="quiz-progress-bar" id="lq-progress" style="width:0%"></div>
+                    </div>
+                    <div class="quiz-meta">
+                        <span class="q-num" id="lq-qnum">Q1 / 15</span>
+                        <span id="lq-cat-label" style="font-size:0.78rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.6px;"></span>
+                        <span class="q-score" id="lq-score">Score: 0</span>
+                    </div>
+                    <div class="quiz-question-card">
+                        <div class="q-category" id="lq-q-cat"></div>
+                        <div class="q-text" id="lq-q-text"></div>
+                    </div>
+                    <div class="quiz-options" id="lq-options"></div>
+                    <div class="quiz-feedback" id="lq-feedback"></div>
+                    <div id="lq-explain" style="background:#f0f9ff;border-left:4px solid #0ea5e9;padding:12px 16px;border-radius:10px;margin-bottom:12px;font-size:0.88rem;color:#0c4a6e;line-height:1.55;display:none;"></div>
+                    <button class="quiz-next-btn" id="lq-next-btn" onclick="lqNext()">Next →</button>
+                </div>
+
+                <!-- Results Screen -->
+                <div class="quiz-results" id="lq-results">
+                    <div class="score-circle">
+                        <div class="sc-num" id="lq-res-score">0</div>
+                        <div class="sc-denom" id="lq-res-total">/15</div>
+                    </div>
+                    <h3 id="lq-res-title">Quiz Complete!</h3>
+                    <p id="lq-res-msg"></p>
+                    <div class="quiz-results-btns">
+                        <button class="quiz-start-btn" onclick="lqRestart()">🔄 Play Again</button>
+                        <button class="quiz-btn-secondary" onclick="lqBackToSetup()">⚙️ Change Settings</button>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /tab-quiz -->
 
             </div><!-- End content-area -->
 
@@ -1502,6 +1672,205 @@ module_i2c_driver(my_driver);</pre>
         }
 
         updateTOC();
+    </script>
+
+    <!-- Linux Quiz + Tab Routing -->
+    <script>
+    // ===== LINUX/DRIVER QUIZ BANK =====
+    const LQ_BANK = [
+        // kernel-basics
+        {q:"What are the three main types of Linux device drivers?", options:["Process, Thread, Module","Character, Block, Network","Read, Write, Execute","User, Kernel, Hypervisor"], ans:1, cat:"kernel-basics", diff:1, explain:"Linux drivers are classified as: Character (byte-stream, e.g. serial port), Block (random-access blocks, e.g. hard disk), or Network (socket-based, e.g. eth0). Each has a different kernel subsystem."},
+        {q:"What does the major number identify in a Linux device file?", options:["The specific device instance","The driver responsible for the device","The device file permissions","The hardware bus type"], ans:1, cat:"kernel-basics", diff:1, explain:"The major number identifies which driver handles a device. The minor number identifies the specific instance. For example, /dev/sda and /dev/sdb share the same major (8) but have different minor numbers."},
+        {q:"Which file shows all registered character and block device major numbers?", options:["/sys/devices","/proc/devices","/dev/drivers","/sys/bus"], ans:1, cat:"kernel-basics", diff:1, explain:"/proc/devices lists all registered major numbers for both character and block devices in the running kernel. Very useful for debugging and verifying driver registration."},
+        {q:"Which interface does user space use to request kernel services?", options:["Direct memory access","System calls (syscalls)","Shared memory only","Hardware interrupts only"], ans:1, cat:"kernel-basics", diff:1, explain:"User space accesses kernel services exclusively through the system call interface (SCI). Examples: open(), read(), write(), ioctl(). This interface transitions the CPU from user mode (ring 3) to kernel mode (ring 0)."},
+        // kernel-modules
+        {q:"Which macro registers the module initialization function?", options:["module_register()","module_init()","init_kernel()","module_setup()"], ans:1, cat:"kernel-modules", diff:1, explain:"module_init(func) marks func as the entry point called by the kernel when the module is loaded with insmod or modprobe. The function must return 0 on success or a negative error code."},
+        {q:"Which command automatically resolves and loads module dependencies?", options:["insmod","modprobe","lsmod","depmod"], ans:1, cat:"kernel-modules", diff:1, explain:"modprobe reads /lib/modules dependency files and loads all required dependency modules before loading the target. insmod loads a single .ko file with no dependency resolution."},
+        {q:"What does MODULE_LICENSE(\"GPL\") declare?", options:["The module is copyrighted","The license type, affecting kernel taint status","The module exports symbols","The module version"], ans:1, cat:"kernel-modules", diff:1, explain:"MODULE_LICENSE sets the license for the module. 'GPL' allows access to GPL-only kernel symbols. Non-GPL licenses mark the kernel as 'tainted', which can affect support and debugging."},
+        {q:"What does the module_exit() macro register?", options:["The module initialization function","The module symbol exports","The cleanup function called on module removal","The module version string"], ans:2, cat:"kernel-modules", diff:1, explain:"module_exit(func) registers func as the cleanup function called when the module is removed with rmmod. It should free resources, unregister devices, and undo everything done in module_init."},
+        // char-driver
+        {q:"Which structure defines the callbacks for open/read/write/ioctl in a character driver?", options:["struct cdev","struct file_operations","struct device","struct module"], ans:1, cat:"char-driver", diff:1, explain:"struct file_operations holds pointers to driver callback functions (.open, .read, .write, .unlocked_ioctl, .release, etc.) that the VFS calls when user-space uses system calls on the device file."},
+        {q:"What does copy_to_user() return when ALL bytes are successfully copied?", options:["The number of bytes copied","-EFAULT","0 (zero bytes NOT copied)","A pointer to the destination"], ans:2, cat:"char-driver", diff:2, explain:"copy_to_user() returns the number of bytes that could NOT be copied. Full success = return 0. If the user pointer is invalid, it returns -EFAULT or a partial count. Always check the return value!"},
+        {q:"What function allocates a major/minor number range dynamically for a char device?", options:["register_chrdev_region()","alloc_chrdev_region()","cdev_add()","device_create()"], ans:1, cat:"char-driver", diff:2, explain:"alloc_chrdev_region() dynamically allocates an available major number and registers the specified range of minor numbers. Use register_chrdev_region() only when you need a specific major number."},
+        {q:"What does cdev_add() do?", options:["Creates a /dev entry via udev","Registers the cdev structure with the kernel VFS","Allocates a major/minor number","Registers file_operations callbacks"], ans:1, cat:"char-driver", diff:2, explain:"cdev_add(cdev, dev_num, count) makes the character device live — it registers the cdev structure with the kernel, making the device accessible via its major/minor number. After this, the VFS can dispatch calls to your file_operations."},
+        // memory
+        {q:"Which GFP flag must be used with kmalloc() in interrupt context?", options:["GFP_KERNEL","GFP_ATOMIC","GFP_HIGHUSER","GFP_DMA"], ans:1, cat:"memory", diff:2, explain:"GFP_ATOMIC tells the allocator it cannot sleep (no blocking). This is required in interrupt handlers, spinlock-held code, and other atomic contexts. GFP_KERNEL may sleep to reclaim pages — forbidden in interrupt context."},
+        {q:"What is the key difference between kmalloc() and vmalloc()?", options:["kmalloc uses virtual memory, vmalloc uses physical","kmalloc is for user space, vmalloc is for kernel","kmalloc returns physically contiguous memory; vmalloc is only virtually contiguous","They are functionally identical"], ans:2, cat:"memory", diff:2, explain:"kmalloc() guarantees physically contiguous pages — required for DMA. vmalloc() only ensures virtual address contiguity (physical pages may be scattered). vmalloc can allocate larger chunks but cannot be used for DMA operations."},
+        {q:"What does DMA stand for?", options:["Direct Memory Allocation","Direct Memory Access","Dynamic Memory Addressing","Device Memory Architecture"], ans:1, cat:"memory", diff:1, explain:"DMA (Direct Memory Access) allows peripherals to transfer data directly to/from system memory without CPU involvement, greatly improving I/O throughput for high-speed devices like network cards and storage controllers."},
+        {q:"Which function frees memory allocated by kmalloc()?", options:["free()","kfree()","vfree()","release_mem()"], ans:1, cat:"memory", diff:1, explain:"kfree() is the kernel counterpart to free(). Memory allocated with kmalloc()/kzalloc() must be freed with kfree(). Memory from vmalloc() must be freed with vfree(). Mixing them causes kernel crashes."},
+        // interrupts
+        {q:"What is a tasklet primarily used for?", options:["Creating a small kernel thread","Deferred interrupt processing (bottom half)","Sending a user-space signal","Setting a hardware timer"], ans:1, cat:"interrupts", diff:2, explain:"Tasklets implement the 'bottom half' pattern: the interrupt handler (top half) does minimal urgent work and schedules a tasklet for deferred, less-urgent processing. Tasklets run in softirq context and cannot sleep."},
+        {q:"Which spinlock variant must be used when shared data is accessed from both process context and interrupt context?", options:["spin_lock()","spin_lock_irqsave()","mutex_lock()","down_interruptible()"], ans:1, cat:"interrupts", diff:3, explain:"spin_lock_irqsave() disables local interrupts AND takes the spinlock. This prevents deadlock when the same data can be touched by an interrupt handler. The saved flags allow restoring the exact IRQ state with spin_unlock_irqrestore()."},
+        {q:"What function registers an interrupt handler in the Linux kernel?", options:["register_irq()","request_irq()","enable_irq()","attach_irq()"], ans:1, cat:"interrupts", diff:1, explain:"request_irq(irq, handler, flags, name, dev_id) registers an interrupt handler. The handler runs in interrupt context whenever the specified IRQ fires. free_irq() is used to unregister it."},
+        // peripheral
+        {q:"How many wires does I2C use for communication (excluding power/ground)?", options:["1","2","3","4"], ans:1, cat:"peripheral", diff:1, explain:"I2C uses just 2 wires: SDA (Serial Data) and SCL (Serial Clock). Both lines are open-drain with external pull-up resistors, enabling multi-master/multi-slave communication on a shared bus."},
+        {q:"Which serial protocol supports full-duplex communication (simultaneous send and receive)?", options:["I2C","UART","1-Wire","SPI"], ans:3, cat:"peripheral", diff:1, explain:"SPI uses separate MOSI (Master→Slave) and MISO (Slave→Master) data lines, enabling true full-duplex operation. I2C is half-duplex (one direction at a time on SDA). UART is typically simplex or half-duplex."},
+        {q:"What is the speed of Standard Mode I2C?", options:["10 kbps","100 kbps","400 kbps","1 Mbps"], ans:1, cat:"peripheral", diff:2, explain:"Standard Mode I2C: 100 kbps. Fast Mode: 400 kbps. Fast Mode+: 1 Mbps. High-Speed Mode: 3.4 Mbps. Ultra-Fast Mode: 5 Mbps (unidirectional only). The speed is determined by the SCL clock frequency."},
+        {q:"In SPI, what does MOSI stand for?", options:["Master Output Slave Input","Master Output Signal Interface","Multi-Output Serial Interface","Multiple Output Single Input"], ans:0, cat:"peripheral", diff:1, explain:"MOSI (Master Output Slave Input) is the data line driven by the master to transmit data to the slave. MISO (Master Input Slave Output) carries data from slave to master. Together they enable full-duplex SPI communication."},
+        {q:"Which Linux kernel subsystem handles I2C device drivers?", options:["Platform bus","I2C core (/drivers/i2c/)","USB subsystem","GPIO subsystem"], ans:1, cat:"peripheral", diff:2, explain:"The Linux I2C core (drivers/i2c/) provides the i2c_driver and i2c_client structures and APIs like i2c_transfer() and i2c_smbus_*(). I2C drivers register via i2c_add_driver() with a matching of_device_id table."},
+        // debugging
+        {q:"What log level does printk(KERN_DEBUG ...) use?", options:["Level 0 (emergency)","Level 3 (error)","Level 4 (warning)","Level 7 (debug)"], ans:3, cat:"debugging", diff:2, explain:"KERN_DEBUG = '\\007' = level 7, the least critical. Levels go from 0 (KERN_EMERG) to 7 (KERN_DEBUG). Only messages at or above the current console_loglevel are printed to the console. Check /proc/sys/kernel/printk."},
+        {q:"Which built-in Linux tool traces kernel function calls with minimal overhead?", options:["KGDB","ftrace","strace","ltrace"], ans:1, cat:"debugging", diff:1, explain:"ftrace (Function Tracer) uses compiler-inserted NOPs replaced at runtime by trace calls, with per-CPU ring buffers. It can trace function entry/exit, scheduling events, IRQs, and more. strace/ltrace only trace user-space syscalls."},
+        {q:"What class of bugs does KASAN (Kernel Address Sanitizer) detect?", options:["CPU performance bottlenecks","Memory safety bugs: use-after-free, out-of-bounds accesses","Network packet loss","Lock deadlocks"], ans:1, cat:"debugging", diff:2, explain:"KASAN instruments all memory accesses to detect heap/stack out-of-bounds reads/writes and use-after-free bugs in kernel code. Requires CONFIG_KASAN=y. It has ~2x memory overhead but catches critical memory safety issues."},
+        {q:"What is a kernel 'oops'?", options:["A kernel panic that halts the system requiring reboot","A non-fatal kernel error that logs a diagnostic report","A segmentation fault in user space","A memory leak warning from kmemleak"], ans:1, cat:"debugging", diff:2, explain:"A kernel oops is a non-fatal error (unlike panic which halts). It prints CPU registers, the call stack, module list, and memory around the faulting instruction. The system can often continue running after an oops, though stability may be compromised."},
+        // platform
+        {q:"What is the device tree (DTS) primarily used for?", options:["Storing kernel build configuration","Describing hardware topology and properties to the kernel","Defining driver file_operations callbacks","Managing user-space process scheduling"], ans:1, cat:"platform", diff:1, explain:"The Device Tree Source (DTS) describes hardware: memory regions, interrupt lines, clock sources, GPIOs, I2C/SPI devices, and bus connections. The kernel uses it to configure platform devices without hard-coded board-specific data in C code."},
+        {q:"Which callback is invoked on a platform driver when a matching device is found?", options:["init()","open()","probe()","start()"], ans:2, cat:"platform", diff:1, explain:"The .probe() callback is called by the kernel when a device's compatible string matches the driver's of_match_table. It initializes hardware, requests resources (IRQs, memory), and registers the device with its subsystem."},
+        {q:"What structure must a platform driver register with the kernel?", options:["struct file_operations","struct cdev","struct platform_driver","struct bus_type"], ans:2, cat:"platform", diff:2, explain:"platform_driver_register(&drv) registers a struct platform_driver containing .probe(), .remove() callbacks and an of_match_table array of compatible strings. The kernel calls probe() when a matching DTS node is found."},
+        // yocto
+        {q:"What is BitBake in the Yocto project?", options:["A board support package format","A cross-compiler toolchain","The build engine that processes recipes and tasks","An embedded Linux filesystem format"], ans:2, cat:"yocto", diff:1, explain:"BitBake is the task execution engine at the core of Yocto/OpenEmbedded. It reads .bb recipe files and metadata, resolves dependencies, then executes tasks: do_fetch, do_patch, do_configure, do_compile, do_install, do_package."},
+        {q:"What file extension do Yocto build recipes use?", options:[".conf",".mk",".cmake",".bb"], ans:3, cat:"yocto", diff:1, explain:"Yocto recipes use the .bb (BitBake) extension. Configuration files use .conf. Class files use .bbclass. A .bbappend file extends/overrides an existing recipe from another layer without modifying the original file."},
+        {q:"What does the MACHINE variable specify in a Yocto build?", options:["The build host CPU architecture","The GCC compiler version","The target hardware platform","The Linux kernel source URL"], ans:2, cat:"yocto", diff:2, explain:"MACHINE in local.conf or a machine configuration file defines the target hardware platform (e.g., 'raspberrypi4', 'beaglebone', 'qemux86-64'). It selects the correct BSP layer, machine-specific kernel config, and toolchain."},
+        {q:"What is a Yocto 'layer'?", options:["A filesystem partition in the image","A hardware abstraction interface","A collection of metadata (recipes, configs) for a specific purpose","A kernel module collection"], ans:2, cat:"yocto", diff:2, explain:"A layer is a directory of metadata organized for a specific purpose: meta-openembedded adds common utilities, meta-raspberrypi adds RPi BSP support, meta-custom contains your application recipes. Layers are listed in BBLAYERS in bblayers.conf."}
+    ];
+
+    let lqCat='all', lqDiff='all', lqQuestions=[], lqIdx=0, lqScore=0, lqAutoTimer;
+
+    function lqGetFiltered(){
+        return LQ_BANK.filter(q =>
+            (lqCat==='all' || q.cat===lqCat) &&
+            (lqDiff==='all' || q.diff===parseInt(lqDiff))
+        );
+    }
+    function lqUpdateCount(){
+        const n = lqGetFiltered().length;
+        const el = document.getElementById('lq-count-display');
+        if(el) el.textContent = n + ' question' + (n!==1?'s':'') + ' available';
+    }
+
+    document.addEventListener('DOMContentLoaded', function(){
+        document.querySelectorAll('#lq-cat-btns .quiz-cat-btn').forEach(b => {
+            b.addEventListener('click', function(){
+                document.querySelectorAll('#lq-cat-btns .quiz-cat-btn').forEach(x=>x.classList.remove('selected'));
+                b.classList.add('selected');
+                lqCat = b.dataset.cat;
+                lqUpdateCount();
+            });
+        });
+        document.querySelectorAll('#lq-diff-btns .quiz-cat-btn').forEach(b => {
+            b.addEventListener('click', function(){
+                document.querySelectorAll('#lq-diff-btns .quiz-cat-btn').forEach(x=>x.classList.remove('selected'));
+                b.classList.add('selected');
+                lqDiff = b.dataset.diff;
+                lqUpdateCount();
+            });
+        });
+        lqUpdateCount();
+        // Tab routing initialization
+        const h = location.hash.replace('#','');
+        lxActivateTab(h==='quiz' ? 'quiz' : 'knowledge');
+    });
+
+    window.addEventListener('hashchange', function(){
+        const h = location.hash.replace('#','');
+        if(h==='quiz' || h==='knowledge') lxActivateTab(h);
+    });
+
+    function lqStartQuiz(){
+        const pool = lqGetFiltered();
+        if(!pool.length){ alert('No questions match the selected filters. Try different settings.'); return; }
+        lqQuestions = [...pool].sort(()=>Math.random()-0.5).slice(0, Math.min(15, pool.length));
+        lqIdx=0; lqScore=0;
+        document.getElementById('lq-setup').style.display='none';
+        document.getElementById('lq-game').style.display='block';
+        document.getElementById('lq-results').style.display='none';
+        lqRenderQ();
+    }
+
+    const CAT_LABELS = {
+        'kernel-basics':'Kernel Basics','kernel-modules':'Kernel Modules',
+        'char-driver':'Char Drivers','memory':'Memory Management',
+        'interrupts':'Interrupts','peripheral':'Peripherals',
+        'debugging':'Debugging','platform':'Platform Drivers','yocto':'Yocto'
+    };
+
+    function lqRenderQ(){
+        const q = lqQuestions[lqIdx];
+        const total = lqQuestions.length;
+        document.getElementById('lq-progress').style.width = (lqIdx/total*100)+'%';
+        document.getElementById('lq-qnum').textContent = 'Q'+(lqIdx+1)+' / '+total;
+        document.getElementById('lq-score').textContent = 'Score: '+lqScore;
+        document.getElementById('lq-q-cat').textContent = CAT_LABELS[q.cat]||q.cat;
+        document.getElementById('lq-q-text').textContent = q.q;
+
+        const idxs = [0,1,2,3].sort(()=>Math.random()-0.5);
+        const optHtml = idxs.map((origIdx,pos)=>{
+            const letter = ['A','B','C','D'][pos];
+            const isCorrect = origIdx===q.ans;
+            return `<button class="quiz-option" data-correct="${isCorrect}" onclick="lqAnswer(this)"><span class="opt-letter">${letter}</span>${q.options[origIdx]}</button>`;
+        }).join('');
+        document.getElementById('lq-options').innerHTML = optHtml;
+
+        const fb = document.getElementById('lq-feedback');
+        fb.style.display='none'; fb.className='quiz-feedback';
+        document.getElementById('lq-explain').style.display='none';
+        const nb = document.getElementById('lq-next-btn');
+        nb.style.display='none';
+        nb.textContent = (lqIdx+1<lqQuestions.length?'Next →':'See Results');
+    }
+
+    function lqAnswer(btn){
+        clearTimeout(lqAutoTimer);
+        document.querySelectorAll('#lq-options .quiz-option').forEach(o=>o.disabled=true);
+        const q = lqQuestions[lqIdx];
+        const correct = btn.dataset.correct==='true';
+        document.querySelectorAll('#lq-options .quiz-option').forEach(o=>{
+            if(o.dataset.correct==='true') o.classList.add('correct');
+        });
+        const fb = document.getElementById('lq-feedback');
+        if(correct){ btn.classList.add('correct'); lqScore++; fb.className='quiz-feedback correct'; fb.textContent='✅ Correct!'; }
+        else { btn.classList.add('wrong'); fb.className='quiz-feedback wrong'; fb.textContent='❌ Incorrect'; }
+        fb.style.display='block';
+        document.getElementById('lq-score').textContent='Score: '+lqScore;
+        const explEl = document.getElementById('lq-explain');
+        explEl.textContent = q.explain;
+        explEl.style.display='block';
+        const nb = document.getElementById('lq-next-btn');
+        nb.style.display='block';
+        let t=4;
+        const label = lqIdx+1<lqQuestions.length?'Next →':'See Results';
+        nb.textContent = label+' ('+t+')';
+        lqAutoTimer = setInterval(function(){
+            t--;
+            if(t<=0){ clearInterval(lqAutoTimer); lqNext(); return; }
+            nb.textContent = label+' ('+t+')';
+        },1000);
+    }
+
+    function lqNext(){ clearInterval(lqAutoTimer); lqIdx++; if(lqIdx>=lqQuestions.length){lqShowResults();return;} lqRenderQ(); }
+
+    function lqShowResults(){
+        document.getElementById('lq-game').style.display='none';
+        const res = document.getElementById('lq-results');
+        res.style.display='block';
+        const total = lqQuestions.length;
+        const pct = Math.round(lqScore/total*100);
+        document.getElementById('lq-res-score').textContent=lqScore;
+        document.getElementById('lq-res-total').textContent='/'+total;
+        document.getElementById('lq-res-title').textContent = pct>=80?'🎉 Excellent!':pct>=60?'👍 Good Job!':'📚 Keep Studying!';
+        document.getElementById('lq-res-msg').textContent = `You scored ${lqScore}/${total} (${pct}%). ${pct>=80?'Outstanding kernel & driver knowledge!':pct>=60?'Solid understanding — review the topics you missed.':'Revisit the Knowledge tab and try again.'}`;
+    }
+
+    function lqRestart(){ lqStartQuiz(); }
+    function lqBackToSetup(){ document.getElementById('lq-results').style.display='none'; document.getElementById('lq-setup').style.display='block'; lqUpdateCount(); }
+
+    // ===== TAB ROUTING =====
+    function lxActivateTab(tab){
+        const kPanel = document.getElementById('tab-knowledge');
+        const qPanel = document.getElementById('tab-quiz');
+        if(kPanel) kPanel.style.display = tab==='knowledge'?'block':'none';
+        if(qPanel) qPanel.style.display = tab==='quiz'?'block':'none';
+        document.querySelectorAll('#lx-tab-nav .tab-btn').forEach(b=>{
+            b.classList.toggle('active', b.dataset.tab===tab);
+        });
+        ['knowledge','quiz'].forEach(t=>{
+            const el = document.getElementById('sidelink-'+t);
+            if(el) el.classList.toggle('active', t===tab);
+        });
+        const rs = document.querySelector('.right-sidebar');
+        if(rs) rs.style.display = tab==='knowledge'?'':'none';
+        history.replaceState(null,'','#'+tab);
+    }
     </script>
 
     <!-- Enhanced Features -->

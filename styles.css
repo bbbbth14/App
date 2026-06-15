@@ -98,6 +98,53 @@ body {
     text-align: center;
 }
 
+/* Sidebar hover submenu (e.g. World Countries sub-pages) */
+.sidebar-menu li.has-submenu {
+    position: relative;
+}
+.submenu-arrow {
+    margin-left: auto;
+    font-size: 0.75rem;
+    opacity: 0.6;
+    transition: transform 0.2s;
+}
+.sidebar-menu li.has-submenu:hover .submenu-arrow {
+    transform: rotate(180deg);
+}
+.sidebar-submenu {
+    display: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: rgba(0, 0, 0, 0.25);
+    border-left: 2px solid rgba(59, 130, 246, 0.3);
+}
+.sidebar-menu li.has-submenu:hover .sidebar-submenu {
+    display: block;
+}
+.sidebar-submenu li a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 20px 9px 40px;
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.88rem;
+    border-left: none;
+    transition: all 0.2s;
+}
+.sidebar-submenu li a:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: white;
+    border-left: none;
+}
+.sidebar-submenu li a.active {
+    color: #38bdf8;
+    font-weight: 600;
+    background: rgba(56, 189, 248, 0.08);
+    border-left: none;
+}
+
 .main-content {
     flex: 1;
     margin-left: 260px;
